@@ -1,6 +1,6 @@
 ## About Seimspeed
 
-Laravel is a Car marketplace mainly targeting Papua New Guinea customers. There is a huge demand for a central place for online marketplace for Car selling.
+Seimspeed is a Car marketplace mainly targeting Papua New Guinea customers. There is a huge demand for an online marketplace for cars.
 
 ## Seimspeed Project
 

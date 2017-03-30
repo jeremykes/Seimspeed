@@ -3,16 +3,21 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-use Bican\Roles\Traits\HasRoleAndPermission;
-use Bican\Roles\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Authenticatable implements HasRoleAndPermissionContract
+use App\Traits\CorporateUserTrait;
+
+class User extends Authenticatable 
 {
-    use HasRoleAndPermission;
-
     use Notifiable;
+
+    use EntrustUserTrait;
+
+    // This is used to check whether a user is part of the Corporation
+    use CorporateUserTrait;
 
     /**
      * The attributes that are mass assignable.

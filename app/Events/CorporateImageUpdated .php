@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ImageUpdated 
+class CorporateImageUpdated 
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

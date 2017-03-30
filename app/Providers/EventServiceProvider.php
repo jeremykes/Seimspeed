@@ -25,9 +25,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\CorporateCreated ' => [],
         'App\Events\CorporateUpdated ' => [],
         'App\Events\CorporateDeactivated' => ['App\Listeners\CorporateDeactivated'],
-        'App\Events\ImageAdded ' => [],
-        'App\Events\ImageUpdated ' => [],
-        'App\Events\ImageDeleted ' => [],
+        'App\Events\CorporateImageAdded ' => [],
+        'App\Events\CorporateImageUpdated ' => [],
+        'App\Events\CorporateImageDeleted ' => [],
         'App\Events\SubscriptionAdded ' => [],
         'App\Events\SubscriptionUpdated ' => [],
         'App\Events\CorporateUserAdded' => ['App\Listeners\CorporateUserAdded'],

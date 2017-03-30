@@ -11,14 +11,63 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
+
+
     </script>
+
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+
+    @if (!Auth::guest())
+
+        <script>
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+
+            var pusher = new Pusher('41b9b7f7d7c0187461f6', {
+                authEndpoint: "{{ url('/pusher/auth/' . Auth::user()->id) }}",
+                auth: {
+                    headers: {
+                        'X-CSRF-Token': "{{ csrf_token() }}"
+                        }
+                    },
+                encrypted: true
+            });
+
+            /*
+            |
+            | This private channel will be present on ALL blade views.
+            |
+            */
+            var userChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+            userChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+                alert('No');
+            });
+
+            /*
+            |
+            | This Channels will only be relevant to the current blade view.
+            |
+            */
+
+            // 
+                var channel = pusher.subscribe('caleb-channel');
+                channel.bind('App\\Events\\SomeEvent', function(data) {
+                    // console.log(data.whats);
+                    alert('yes');
+                });
+
+        </script>
+
+    @endif
+
 </head>
 <body>
     <div id="app">
@@ -48,6 +97,8 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><i class="fa fa-envelope-o"></i></a></li>
+                        <li><a href="#"><i class="fa fa-bell-o"></i></a></li>
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
@@ -82,6 +133,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/js/app.js"></script>
+    <script src="js/app.js"></script>
+
 </body>
 </html>

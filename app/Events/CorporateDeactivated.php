@@ -20,7 +20,7 @@ class CorporateDeactivated implements ShouldBroadcast
     public $corporate;
 
     /**
-     * Create a new event instance. some comment
+     * Create a new event instance.
      *
      * @return void
      */

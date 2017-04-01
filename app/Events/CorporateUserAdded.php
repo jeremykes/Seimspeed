@@ -10,18 +10,28 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CorporateUserAdded
+use App\User;
+use App\Corporate;
+use App\Corporateuser;
+
+class CorporateUserAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $user;
+    public $corporate;
+    public $corporateuser;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Corporate $corporate, Corporateuser $corporateuser)
     {
-        //
+        $this->user = $user;
+        $this->corporate = $corporate;
+        $this->corporateuser = $corporateuser;
     }
 
     /**
@@ -31,6 +41,6 @@ class CorporateUserAdded
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('App.User.'.$this->user->id);
     }
 }

@@ -14,7 +14,7 @@ use App\User;
 use App\Corporate;
 use App\Car;
 
-class CarAdded  implements ShouldBroadcast
+class CarAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

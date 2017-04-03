@@ -10,18 +10,28 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CarCommentUpdated
+use App\User;
+use App\Car;
+use App\Carcomment;
+
+class CarCommentUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $user;
+    public $car;
+    public $carcomment;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Car $car, Carcomment $carcomment)
     {
-        //
+        $this->user = $user;
+        $this->car = $car;
+        $this->carcomment = $carcomment;
     }
 
     /**
@@ -31,6 +41,6 @@ class CarCommentUpdated
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

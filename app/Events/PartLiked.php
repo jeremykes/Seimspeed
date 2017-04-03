@@ -10,18 +10,27 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
+use App\User;
+use App\Part;
+use App\Partlike;
+
 class PartLiked
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+        public $user;
+        public $part;
+        public $partlike;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Part $part, Partlike $partlike)
     {
-        //
+        $this->user = $user;
+        $this->part = $part;
+        $this->partlike = $partlike;
     }
 
     /**
@@ -31,6 +40,6 @@ class PartLiked
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

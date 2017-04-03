@@ -12,6 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\User;
 use App\Corporate;
+use App\Corporatetail;
 
 class CorporateTailed implements ShouldBroadcast
 {
@@ -19,16 +20,18 @@ class CorporateTailed implements ShouldBroadcast
 
 	public $user;
 	public $corporate;
+    public $corporatetail;
 	
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, Corporate $corporate)
+    public function __construct(User $user, Corporate $corporate, Corporatetail $corporatetail)
     {
         $this->user = $user;
 		$this->corporate = $corporate;
+        $this->corporatetail = $corporatetail;
 		
     }
 
@@ -39,6 +42,6 @@ class CorporateTailed implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('public-channnel');
+        return new PrivateChannel('public-channel');
     }
 }

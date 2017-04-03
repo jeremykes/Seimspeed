@@ -10,18 +10,27 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CarRentReserveExpired
+use App\User;
+use App\Car;
+use App\Carrentreserve;
+
+class CarRentReserveExpired implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+        public $user:
+        public $car;
+        public $carrentreserve;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Car $car, Carrentreserve $carrentreserve)
     {
-        //
+        $this->user = $user;
+        $this->car = $car;
+        $this->carrentreserve = $carrentreserve;
     }
 
     /**
@@ -31,6 +40,6 @@ class CarRentReserveExpired
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

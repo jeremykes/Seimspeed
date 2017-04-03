@@ -10,7 +10,17 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PartUntailed 
+use App\User;
+use App\Part;
+use App\Partgroup;
+use App\Parttail;
+
+class PartUntailed implements ShouldBroadcast
+
+        public $user;
+        public $part;
+        public $partgroup;
+        public $parttail;
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,9 +29,8 @@ class PartUntailed 
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Part $part, Partgroup $partgroup,Parttail $parttail)
     {
-        //
     }
 
     /**
@@ -31,6 +40,6 @@ class PartUntailed 
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

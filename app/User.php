@@ -242,13 +242,13 @@ class User extends Authenticatable
 
 
 
-    /**
-    * Get the notifications for this user.
-    */
-    public function notifications()
-    {
-        return $this->hasMany('App\Notification');
-    }
+    // /**
+    // * Get the notifications for this user.
+    // */
+    // public function notifications()
+    // {
+    //     return $this->hasMany('App\Notification');
+    // }
 
 
 

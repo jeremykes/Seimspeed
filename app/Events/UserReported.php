@@ -17,6 +17,7 @@ class UserReported implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $user;
     public $userreport;
 
     /**

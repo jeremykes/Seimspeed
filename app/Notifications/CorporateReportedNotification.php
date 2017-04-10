@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+
+use App\Corporatereport;
+
+class CorporateReportedNotification extends Notification
+{
+    use Queueable;
+
+    public $corporatereport;
+    public $url;
+    public $message;
+
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct(Corporatereport $corporatereport)
+    {
+        $this->corporatereport = $corporatereport
+        $this->url = url('/corporate/' . $this->corporatereport->corporate->corporate->id . '/dashboard/');
+        $this->message = "<strong>" . $this->corporatereport->user->name . "</strong> reported that: " . $this->corporatereport->report;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['database', 'broadcast'];
+    }
+
+    /**
+     * Get the database representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'corporatereport' => $corporatereport,
+            'url' => $this->url,
+            'message' => $this->message,
+        ];
+    }
+
+    /**
+     * Get the broadcastable representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return BroadcastMessage
+     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'corporatereport' => $corporatereport,
+            'url' => $this->url,
+            'message' => $this->message,
+        ]);
+    }
+}

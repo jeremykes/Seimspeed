@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Notifications\CarUserCommented;
-
-use App\Events\SomeEvent;
+use App\Notifications\NewMessageNotification;
 
 use App\User;
+use App\Userreport;
+use App\Events\UserReported;
 
-use App\Carcomment;
+use App\Message;
 
 use Auth;
 
@@ -34,20 +34,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $data = [
-        //         'name' => 'John',
-        //         'age' => 40,
-        //     ];
+        // $user = User::find(2);
 
-        // $text = "Hello";
+        // $userreport = Userreport::find(1);
 
-        // event(new SomeEvent($text, $data));
+        // event(new UserReported($user, $userreport));
 
-        $carcomment = Carcomment::find(1);
+        // $message = Message::find(20);
 
-        // $user = ;
-
-        Auth::user()->notify(new CarUserCommented($carcomment));
+        // Auth::user()->notify(new NewMessageNotification($message));
 
         return view('home'); 
     }

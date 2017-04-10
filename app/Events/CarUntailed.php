@@ -10,19 +10,31 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CarUntailed
+use App\User;
+use App\Car;
+use App\Cartail;
+
+
+class CarUntailed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+        public $user;
+        public $car;
+        public $cartail;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Car $car, Cartail $cartail)
     {
-        //
+        $this->user = $user;
+        $this->car = $car;
+        $this->cartail = $cartail;
     }
+
 
     /**
      * Get the channels the event should broadcast on.
@@ -31,6 +43,6 @@ class CarUntailed
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

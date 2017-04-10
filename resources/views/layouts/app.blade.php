@@ -13,6 +13,7 @@
     <!-- Styles -->
     <link href="css/app.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url('css/seimspeed.css') }}">
 
     <!-- Scripts -->
     <script>
@@ -24,6 +25,7 @@
     </script>
 
     <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script src="{{ asset('js/seimspeed.js') }}"></script>
 
     @if (!Auth::guest())
 
@@ -43,30 +45,40 @@
 
             /*
             |
-            | This private channel will be present on ALL blade views.
+            | 1. Subscribe to the Channels
             |
             */
-            var userChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-            userChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-                alert('No');
+
+            // PRIVATE
+            var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+            // PUBLIC
+            var publicChannel = pusher.subscribe('public-channel');
+
+            // Bind the the Private Notification Event
+            privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+                BroadcastNotificationCreated(data);
             });
 
-            /*
-            |
-            | This Channels will only be relevant to the current blade view.
-            |
-            */
-
-            // 
-                var channel = pusher.subscribe('caleb-channel');
-                channel.bind('App\\Events\\SomeEvent', function(data) {
-                    // console.log(data.whats);
-                    alert('yes');
-                });
+            // Function for the Notification Events
+            function BroadcastNotificationCreated(data) {
+                if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                    if (data.user_sending_id == {{ Auth::user()->id }}) {
+                        var sending_name = 'you';
+                    } else {
+                        var sending_name = data.user_sending_name;
+                    }
+                    $('#newsfeed').append('<div>'+sending_name+' - '+data.message+'<div><hr>');
+                } else {
+                    // NOTIFICATION APPENDING HAPPENS HERE
+                }
+            }
 
         </script>
 
     @endif
+
+    @yield('realtime')
 
 </head>
 <body>
@@ -97,8 +109,42 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><i class="fa fa-envelope-o"></i></a></li>
-                        <li><a href="#"><i class="fa fa-bell-o"></i></a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span class="fa-stack has-badge" data-count="7">
+                                  <i class="fa fa-bell-o fa-stack-1x"></i>
+                                </span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="#">Noti 1</a>
+                                    <a href="#">Noti 2</a>
+                                    <a href="#">Noti 3</a>
+                                    <a href="#">Noti 4</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span class="fa-stack has-badge" data-count="99">
+                                  <i class="fa fa-envelope-o fa-stack-1x"></i>
+                                </span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li id="message-list">
+                                    <a href="#">Message 1</a>
+                                    <a href="#">Message 2</a>
+                                    <a href="#">Message 3</a>
+                                    <a href="#">Message 4</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li></li>
+                        <li></li>
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
@@ -134,6 +180,8 @@
 
     <!-- Scripts -->
     <script src="js/app.js"></script>
+
+    @yield('script')
 
 </body>
 </html>

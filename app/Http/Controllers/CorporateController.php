@@ -80,6 +80,130 @@ class CorporateController extends Controller
         
     }
 
+    /**
+     * Add Corporate
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function addcorporate(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'subscription_id' => 'required',
+        ]);
+
+        $success = false;
+
+        $corporate = new Corporate;
+        $corporate->name = $request->name;
+        $corporate->address = $request->address;
+        $corporate->phone = $request->phone;
+        $corporate->descrip = $descrip;
+        $corporate->logo_url = $request->logo_url;
+        $corporate->banner_url = $request->banner_url;
+        $corporate->subscription_id = $request->subscription_id;
+        $corporate->subscriptionexpires = $request->subscriptionexpires;
+        $corporate->save();
+
+        event(new CorporateCreated($corporate));
+
+        // No need to notify user because he just created it.
+        // $car->notify(new CarReportedNotification($carreport));
+
+        $success = true;
+
+        return response()->json(['success'=>$success]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     ALL THE OLD STUFF
+    // 
+    // 
+    // ===================================================================================
+
+
+
+
+
+
+
 
     // ===================================================================================
     // 

@@ -13,10 +13,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\User;
 use App\Message;
 
-class NewMessage implements ShouldBroadcast
+class NewMessage
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $user;
     public $message;
 
     /**

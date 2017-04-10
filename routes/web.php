@@ -15,7 +15,22 @@ Route::get('/', function () {
 	return view('welcome'); 
 });
 
+
+
+/*
+|--------------------------------------------------------------------------
+| Main Blade View URL's
+|--------------------------------------------------------------------------
+| 
+| This routes will go the main blade views. They will also have optional parameters
+| passed with the URL to determine what dynamic page will be loaded initially too.
+|
+*/
 Route::get('/home', 'HomeController@index');
+Route::get('/corporate/{corporate}/home/{page?}', 'FrameworkController@corporatehome'); 
+
+// Ajax test - user send messages
+// Route::post('/sendmessage', 'FrameworkController@sendmessage');
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +53,122 @@ Route::group(['middleware' => ['auth']], function() {
 		  echo "Forbidden";
 		}
 	}); 
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Single Entity Routes
+	|--------------------------------------------------------------------------
+	| 
+	| This routes will show blade templates with single entities. This will be 
+	| useful for notification URL's that need to re-route to the entity.
+	|
+	*/
+
+	Route::get('/carsale/{carsale}/{notification?}', 'FrameworkController@carsale'); 
+	Route::get('/carrent/{carrent}/{notification?}', 'FrameworkController@carrent'); 
+	Route::get('/cartender/{cartender}/{notification?}', 'FrameworkController@cartender'); 
+	Route::get('/carauction/{carauction}/{notification?}', 'FrameworkController@carauction'); 
+	Route::get('/partsale/{partsale}/{notification?}', 'FrameworkController@partsale'); 
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Main Blade View URL's
+	|--------------------------------------------------------------------------
+	| 
+	| This routes will go the main blade views. They will also have optional parameters
+	| passed with the URL to determine what dynamic page will be loaded initially too.
+	|
+	*/
+
+	Route::get('/corporate/{corporate}/settings/{page?}', 'FrameworkController@corporatesettings'); 
+	Route::get('/corporate/{corporate}/dashboard/{page?}', 'FrameworkController@corporatedashboard'); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// OLD CODE DOWN HERE
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Auth routes (up to offers)
@@ -46,7 +177,7 @@ Route::group(['middleware' => ['auth']], function() {
 	| All Auth routes up to offers.
 	|
 	*/
-	Route::get('/corporate/{corporate}/cars', 'UserController@carindex'); 
+	// Route::get('/corporate/{corporate}/cars', 'UserController@carindex'); 
 
 	// SALES
 	// Route::get('/corporate/{corporate}/cars/sales', 'UserController@sales'); 

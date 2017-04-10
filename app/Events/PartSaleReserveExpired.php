@@ -10,18 +10,31 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PartSaleReserveExpired
+use App\User;
+use App\Part;
+use App\Partsale;
+use App\Partsalereserve;
+
+class PartSaleReserveExpired implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+        public $user;
+        public $part;
+        public $partsale;
+        public $partsalereserve;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Part $part, Partsale $partsale, Partsalereserve $partsalereserve)
     {
-        //
+        $this->user = $user;
+        $this->part = $part;
+        $this->partsale = $partsale;  
+        $this->partsalereserve = $partsalereserve;
     }
 
     /**
@@ -31,6 +44,6 @@ class PartSaleReserveExpired
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

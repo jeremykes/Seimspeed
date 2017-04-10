@@ -10,18 +10,29 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class CorporateTailed
+use App\User;
+use App\Corporate;
+use App\Corporatetail;
+
+class CorporateTailed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+	public $user;
+	public $corporate;
+    public $corporatetail;
+	
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Corporate $corporate, Corporatetail $corporatetail)
     {
-        //
+        $this->user = $user;
+		$this->corporate = $corporate;
+        $this->corporatetail = $corporatetail;
+		
     }
 
     /**
@@ -31,6 +42,6 @@ class CorporateTailed
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('public-channel');
     }
 }

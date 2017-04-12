@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\User;
+use App\Car;
+
 class CarLikedNotification extends Notification
 {
     use Queueable;
@@ -21,8 +24,9 @@ class CarLikedNotification extends Notification
      */
     public function __construct(User $user, Car $car)
     {
-        $this->url = url('/corporate/cars/');
-        $this->message = $user->name . ' liked your ' $car->model;
+        $this->car = $car;
+        $this->url = url('/corporate/' . $this->car->corporate->id . '/dashboard/');
+        $this->message = $user->name . ' liked your ' $car->model . ' ' . $car->make . '';
     }
 
     /**

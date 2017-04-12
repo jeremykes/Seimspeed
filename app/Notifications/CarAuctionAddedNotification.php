@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+// 1. Do this if you see that you need to do it.
 use App\Auction;
 
 class CarAuctionAddedNotification extends Notification
@@ -21,10 +22,14 @@ class CarAuctionAddedNotification extends Notification
      *
      * @return void
      */
+    // 2. Add Classes that you think you need to add, depending on the Notification
     public function __construct(Carauction $carauction)
     {
+        // 3. Construct all classes to bind to this class.
         $this->carauction = $carauction;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');;
+        // 4. Build the URL. All URL's just go straight to the corporate dashboard.
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
+        // 5. Build the message.
         $this->message = $corporate->name . ' added an auction.';
     }
 
@@ -47,6 +52,7 @@ class CarAuctionAddedNotification extends Notification
      */
     public function toDatabase($notifiable)
     {
+        // 6. Uncomment this two 
         return [
             'url' => $this->url,
             'message' => $this->message,
@@ -61,6 +67,7 @@ class CarAuctionAddedNotification extends Notification
      */
     public function toBroadcast($notifiable)
     {
+        // 7. Uncomment this two
         return new BroadcastMessage([
             'url' => $this->url,
             'message' => $this->message,

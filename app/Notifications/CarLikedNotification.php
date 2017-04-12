@@ -19,10 +19,10 @@ class CarLikedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Car $car)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->url = url('/corporate/cars/');
+        $this->message = $user->name . ' liked your ' $car->model;
     }
 
     /**
@@ -45,8 +45,8 @@ class CarLikedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +59,8 @@ class CarLikedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

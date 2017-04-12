@@ -23,6 +23,7 @@ class CreateCorporatesTable extends Migration
             $table->integer('subscription_id')->unsigned();
             $table->foreign('subscription_id')->references('id')->on('subscriptions');
             $table->date('subscriptionexpires')->nullable();
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }

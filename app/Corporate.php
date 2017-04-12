@@ -18,6 +18,7 @@ class Corporate extends Model
         'descrip', 
         'logo_url', 
         'banner_url', 
+        'active',
     ];
 
     /**

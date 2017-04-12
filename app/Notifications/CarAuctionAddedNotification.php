@@ -52,7 +52,7 @@ class CarAuctionAddedNotification extends Notification
      */
     public function toDatabase($notifiable)
     {
-        // 6. Uncomment this two
+        // 6. Uncomment this two 
         return [
             'url' => $this->url,
             'message' => $this->message,

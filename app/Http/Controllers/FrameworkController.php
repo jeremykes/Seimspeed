@@ -19,6 +19,7 @@ use App\Events\UserReported;
 use App\Events\CorporateReported;
 use App\Events\CarReported;
 use App\Events\PartReported;
+use App\Events\CorporateCreated;
 
 use App\Notifications\NewMessageNotification;
 use App\Notifications\UserReportedNotification;
@@ -53,6 +54,7 @@ class FrameworkController extends Controller
             'reportpart',
             'corporatesettings',
             'corporatedashboard',
+            'addcorporate',
         ]]);
 
         $this->middleware('corpuser', ['only' => [
@@ -79,8 +81,6 @@ class FrameworkController extends Controller
      */
     public function sendmessage(Request $request)
     {
-    	$success = false;
-
     	$receiving_user = User::find($request->user_id_receiving);
 
     	$message = new Message();
@@ -89,14 +89,12 @@ class FrameworkController extends Controller
     	$message->message = $request->message;
     	$message->save();
 
-    	$success = true;
-
         event(new NewMessage($receiving_user, $message));
 
         $receiving_user->notify(new NewMessageNotification($message));
     	Auth::user()->notify(new NewMessageNotification($message));
 
-        return response()->json(['success'=>$success]);
+        return response()->json(['success'=>true]);
     }
 
 
@@ -116,8 +114,6 @@ class FrameworkController extends Controller
      */
     public function reportuser(Request $request)
     {
-        $success = false;
-
         $userreport = new Userreport;
         $userreport->reporting_user_id = Auth::User()->id;
         $userreport->report_user_id = $request->report_user_id;
@@ -130,9 +126,7 @@ class FrameworkController extends Controller
 
         $reported_user->notify(new UserReportedNotification($userreport));
 
-        $success = true;
-
-        return response()->json(['success'=>$success]);
+        return response()->json(['success'=>true]);
     }
 
     /**
@@ -142,8 +136,6 @@ class FrameworkController extends Controller
      */
     public function reportcorporate(Request $request)
     {
-        $success = false;
-
         $corporatereport = new Corporatereport;
         $corporatereport->corporate_id = $request->corporate_id;
         $corporatereport->user_id = $request->user_id;
@@ -154,12 +146,7 @@ class FrameworkController extends Controller
 
         event(new CorporateReported($corporatereport));
 
-        // report corporate user admin here. Not this 
-        // $corporate->notify(new CorporateReportedNotification($corporatereport));
-
-        $success = true;
-
-        return response()->json(['success'=>$success]);
+        return response()->json(['success'=>true]);
     }
 
     /**
@@ -169,8 +156,6 @@ class FrameworkController extends Controller
      */
     public function reportcar(Request $request)
     {
-        $success = false;
-
         $carreport = new Carreport;
         $carreport->car_id = $request->car_id;
         $carreport->user_id = $request->user_id;
@@ -181,12 +166,7 @@ class FrameworkController extends Controller
 
         event(new CarReported($carreport));
 
-        // report corporate user admin here. Not this 
-        // $car->notify(new CarReportedNotification($carreport));
-
-        $success = true;
-
-        return response()->json(['success'=>$success]);
+        return response()->json(['success'=>true]);
     }
 
     /**
@@ -196,8 +176,6 @@ class FrameworkController extends Controller
      */
     public function reportpart(Request $request)
     {
-        $success = false;
-
         $partreport = new Partreport;
         $partreport->part_id = $request->part_id;
         $partreport->user_id = $request->user_id;
@@ -208,12 +186,7 @@ class FrameworkController extends Controller
 
         event(new PartReported($partreport));
 
-        // report corporate user admin here. Not this 
-        // $part->notify(new PartReportedNotification($partreport));
-
-        $success = true;
-
-        return response()->json(['success'=>$success]);
+        return response()->json(['success'=>true]);
     }
 
 
@@ -372,5 +345,42 @@ class FrameworkController extends Controller
             'corporate' => $corporate,
             'page' => $page,
         ]); 
+    }
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Add Corporate
+    // 
+    // 
+    // ===================================================================================
+    /**
+     * Add Corporate
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function addcorporate(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'subscription_id' => 'required',
+        ]);
+
+        $corporate = new Corporate;
+        $corporate->name = $request->name;
+        $corporate->address = $request->address;
+        $corporate->phone = $request->phone;
+        $corporate->descrip = $descrip;
+        $corporate->logo_url = $request->logo_url;
+        $corporate->banner_url = $request->banner_url;
+        $corporate->subscription_id = $request->subscription_id;
+        $corporate->subscriptionexpires = $request->subscriptionexpires;
+        $corporate->save();
+
+        event(new CorporateCreated($corporate));
+
+        return response()->json(['success'=>true]);
     }
 }

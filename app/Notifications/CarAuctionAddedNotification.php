@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 // 1. Do this if you see that you need to do it.
-use App\Auction;
+use App\Carauction;
 
 class CarAuctionAddedNotification extends Notification
 {

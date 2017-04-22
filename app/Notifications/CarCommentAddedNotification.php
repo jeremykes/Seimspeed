@@ -7,6 +7,10 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Car;
+use App\User;
+use App\Carcomment;
+
 class CarCommentAddedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +23,13 @@ class CarCommentAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Car $car, Carcomment $carcomment, User $user)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->car=$car;
+        $this->user=$user;
+        $thos->carcomment=$carcomment;
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
+        $this->message = $user->name . ' commented on your car. ' . $carcomment->comment;
     }
 
     /**
@@ -45,8 +52,8 @@ class CarCommentAddedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ];
     }
 
@@ -59,8 +66,8 @@ class CarCommentAddedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ]);
     }
 }

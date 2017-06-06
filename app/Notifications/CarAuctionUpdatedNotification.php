@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Carauction;
+
+
 class CarAuctionUpdatedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +22,11 @@ class CarAuctionUpdatedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Carauction $carauction)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->carauction=$carauction;
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
+        $this->message = $corporate->name . ' updated their auction details on the auction:' $carauction->carauction_id;
     }
 
     /**
@@ -45,8 +49,8 @@ class CarAuctionUpdatedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ];
     }
 
@@ -59,8 +63,8 @@ class CarAuctionUpdatedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ]);
     }
 }

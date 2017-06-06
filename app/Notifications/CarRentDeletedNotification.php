@@ -7,6 +7,11 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\User;
+use App\Car;
+use App\Carrent;
+use App\Corporate;
+
 class CarRentDeletedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +24,14 @@ class CarRentDeletedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Car $car, Carrent $carrent, Corporate $corporate)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->user=$user;
+        $this->car=$car;
+        $this->carrent=$carrent;
+        $this->corporate=$corporate;
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
+        $this->message = $corporate->name . ' removed the rental for the car: ' $car->model . ' ' . $car->make . '';
     }
 
     /**
@@ -45,8 +54,8 @@ class CarRentDeletedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ];
     }
 
@@ -59,8 +68,8 @@ class CarRentDeletedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+             'url' => $this->url,
+             'message' => $this->message,
         ]);
     }
 }

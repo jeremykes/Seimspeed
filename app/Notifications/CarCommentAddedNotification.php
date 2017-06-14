@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Carcomment;
+
 class CarCommentAddedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,21 @@ class CarCommentAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Carcomment $carcomment)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->carcomment = $carcomment;
+
+        if ($this->carcomment->car->sale->exists()) {
+           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/sale/' . $this->carcomment->car->sale->id);
+        } else if ($this->carcomment->car->rent->exists()) {
+           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/rent/' . $this->carcomment->car->rent->id);
+        } else if ($this->carcomment->car->auction->exists()) {
+           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/auction/' . $this->carcomment->car->auction->id);
+        } else if ($this->carcomment->car->tender->exists()) {
+           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/tender/' . $this->carcomment->car->tender->id);
+        }
+
+        $this->message = $this->carcomment->user->name . ' added a comment.';
     }
 
     /**
@@ -45,8 +58,8 @@ class CarCommentAddedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +72,8 @@ class CarCommentAddedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

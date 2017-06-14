@@ -7,8 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\User;
-use App\Car;
+use App\Carlike;
 
 class CarLikedNotification extends Notification
 {
@@ -22,11 +21,21 @@ class CarLikedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, Car $car)
+    public function __construct(Carlike $carlike)
     {
-        $this->car = $car;
-        $this->url = url('/corporate/' . $this->car->corporate->id . '/dashboard/');
-        $this->message = $user->name . ' liked your ' $car->model . ' ' . $car->make . '';
+        $this->carlike = $carlike;
+
+        if ($this->carlike->car->sale->exists()) {
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/sale/' . $this->carlike->car->sale->id);
+        } else if ($this->carlike->car->rent->exists()) {
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/rent/' . $this->carlike->car->rent->id);
+        } else if ($this->carlike->car->auction->exists()) {
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/auction/' . $this->carlike->car->auction->id);
+        } else if ($this->carlike->car->tender->exists()) {
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/tender/' . $this->carlike->car->tender->id);
+        }
+
+        $this->message = $this->carlike->user->name . ' liked your car.';
     }
 
     /**

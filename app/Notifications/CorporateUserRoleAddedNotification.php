@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Corporateuser;
+
 class CorporateUserRoleAddedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,11 @@ class CorporateUserRoleAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Corporateuser $corporateuser)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->corporateuser = $corporateuser;
+        $this->url = url('/corporate/' . $this->corporateuser->corporate->id . '/user/' . $this->corporateuser->user->id);
+        $this->message = 'You have been assigned a role.';
     }
 
     /**
@@ -45,8 +48,8 @@ class CorporateUserRoleAddedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class CorporateUserRoleAddedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

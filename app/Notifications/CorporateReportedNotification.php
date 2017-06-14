@@ -1,5 +1,7 @@
 <?php
 
+// This notification is sent to the Corporate AFTER it goes through screening and we agree that it violates our rules.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -24,8 +26,8 @@ class CorporateReportedNotification extends Notification
     public function __construct(Corporatereport $corporatereport)
     {
         $this->corporatereport = $corporatereport;
-        $this->url = url('/corporate/' . $this->corporatereport->corporate->corporate->id . '/dashboard/');
-        $this->message = "<strong>" . $this->corporatereport->user->name . "</strong> reported that: " . $this->corporatereport->report;
+        $this->url = url('/corporate/' . $this->corporatereport->corporate->id . '/report/' . $this->corporatereport->id);
+        $this->message = 'You have violated our rules and your account has been disabled.';
     }
 
     /**

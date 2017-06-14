@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Cartendertender;
+
 class CarTenderTenderReserveExpiredNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,11 @@ class CarTenderTenderReserveExpiredNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Cartendertender $cartendertender)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->cartendertender = $cartendertender;
+        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/tender/' . $this->cartendertender->cartender->id);
+        $this->message = 'Your tender reserve period has expired. Please contact the supplier if this is a mistake.';
     }
 
     /**
@@ -45,8 +48,8 @@ class CarTenderTenderReserveExpiredNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class CarTenderTenderReserveExpiredNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

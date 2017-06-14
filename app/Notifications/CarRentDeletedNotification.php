@@ -1,5 +1,7 @@
 <?php
 
+// NO notification is necessary for this.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;

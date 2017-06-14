@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Cartail;
+
 class CarTailedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,21 @@ class CarTailedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Cartail $cartail)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->cartail = $cartail;
+
+        if ($this->cartail->car->sale->exists()) {
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/sale/' . $this->cartail->car->sale->id);
+        } else if ($this->cartail->car->rent->exists()) {
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/rent/' . $this->cartail->car->rent->id);
+        } else if ($this->cartail->car->auction->exists()) {
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/auction/' . $this->cartail->car->auction->id);
+        } else if ($this->cartail->car->tender->exists()) {
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/tender/' . $this->cartail->car->tender->id);
+        }
+
+        $this->message = $this->cartail->user->name . ' is tailing your car.';
     }
 
     /**
@@ -45,8 +58,8 @@ class CarTailedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +72,8 @@ class CarTailedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

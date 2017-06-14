@@ -1,5 +1,8 @@
 <?php
 
+// This will not be necessary because the CarAuctionAdded notification will be called instead of this.
+
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -21,8 +24,8 @@ class CarAuctionDateStartedNotification extends Notification
      */
     public function __construct()
     {
-        $this->url = ;
-        $this->message = ;
+        // $this->url = ;
+        // $this->message = ;
     }
 
     /**

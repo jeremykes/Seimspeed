@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Part;
+
 class PartUpdatedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,11 @@ class PartUpdatedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Part $part)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->part = $part;
+        $this->url = url('/corporate/' . $this->part->corporate->id . '/part/' . $this->part->id);
+        $this->message = $this->part->corporate->name . ' updated the part.';
     }
 
     /**
@@ -45,8 +48,8 @@ class PartUpdatedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class PartUpdatedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

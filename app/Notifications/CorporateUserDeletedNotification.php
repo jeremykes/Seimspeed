@@ -1,5 +1,7 @@
 <?php
 
+// No notification is necessary
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -19,7 +21,7 @@ class CorporateUserDeletedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Corporateuser $corporateuser)
     {
         $this->url = ;
         $this->message = ;

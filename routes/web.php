@@ -85,7 +85,12 @@ Route::group(['middleware' => ['auth']], function() {
 	// Route::get('/corporate/{corporate}/settings/{page?}', 'FrameworkController@corporatesettings'); 
 	// Route::get('/corporate/{corporate}/dashboard/{page?}', 'FrameworkController@corporatedashboard'); 
 
-	Route::get('/corporate/{corporate}/car/{car}/sale/{sale}/{page?}', 'FrameworkController@corporatedashboard');	
+	Route::get('/corporate/{corporate}/car/{car}/sale/{sale}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/rent/{rent}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/auction/{auction}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/tender/{tender}', 'FrameworkController@');	
+
+	Route::get('/corporate/{corporate}/part/{part}/sale/{sale}', 'FrameworkController@'); 	
 
 
 

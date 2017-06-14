@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Partlike;
+
 class PartLikedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,15 @@ class PartLikedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Partlike $partlike)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->partlike = $partlike;
+
+        if ($this->partlike->part->sale->exists()) {
+           $this->url = url('/corporate/' . $this->partlike->part->corporate->id . '/part/' . $this->partlike->part->id . '/sale/' . $this->partlike->part->sale->id);
+        } 
+
+        $this->message = $this->partlike->user->name . ' liked your part.';
     }
 
     /**
@@ -45,8 +52,8 @@ class PartLikedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +66,8 @@ class PartLikedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

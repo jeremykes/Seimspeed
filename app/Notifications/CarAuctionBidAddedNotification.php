@@ -7,8 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Carauction;
-use App\Carauctionbidder;
+use App\Carauctionbid;
 
 class CarAuctionBidAddedNotification extends Notification
 {
@@ -22,12 +21,12 @@ class CarAuctionBidAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Caruaction $carauction, Carauctionbidder $carauctionbidder)
+
+    public function __construct(Carauctionbid $carauctionbid)
     {
-        $this->carauction->$carauction;
-        $this->carauctionbidder->$carauctionbidder;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/'); ;
-        $this->message = $carauctionbidder->user_id . ' has made a bid on your auction.';
+        $this->carauctionbid = $carauctionbid;
+        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
+        $this->message = $this->carauctionbid->user->name . ' placed a bid.';
     }
 
     /**

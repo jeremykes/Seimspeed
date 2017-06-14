@@ -89,7 +89,7 @@ class FrameworkController extends Controller
     	$message->message = $request->message;
     	$message->save();
 
-        event(new NewMessage($receiving_user, $message));
+        // event(new NewMessage($receiving_user, $message));
 
         $receiving_user->notify(new NewMessageNotification($message));
     	Auth::user()->notify(new NewMessageNotification($message));
@@ -122,7 +122,7 @@ class FrameworkController extends Controller
 
         $reported_user = User::find($request->report_user_id);
 
-        event(new UserReported($userreport));
+        // event(new UserReported($userreport));
 
         $reported_user->notify(new UserReportedNotification($userreport));
 
@@ -144,7 +144,7 @@ class FrameworkController extends Controller
 
         $corporate = Corporate::find($request->corporate_id);
 
-        event(new CorporateReported($corporatereport));
+        // event(new CorporateReported($corporatereport));
 
         return response()->json(['success'=>true]);
     }
@@ -164,7 +164,7 @@ class FrameworkController extends Controller
 
         $car = Car::find($request->car_id);
 
-        event(new CarReported($carreport));
+        // event(new CarReported($carreport));
 
         return response()->json(['success'=>true]);
     }
@@ -184,7 +184,7 @@ class FrameworkController extends Controller
 
         $part = Part::find($request->part_id);
 
-        event(new PartReported($partreport));
+        // event(new PartReported($partreport));
 
         return response()->json(['success'=>true]);
     }
@@ -379,7 +379,7 @@ class FrameworkController extends Controller
         $corporate->subscriptionexpires = $request->subscriptionexpires;
         $corporate->save();
 
-        event(new CorporateCreated($corporate));
+        // event(new CorporateCreated($corporate));
 
         return response()->json(['success'=>true]);
     }

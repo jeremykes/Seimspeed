@@ -1,5 +1,7 @@
 <?php
 
+// This notification is sent to the User AFTER it goes through screening and we agree that it violates our rules.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -22,7 +24,9 @@ class UserReportedNotification extends Notification
      */
     public function __construct(Userreport $userreport)
     {
-        $this->userrreport = $userreport;
+        $this->userreport = $userreport;
+        $this->url = url('/user/' . $this->userreport->user->id . '/report/' . $this->userreport->id);
+        $this->message = 'You have violated our rules and your account has been disabled.';
     }
 
     /**
@@ -45,9 +49,8 @@ class UserReportedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'report' => $this->userreport->userreport,
-            'reporting_user_name' => $this->userreport->reporting_user->name,
-            'reporting_user_id' => $this->userreport->reporing_user->id,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -60,9 +63,8 @@ class UserReportedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'report' => $this->userreport->userreport,
-            'reporting_user_name' => $this->userreport->reporting_user->name,
-            'reporting_user_id' => $this->userreport->reporing_user->id,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Cartender;
+
 class CarTenderUpdatedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,11 @@ class CarTenderUpdatedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Cartender $cartender)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->cartender = $cartender;
+        $this->url = url('/corporate/' . $this->cartender->corporate->id . '/car/' . $this->cartender->car->id . '/tender/' . $this->cartender->id);
+        $this->message = $this->cartender->corporate->name . ' updated their tender.';
     }
 
     /**
@@ -45,8 +48,8 @@ class CarTenderUpdatedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class CarTenderUpdatedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

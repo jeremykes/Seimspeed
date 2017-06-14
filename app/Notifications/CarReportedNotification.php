@@ -1,5 +1,7 @@
 <?php
 
+// This notification is sent to the Corporate AFTER it goes through screening and we agree that it violates our rules.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -13,7 +15,6 @@ class CarReportedNotification extends Notification
 {
     use Queueable;
 
-    public $carreport;
     public $url;
     public $message;
 
@@ -25,8 +26,8 @@ class CarReportedNotification extends Notification
     public function __construct(Carreport $carreport)
     {
         $this->carreport = $carreport;
-        $this->url = url('/corporate/' . $this->carreport->car->corporate->id . '/dashboard/allcars');
-        $this->message = "<strong>" . $this->carreport->user->name . "</strong> reported that: <strong>" . $this->carreport->car->make . " " . $this->carreport->car->make. "</strong> " . $this->carreport->report;
+        $this->url = url('/corporate/' . $this->carreport->corporate->id . '/car/' . $this->carreport->car->id . '/report/' . $this->carreport->id);
+        $this->message = 'Your car violated our rules and has been deleted.';
     }
 
     /**
@@ -49,7 +50,6 @@ class CarReportedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'carreport' => $carreport,
             'url' => $this->url,
             'message' => $this->message,
         ];
@@ -64,7 +64,6 @@ class CarReportedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'carreport' => $carreport,
             'url' => $this->url,
             'message' => $this->message,
         ]);

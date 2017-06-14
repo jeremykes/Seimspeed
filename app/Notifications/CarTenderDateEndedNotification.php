@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Cartender;
+
 class CarTenderDateEndedNotification extends Notification
 {
     use Queueable;
@@ -21,8 +23,9 @@ class CarTenderDateEndedNotification extends Notification
      */
     public function __construct()
     {
-        $this->url = ;
-        $this->message = ;
+        $this->cartender = $cartender;
+        $this->url = url('/corporate/' . $this->cartender->corporate->id . '/car/' . $this->cartender->car->id . '/tender/' . $this->cartender->id);
+        $this->message = 'Tender has ended.';
     }
 
     /**
@@ -45,8 +48,8 @@ class CarTenderDateEndedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class CarTenderDateEndedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

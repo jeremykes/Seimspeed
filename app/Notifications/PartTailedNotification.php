@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Parttail;
+
 class PartTailedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,15 @@ class PartTailedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Parttail $parttail)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->parttail = $parttail;
+
+        if ($this->parttail->part->sale->exists()) {
+           $this->url = url('/corporate/' . $this->parttail->part->corporate->id . '/part/' . $this->parttail->part->id . '/sale/' . $this->parttail->part->sale->id);
+        } 
+        
+        $this->message = $this->parttail->user->name . ' is tailing your part.';
     }
 
     /**
@@ -45,8 +52,8 @@ class PartTailedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +66,8 @@ class PartTailedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

@@ -16,6 +16,10 @@
         CarAdded(data);
     });
 
+    publicChannel.bind('App\\Events\\NewNewsfeed', function(data) {
+        newsfeedbuilder(data);
+    });
+
     /*
     |
     | 2. All functions for the bound events
@@ -50,15 +54,15 @@
 
 @section('content')
 <div class="container">
-
+    <h2>Newsfeed</h2>
     <div id="newsfeed" class="row">
         <div class="col-md-8 col-md-offset-2">
-            <!-- EVERYTHING WILL BE APPENDED, PREPENDED -->
+            
         </div>
     </div>
 
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Dashboard</div>
@@ -73,7 +77,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 @endsection
 

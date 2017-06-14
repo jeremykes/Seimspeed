@@ -24,8 +24,8 @@ class CarAuctionClosedNotification extends Notification
     public function __construct(Carauction $carauction)
     {
         $this->carauction = $carauction;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
-        $this->message = $corporate->name . 's auction:' $carauction->carauction_id 'has closed.';
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/car/' . $this->carauction->car->id . '/auction/' . $this->carauction->id);
+        $this->message = $this->carauction->corporate->name . ' has closed this auction.';
     }
 
     /**
@@ -48,8 +48,8 @@ class CarAuctionClosedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -62,8 +62,8 @@ class CarAuctionClosedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

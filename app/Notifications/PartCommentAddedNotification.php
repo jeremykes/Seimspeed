@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Partcomment;
+
 class PartCommentAddedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,15 @@ class PartCommentAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Partcomment $partcomment)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->partcomment = $partcomment;
+
+        if ($this->partcomment->part->sale->exists()) {
+           $this->url = url('/corporate/' . $this->partcomment->corporate->id . '/part/' . $this->partcomment->part->id . '/sale/' . $this->partcomment->part->sale->id);
+        } 
+
+        $this->message = $this->partcomment->user->name . ' added a comment.';
     }
 
     /**
@@ -45,8 +52,8 @@ class PartCommentAddedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +66,8 @@ class PartCommentAddedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

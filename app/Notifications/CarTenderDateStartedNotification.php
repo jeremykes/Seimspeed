@@ -1,5 +1,7 @@
 <?php
 
+// This will not be necessary because the CarTenderAdded notification will be called instead of this.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;

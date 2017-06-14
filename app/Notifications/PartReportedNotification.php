@@ -1,5 +1,7 @@
 <?php
 
+// This notification is sent to the Corporate AFTER it goes through screening and we agree that it violates our rules.
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -25,8 +27,8 @@ class PartReportedNotification extends Notification
     public function __construct(Partreport $partreport)
     {
         $this->partreport = $partreport;
-        $this->url = url('/corporate/' . $this->partreport->part->corporate->id . '/dashboard/allparts');
-        $this->message = "<strong>" . $this->partreport->user->name . "</strong> reported that: <strong>" . $this->partreport->part->name . "</strong> " . $this->partreport->report;
+        $this->url = url('/corporate/' . $this->partreport->corporate->id . '/part/' . $this->partreport->part->id . '/report/' . $this->partreport->id);
+        $this->message = 'Your part violated our rules and has been deleted.';
     }
 
     /**
@@ -49,7 +51,6 @@ class PartReportedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'partreport' => $partreport,
             'url' => $this->url,
             'message' => $this->message,
         ];
@@ -64,7 +65,6 @@ class PartReportedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'partreport' => $partreport,
             'url' => $this->url,
             'message' => $this->message,
         ]);

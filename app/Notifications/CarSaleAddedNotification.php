@@ -7,9 +7,6 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\User;
-use App\Car;
-use App\Corporate;
 use App\Carsale;
 
 class CarSaleAddedNotification extends Notification
@@ -24,14 +21,11 @@ class CarSaleAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, Car $car, Corporate $corporate, Carsale $carsale)
+    public function __construct(Carsale $carsale)
     {
-        $this->user=$user;
-        $this->car=$car;
-        $this->corporate=$corporate;
-        $this->carsale=$carsale
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
-        $this->message = $corporate->name . ' added a car for sale: ' . $this->car->model . ' ' . $this->car->make . ''.;
+        $this->carsale = $carsale;
+        $this->url = url('/corporate/' . $this->carsale->corporate->id . '/car/' . $this->carsale->car->id . '/sale/' . $this->carsale->id);
+        $this->message = $this->carsale->corporate->name . ' added a new sale.';
     }
 
     /**
@@ -54,8 +48,8 @@ class CarSaleAddedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -68,8 +62,8 @@ class CarSaleAddedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

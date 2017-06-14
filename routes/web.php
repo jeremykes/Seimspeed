@@ -65,11 +65,11 @@ Route::group(['middleware' => ['auth']], function() {
 	|
 	*/
 
-	Route::get('/carsale/{carsale}/{notification?}', 'FrameworkController@carsale'); 
-	Route::get('/carrent/{carrent}/{notification?}', 'FrameworkController@carrent'); 
-	Route::get('/cartender/{cartender}/{notification?}', 'FrameworkController@cartender'); 
-	Route::get('/carauction/{carauction}/{notification?}', 'FrameworkController@carauction'); 
-	Route::get('/partsale/{partsale}/{notification?}', 'FrameworkController@partsale'); 
+	// Route::get('/carsale/{carsale}/{notification?}', 'FrameworkController@carsale'); 
+	// Route::get('/carrent/{carrent}/{notification?}', 'FrameworkController@carrent'); 
+	// Route::get('/cartender/{cartender}/{notification?}', 'FrameworkController@cartender'); 
+	// Route::get('/carauction/{carauction}/{notification?}', 'FrameworkController@carauction'); 
+	// Route::get('/partsale/{partsale}/{notification?}', 'FrameworkController@partsale'); 
 
 
 	/*
@@ -82,8 +82,15 @@ Route::group(['middleware' => ['auth']], function() {
 	|
 	*/
 
-	Route::get('/corporate/{corporate}/settings/{page?}', 'FrameworkController@corporatesettings'); 
-	Route::get('/corporate/{corporate}/dashboard/{page?}', 'FrameworkController@corporatedashboard'); 
+	// Route::get('/corporate/{corporate}/settings/{page?}', 'FrameworkController@corporatesettings'); 
+	// Route::get('/corporate/{corporate}/dashboard/{page?}', 'FrameworkController@corporatedashboard'); 
+
+	Route::get('/corporate/{corporate}/car/{car}/sale/{sale}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/rent/{rent}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/auction/{auction}', 'FrameworkController@');	
+	Route::get('/corporate/{corporate}/car/{car}/tender/{tender}', 'FrameworkController@');	
+
+	Route::get('/corporate/{corporate}/part/{part}/sale/{sale}', 'FrameworkController@'); 	
 
 
 

@@ -7,7 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class CorporateTailedNotification extends Notification
+use App\Corporatetail;
+
+class CorporaorporateTailedNotification extends Notification
 {
     use Queueable;
 
@@ -19,10 +21,21 @@ class CorporateTailedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Corporatetail $corporatetail)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->corporatetail = $corporatetail;
+
+        if ($this->corporatetail->car->sale->exists()) {
+           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/sale/' . $this->corporatetail->car->sale->id);
+        } else if ($this->corporatetail->car->rent->exists()) {
+           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/rent/' . $this->corporatetail->car->rent->id);
+        } else if ($this->corporatetail->car->auction->exists()) {
+           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/auction/' . $this->corporatetail->car->auction->id);
+        } else if ($this->corporatetail->car->tender->exists()) {
+           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/tender/' . $this->corporatetail->car->tender->id);
+        }
+
+        $this->message = $this->corporatetail->user->name . ' is tailing you.';
     }
 
     /**
@@ -45,8 +58,8 @@ class CorporateTailedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +72,8 @@ class CorporateTailedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

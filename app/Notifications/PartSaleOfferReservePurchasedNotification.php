@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
+use App\Partsaleoffer;
+
 class PartSaleOfferReservePurchasedNotification extends Notification
 {
     use Queueable;
@@ -19,10 +21,11 @@ class PartSaleOfferReservePurchasedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Partsaleoffer $partsaleoffer)
     {
-        $this->url = ;
-        $this->message = ;
+        $this->partsaleoffer = $partsaleoffer;
+        $this->url = url('/corporate/' . $this->partsaleoffer->partsale->corporate->id . '/part/' . $this->partsaleoffer->partsale->part->id . '/sale/' . $this->partsaleoffer->partsale->id);
+        $this->message = 'Congratualations! You have bought this part!';
     }
 
     /**
@@ -45,8 +48,8 @@ class PartSaleOfferReservePurchasedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -59,8 +62,8 @@ class PartSaleOfferReservePurchasedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            // 'url' => $this->url,
-            // 'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

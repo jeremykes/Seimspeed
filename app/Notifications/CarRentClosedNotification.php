@@ -7,10 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\User;
-use App\Car;
 use App\Carrent;
-use App\Corporate;
 
 class CarRentClosedNotification extends Notification
 {
@@ -24,14 +21,11 @@ class CarRentClosedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, Car $car, Carrent $carrent, Corporate $corporate)
+    public function __construct(Carrent $carrent)
     {
-        $this->user=$user;
-        $this->car=$car;
-        $this->carrent=$carrent;
-        $this->corporate=$corporate;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/');
-        $this->message = $corporate->name . ' has closed the rental for the car: ' $car->model . ' ' . $car->make . '';
+        $this->carrent = $carrent;
+        $this->url = url('/corporate/' . $this->carrent->corporate->id . '/car/' . $this->carrent->car->id . '/rent/' . $this->carrent->id);
+        $this->message = $this->carrent->corporate->name . ' has closed this rental.';
     }
 
     /**
@@ -54,8 +48,8 @@ class CarRentClosedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ];
     }
 
@@ -68,8 +62,8 @@ class CarRentClosedNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-             'url' => $this->url,
-             'message' => $this->message,
+            'url' => $this->url,
+            'message' => $this->message,
         ]);
     }
 }

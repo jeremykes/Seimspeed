@@ -7,9 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Carauction;
 use App\Carauctionbid;
-use App\Carauctionbidder;
 
 class CarAuctionBidCancelledNotification extends Notification
 {
@@ -23,12 +21,11 @@ class CarAuctionBidCancelledNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Caruaction $carauction, Carauctionbidder $carauctionbidder)
+    public function __construct(Carauctionbid $carauctionbid)
     {
-        $this->carauction->$carauction;
-        $this->carauctionbidder->$carauctionbidder;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/dashboard/'); ;
-        $this->message = $carauctionbidder->user_id . ' cancelled the bid on your auction:' $carauction->carauction_id;
+        $this->carauctionbid = $carauctionbid;
+        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
+        $this->message = $this->carauctionbid->user->name . ' cancelled their bid.';
     }
 
     /**

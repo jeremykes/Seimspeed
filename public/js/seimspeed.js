@@ -89,7 +89,7 @@ function newsfeedbuilder(trades) {
 		htmltext += '</span></span></p></div></div></div>';
     }
 
-    $('#canvas').append(htmltext);
+    $('#newsfeed').append(htmltext);
 
 }
 

@@ -14,30 +14,7 @@ use App\Part;
 use App\Partimage;
 use App\Partgroup;
 
-use App\Events\CorporateUpdated;
-use App\Events\CorporateDeactivated;
-use App\Events\CorporateUserAdded;
-use App\Events\CorporateUserUpdated;
-use App\Events\CorporateUserDeleted;
-use App\Events\CorporateUserRoleAdded;
-use App\Events\CorporateUserRoleUpdated;
-use App\Events\CarAdded;
-use App\Events\CarUpdated;
-use App\Events\CarDeleted;
-use App\Events\CarImageAdded;
-use App\Events\CarImageDeleted;
-use App\Events\CarGroupAdded;
-use App\Events\CarGroupUpdated;
-use App\Events\CarGroupDeleted;
-use App\Events\PartAdded;
-use App\Events\PartUpdated;
-use App\Events\PartDeleted;
-use App\Events\PartImageAdded;
-use App\Events\PartImageDeleted;
-use App\Events\PartGroupAdded;
-use App\Events\PartGroupUpdated;
-use App\Events\PartGroupDeleted;
-
+use Auth;
 
 class CorporateController extends Controller
 {
@@ -112,7 +89,6 @@ class CorporateController extends Controller
         $corporate->banner_url = $request->banner_url;
         $corporate->save();
 
-        event(new CorporateUpdated($corporate));
 
         return response()->json(['success'=>true]);
     }
@@ -128,7 +104,6 @@ class CorporateController extends Controller
         $corporate->active = false;
         $corporate->save();
 
-        event(new CorporateDeactivated($corporate));
 
         return response()->json(['success'=>true]);
     }
@@ -147,7 +122,6 @@ class CorporateController extends Controller
         $corporateuser->title = $title;
         $corporateuser->save();
 
-        event(new CorporateUserAdded($corporateuser));
 
         $user->notify(new CorporateUserAddedNotification($corporateuser));
 
@@ -165,7 +139,6 @@ class CorporateController extends Controller
         $corporateuser->title = $title;
         $corporateuser->save();
 
-        event(new CorporateUserUpdated($corporateuser));
 
         $corporateuser->user->notify(new CorporateUserUpdatedNotification($corporateuser));
 
@@ -182,7 +155,6 @@ class CorporateController extends Controller
     {
         $corporateuser->delete();
 
-        event(new CorporateUserDeleted($user));
 
         return response()->json(['success'=>true]);
     }
@@ -198,7 +170,6 @@ class CorporateController extends Controller
 
         $corporateuser->user->attachRole($role);
 
-        event(new CorporateUserRoleAdded($corporateuser));
 
         $corporateuser->user->notify(new CorporateUserRoleAddedNotification($corporateuser));
 
@@ -216,7 +187,6 @@ class CorporateController extends Controller
         $corporateuser->user->detachRole($corporateuser->user->roles);
         $corporateuser->user->attachRole($role);
 
-        event(new CorporateUserRoleUpdated($corporateuser));
 
         $corporateuser->user->notify(new CorporateUserRoleUpdatedNotification($corporateuser));
 
@@ -252,7 +222,6 @@ class CorporateController extends Controller
         $car->published = $request->published;
         $car->save();
 
-        event(new CarAdded($car));
 
         return response()->json(['success'=>true]);
     }
@@ -284,7 +253,6 @@ class CorporateController extends Controller
         $car->published = $request->published;
         $car->save();
 
-        event(new CarUpdated($car));
 
         return response()->json(['success'=>true]);
     }
@@ -299,7 +267,6 @@ class CorporateController extends Controller
     {
         $car->delete();
 
-        // event(new CarDeleted($car));
 
         return response()->json(['success'=>true]);
     }
@@ -318,7 +285,6 @@ class CorporateController extends Controller
         $carimage->thumb_img_url = $request->thumb_img_url;
         $carimage->save();
 
-        event(new CarImageAdded($carimage));
 
         return response()->json(['success'=>true]);
     }
@@ -333,7 +299,6 @@ class CorporateController extends Controller
     {
         $carimage->delete();
 
-        // event(new CarImageDeleted($carimage));
 
         return response()->json(['success'=>true]);
     }
@@ -361,7 +326,6 @@ class CorporateController extends Controller
         $cargroup->descript = $request->descript;
         $cargroup->save();
 
-        event(new CarGroupAdded($cargroup));
 
         return response()->json(['success'=>true]);
     }
@@ -387,7 +351,6 @@ class CorporateController extends Controller
         $cargroup->descript = $request->descript;
         $cargroup->save();
 
-        event(new CarGroupUpdated($cargroup));
 
         return response()->json(['success'=>true]);
     }
@@ -402,7 +365,6 @@ class CorporateController extends Controller
     {
         $cargroup->delete();
 
-        // event(new CarGroupDeleted($cargroup));
 
         return response()->json(['success'=>true]);
     }
@@ -427,7 +389,6 @@ class CorporateController extends Controller
         $part->note = $request->note;
         $part->save();
 
-        event(new PartAdded($part));
 
         return response()->json(['success'=>true]);
     }
@@ -450,7 +411,6 @@ class CorporateController extends Controller
         $part->note = $request->note;
         $part->save();
 
-        event(new PartUpdated($part));
 
         return response()->json(['success'=>true]);
     }
@@ -465,7 +425,6 @@ class CorporateController extends Controller
     {
         $part->delete();
 
-        // event(new PartDeleted($part));
 
         return response()->json(['success'=>true]);
     }
@@ -484,7 +443,6 @@ class CorporateController extends Controller
         $partimage->thumb_img_url = $request->thumb_img_url;
         $partimage->save();
 
-        event(new PartImageAdded($partimage));
 
         return response()->json(['success'=>true]);
     }
@@ -499,7 +457,6 @@ class CorporateController extends Controller
     {
         $partimage->delete();
 
-        // event(new PartImageDeleted($partimage));
 
         return response()->json(['success'=>true]);
     }
@@ -526,7 +483,6 @@ class CorporateController extends Controller
         $partgroup->descript = $request->descript;
         $partgroup->save();
 
-        event(new PartGroupAdded($partgroup));
 
         return response()->json(['success'=>true]);
     }
@@ -551,7 +507,6 @@ class CorporateController extends Controller
         $partgroup->descript = $request->descript;
         $partgroup->save();
 
-        event(new PartGroupUpdated($partgroup));
 
         return response()->json(['success'=>true]);
     }
@@ -566,7 +521,6 @@ class CorporateController extends Controller
     {
         $partgroup->delete();
 
-        // event(new PartGroupDeleted($partgroup));
 
         return response()->json(['success'=>true]);
     }

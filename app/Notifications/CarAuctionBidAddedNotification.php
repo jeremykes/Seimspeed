@@ -21,6 +21,7 @@ class CarAuctionBidAddedNotification extends Notification
      *
      * @return void
      */
+
     public function __construct(Carauctionbid $carauctionbid)
     {
         $this->carauctionbid = $carauctionbid;

@@ -14,11 +14,11 @@ class Partsale extends Model
         'corporate_id',
     	'part_id',
         'partgroup_id', 
-        'startdate', 
         'price', 
+        'startdate',
+        'salereserveholddays',
         'negotiable', 
         'locked',
-        'salereserveholddays',
         'status', 
         'note', 
     ];

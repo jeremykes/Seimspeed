@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Carbon;
-
 use Illuminate\Http\Request;
 use App\Http\Requests;
+
 use Auth;
+use Carbon;
+
 use App\User;
 use App\Message;
 use App\Userreport;
@@ -35,9 +36,6 @@ use App\Cartender;
 use App\Carauction;
 use App\Partsale;
 
-use Auth;
-
-
 class FrameworkController extends Controller
 {
     /**
@@ -48,6 +46,7 @@ class FrameworkController extends Controller
     public function __construct() 
     {
         $this->middleware('auth', ['only' => [
+            'sendmessage',
             'reportuser',
             'reportcorporate',
             'reportcar',
@@ -91,8 +90,8 @@ class FrameworkController extends Controller
 
         // event(new NewMessage($receiving_user, $message));
 
-        $receiving_user->notify(new NewMessageNotification($message));
-    	Auth::user()->notify(new NewMessageNotification($message));
+        // $receiving_user->notify(new NewMessageNotification($message));
+    	// Auth::user()->notify(new NewMessageNotification($message));
 
         return response()->json(['success'=>true]);
     }
@@ -120,11 +119,11 @@ class FrameworkController extends Controller
         $userreport->report = $request->report;
         $userreport->save();
 
-        $reported_user = User::find($request->report_user_id);
+        // $reported_user = User::find($request->report_user_id);
 
         // event(new UserReported($userreport));
 
-        $reported_user->notify(new UserReportedNotification($userreport));
+        // $reported_user->notify(new UserReportedNotification($userreport));
 
         return response()->json(['success'=>true]);
     }
@@ -313,11 +312,12 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function corporatehome(Corporate $corporate, $page = 'newsfeed')
+    // public function corporatehome(Corporate $corporate, $page = 'newsfeed')
+    public function corporatehome(Corporate $corporate)
     {
         return view('corporatehome', [
             'corporate' => $corporate,
-            'page' => $page,
+            // 'page' => $page,
         ]); 
     }
 
@@ -326,11 +326,12 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function corporatesettings(Corporate $corporate, $page = 'settings')
+    // public function corporatesettings(Corporate $corporate, $page = 'settings')
+    public function corporatesettings(Corporate $corporate)
     {
         return view('corporatesettings', [
             'corporate' => $corporate,
-            'page' => $page,
+            // 'page' => $page,
         ]); 
     }
 
@@ -339,11 +340,12 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function corporatedashboard(Corporate $corporate, $page = 'dashboard')
+    // public function corporatedashboard(Corporate $corporate, $page = 'dashboard')
+    public function corporatedashboard(Corporate $corporate)
     {
         return view('corporatedashboard', [
             'corporate' => $corporate,
-            'page' => $page,
+            // 'page' => $page,
         ]); 
     }
 

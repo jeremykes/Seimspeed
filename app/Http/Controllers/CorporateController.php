@@ -49,21 +49,10 @@ class CorporateController extends Controller
             'updatepartgroup',
             'deletepartgroup',
         ]]);
-        
-
-        $this->middleware('role:sales|administrator', ['only' => [
-            
-        ]]);
-        
-
-        $this->middleware('role:management|administrator', ['only' => [
-             
-        ]]);
-        
 
         $this->middleware('role:administrator', ['only' => [
-            'deactivatecorporate',
             'updatecorporate',
+            'deactivatecorporate',
         ]]);
         
     }
@@ -103,7 +92,6 @@ class CorporateController extends Controller
     {
         $corporate->active = false;
         $corporate->save();
-
 
         return response()->json(['success'=>true]);
     }

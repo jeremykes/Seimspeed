@@ -1,8 +1,12 @@
 <?php
 
+// THIS IS JUST A TEMPORARY CONTROLLER FOR TRYING OUT SCRIPTS. NOT ACTUALLY IN THE ARCHITECTURE DESIGN.
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use Auth;
 
 use App\Notifications\NewMessageNotification;
 
@@ -12,7 +16,7 @@ use App\Events\UserReported;
 
 use App\Message;
 
-use Auth;
+
 
 
 class HomeController extends Controller

@@ -9,26 +9,25 @@ use Auth;
 use Carbon;
 
 use App\User;
-use App\Message;
-use App\Userreport;
-use App\Corporatereport;
-use App\Carreport;
-use App\Partreport;
 
-use App\Events\NewMessage;
-use App\Events\UserReported;
-use App\Events\CorporateReported;
-use App\Events\CarReported;
-use App\Events\PartReported;
-use App\Events\CorporateCreated;
+// use App\Message;
+// use App\Userreport;
+// use App\Corporatereport;
+// use App\Carreport;
+// use App\Partreport;
+// use App\Events\NewMessage;
+// use App\Events\UserReported;
+// use App\Events\CorporateReported;
+// use App\Events\CarReported;
+// use App\Events\PartReported;
+// use App\Events\CorporateCreated;
+// use App\Notifications\NewMessageNotification;
+// use App\Notifications\UserReportedNotification;
+// use App\Notifications\CorporateReportedNotification;
+// use App\Notifications\CarReportedNotification;
+// use App\Notifications\PartReportedNotification;
 
-use App\Notifications\NewMessageNotification;
-use App\Notifications\UserReportedNotification;
-use App\Notifications\CorporateReportedNotification;
-use App\Notifications\CarReportedNotification;
-use App\Notifications\PartReportedNotification;
-
-use Illuminate\Notifications\DatabaseNotification;
+// use Illuminate\Notifications\DatabaseNotification;
 
 use App\Carsale;
 use App\Carrent;
@@ -62,6 +61,151 @@ class FrameworkController extends Controller
         ]]);
     }
 
+    // ===================================================================================
+    // 
+    // 
+    //     Main Views
+    // 
+    // 
+    // ===================================================================================
+
+    /**
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // $user = User::find(2);
+
+        // $userreport = Userreport::find(1);
+
+        // event(new UserReported($user, $userreport));
+
+        // $message = Message::find(20);
+
+        // Auth::user()->notify(new NewMessageNotification($message));
+
+        return view('home'); 
+    }
+
+    /**
+     * Show to the Carauction.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function carauction(Corporate $corporate, Car $car, Carauction $carauction, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
+
+        return view('car.carauction', [
+            'carauction' => $carauction,
+        ]); 
+    }
+
+    /**
+     * Show to the Carrent.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function carrent(Corporate $corporate, Car $car, Carrent $carrent, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
+
+        return view('car.carrent', [
+            'carrent' => $carrent,
+        ]); 
+    }
+
+    /**
+     * Show to the Carsale.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function carsale(Corporate $corporate, Car $car, Carsale $carsale, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
+
+        return view('car.carsale', [
+            'carsale' => $carsale,
+        ]); 
+    }
+
+    /**
+     * Show to the Cartender.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cartender(Corporate $corporate, Car $car, Cartender $cartender, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
+
+        return view('car.cartender', [
+            'cartender' => $cartender,
+        ]); 
+    }
+
+    /**
+     * Show to the Partsale.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function partsale(Corporate $corporate, Part $part, Partsale $partsale, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
+
+        return view('partsale', [
+            'partsale' => $partsale,
+        ]); 
+    }
+
+    // /**
+    //  * Show the Corporate Home.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function corporatehome(Corporate $corporate)
+    // {
+    //     return view('corporatehome', [
+    //         'corporate' => $corporate,
+    //         'page' => $page,
+    //     ]); 
+    // }
+
+    // /**
+    //  * Show the Corporate settings.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function corporatesettings(Corporate $corporate)
+    // {
+    //     return view('corporatesettings', [
+    //         'corporate' => $corporate,
+    //         'page' => $page,
+    //     ]); 
+    // }
+
+    // /**
+    //  * Show the Corporate dashboard.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function corporatedashboard(Corporate $corporate)
+    // {
+    //     return view('corporatedashboard', [
+    //         'corporate' => $corporate,
+    //         'page' => $page,
+    //     ]); 
+    // }
 
 
     // ===================================================================================
@@ -80,18 +224,18 @@ class FrameworkController extends Controller
      */
     public function sendmessage(Request $request)
     {
-    	$receiving_user = User::find($request->user_id_receiving);
+        $receiving_user = User::find($request->user_id_receiving);
 
-    	$message = new Message();
-    	$message->user_id_sending = Auth::user()->id;
-    	$message->user_id_receiving = $receiving_user->id;
-    	$message->message = $request->message;
-    	$message->save();
+        $message = new Message();
+        $message->user_id_sending = Auth::user()->id;
+        $message->user_id_receiving = $receiving_user->id;
+        $message->message = $request->message;
+        $message->save();
 
         // event(new NewMessage($receiving_user, $message));
 
         // $receiving_user->notify(new NewMessageNotification($message));
-    	// Auth::user()->notify(new NewMessageNotification($message));
+        // Auth::user()->notify(new NewMessageNotification($message));
 
         return response()->json(['success'=>true]);
     }
@@ -141,7 +285,7 @@ class FrameworkController extends Controller
         $corporatereport->report = $request->report;
         $corporatereport->save();
 
-        $corporate = Corporate::find($request->corporate_id);
+        // $corporate = Corporate::find($request->corporate_id);
 
         // event(new CorporateReported($corporatereport));
 
@@ -161,7 +305,7 @@ class FrameworkController extends Controller
         $carreport->report = $request->report;
         $carreport->save();
 
-        $car = Car::find($request->car_id);
+        // $car = Car::find($request->car_id);
 
         // event(new CarReported($carreport));
 
@@ -181,173 +325,13 @@ class FrameworkController extends Controller
         $partreport->report = $request->report;
         $partreport->save();
 
-        $part = Part::find($request->part_id);
+        // $part = Part::find($request->part_id);
 
         // event(new PartReported($partreport));
 
         return response()->json(['success'=>true]);
     }
 
-
-
-    // ===================================================================================
-    // 
-    // 
-    //     Single Blade Views (used for Notifications too)
-    // 
-    // 
-    // ===================================================================================
-
-    /**
-     * Show to the Carsale.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function carsale(Carsale $carsale, DatabaseNotification $notification = null)
-    {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
-        return view('carsale', [
-            'carsale' => $carsale,
-        ]); 
-    }
-
-    /**
-     * Show to the Carrent.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function carrent(Carrent $carrent, DatabaseNotification $notification = null)
-    {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
-        return view('carrent', [
-            'carrent' => $carrent,
-        ]); 
-    }
-
-    /**
-     * Show to the Cartender.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function cartender(Cartender $cartender, DatabaseNotification $notification = null)
-    {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
-        return view('cartender', [
-            'cartender' => $cartender,
-        ]); 
-    }
-
-    /**
-     * Show to the Carauction.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function carauction(Carauction $carauction, DatabaseNotification $notification = null)
-    {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
-        return view('carauction', [
-            'carauction' => $carauction,
-        ]); 
-    }
-
-    /**
-     * Show to the Partsale.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function partsale(Partsale $partsale, DatabaseNotification $notification = null)
-    {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
-        return view('partsale', [
-            'partsale' => $partsale,
-        ]); 
-    }
-
-
-    // ===================================================================================
-    // 
-    // 
-    //     Main Views
-    // 
-    // 
-    // ===================================================================================
-
-    /**
-     * Show the home page.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        // $user = User::find(2);
-
-        // $userreport = Userreport::find(1);
-
-        // event(new UserReported($user, $userreport));
-
-        // $message = Message::find(20);
-
-        // Auth::user()->notify(new NewMessageNotification($message));
-
-        return view('home'); 
-    }
-
-    /**
-     * Show the Corporate Home.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function corporatehome(Corporate $corporate, $page = 'newsfeed')
-    public function corporatehome(Corporate $corporate)
-    {
-        return view('corporatehome', [
-            'corporate' => $corporate,
-            // 'page' => $page,
-        ]); 
-    }
-
-    /**
-     * Show the Corporate settings.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function corporatesettings(Corporate $corporate, $page = 'settings')
-    public function corporatesettings(Corporate $corporate)
-    {
-        return view('corporatesettings', [
-            'corporate' => $corporate,
-            // 'page' => $page,
-        ]); 
-    }
-
-    /**
-     * Show the Corporate dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function corporatedashboard(Corporate $corporate, $page = 'dashboard')
-    public function corporatedashboard(Corporate $corporate)
-    {
-        return view('corporatedashboard', [
-            'corporate' => $corporate,
-            // 'page' => $page,
-        ]); 
-    }
 
 
     // ===================================================================================

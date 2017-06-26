@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Carbon;
-
 use Illuminate\Http\Request;
 use App\Http\Requests;
+
 use Auth;
+use Carbon;
+
 use App\User;
 
 // use App\Message;
@@ -34,7 +35,6 @@ use App\Cartender;
 use App\Carauction;
 use App\Partsale;
 
-
 class FrameworkController extends Controller
 {
     /**
@@ -45,6 +45,7 @@ class FrameworkController extends Controller
     public function __construct() 
     {
         $this->middleware('auth', ['only' => [
+            'sendmessage',
             'reportuser',
             'reportcorporate',
             'reportcar',
@@ -69,7 +70,6 @@ class FrameworkController extends Controller
     // ===================================================================================
 
     /**
-     * Show the home page.
      *
      * @return \Illuminate\Http\Response
      */

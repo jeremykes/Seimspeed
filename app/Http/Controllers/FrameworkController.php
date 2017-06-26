@@ -35,6 +35,9 @@ use App\Cartender;
 use App\Carauction;
 use App\Partsale;
 
+use App\Corporate;
+use App\Car;
+
 class FrameworkController extends Controller
 {
     /**
@@ -125,11 +128,11 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carsale(Corporate $corporate, Car $car, Carsale $carsale, DatabaseNotification $notification = null)
+    public function carsale(Corporate $corporate, Car $car, Carsale $carsale)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
+        // if ($notification != null) {
+        //     $notification->markAsRead();    
+        // }
 
         return view('car.carsale', [
             'carsale' => $carsale,

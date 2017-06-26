@@ -30,7 +30,7 @@ Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}/{notificati
 // cargroup  
 Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}/{notification}', 'FrameworkController@carrent'); // carrent 			
 // carrentgroup 	
-Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/{notification}', 'FrameworkController@carsale'); // carsale 			
+Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/', 'FrameworkController@carsale'); // carsale 			
 // carsalegroup  		
 Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{notification}', 'FrameworkController@cartender'); // cartender  		
 // cartendergroup  	

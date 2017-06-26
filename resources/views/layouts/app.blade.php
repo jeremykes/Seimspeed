@@ -11,7 +11,6 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="css/app.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url('css/seimspeed.css') }}">
 
@@ -25,7 +24,6 @@
     </script>
 
     <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
-    <script src="{{ asset('js/seimspeed.js') }}"></script>
 
     @if (!Auth::guest())
 
@@ -179,8 +177,15 @@
         
     </div>
 
+    <!-- JavaScripts -->
+    <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/seimspeed.js') }}"></script>
+
     <!-- Scripts -->
-    <script src="js/app.js"></script>
+    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+
+
 
     @yield('script')
 

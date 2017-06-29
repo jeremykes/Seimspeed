@@ -60,6 +60,16 @@ class UserController extends Controller
             }
         }
 
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CorporateRatedNotification($corporaterating));
+
         return response()->json(['success'=>true]);
     }
 
@@ -84,6 +94,16 @@ class UserController extends Controller
             }
         }
 
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CorporateTailedNotification($corporatetail));
+
         return response()->json(['success'=>true]);
     }
 
@@ -103,6 +123,16 @@ class UserController extends Controller
         $carcomment->car_id = $car->id;
         $carcomment->comment = $request->comment;
 
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CarCommentAddedNotification($carcomment));
+
         return response()->json(['success'=>true]);
     }
 
@@ -117,6 +147,16 @@ class UserController extends Controller
         if (Auth::user->id == $carcomment->user_id) {
             $carcomment->comment = $request->comment;
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CarCommentUpdatedNotification($carcomment));
         
         return response()->json(['success'=>true]);
     }
@@ -156,6 +196,16 @@ class UserController extends Controller
                 $carlike_exist->delete();
             }
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CarLikedNotification($carlike));
         
         return response()->json(['success'=>true]);
     }
@@ -180,6 +230,16 @@ class UserController extends Controller
                 $cartail_exist->delete();
             }
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new CarTailedNotification($carlike));
 
         return response()->json(['success'=>true]);
     }
@@ -206,6 +266,18 @@ class UserController extends Controller
         $carsaleoffer->user_id = Auth::user->id;
         $carsaleoffer->offer = $request->offer;
         $carsale->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarSaleOfferAddedNotification($carsaleoffer));
         
         return response()->json(['success'=>true]);
     }
@@ -223,10 +295,22 @@ class UserController extends Controller
             return response()->json(['success'=>false]);
         }
 
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarSaleOfferCancelledNotification($carsaleoffer));
+
         if (Auth::user->id == $carsaleoffer->user_id) {
             $carsaleoffer->delete();
         }
-        
+
         return response()->json(['success'=>true]);
     }
 
@@ -254,6 +338,18 @@ class UserController extends Controller
         $carrentoffer->daysofrent = $request->daysofrent;
         $carrentoffer->offer = $request->offer;
         $carrent->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarRentOfferAddedNotification($carrentoffer));
         
         return response()->json(['success'=>true]);
     }
@@ -270,6 +366,18 @@ class UserController extends Controller
         if ($carrent->status != 'reserved' || $carrent->status != 'opened') {
             return response()->json(['success'=>false]);
         }
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarRentOfferCancelledNotification($carrentoffer));
 
         if (Auth::user->id == $carrentoffer->user_id) {
             $carrentoffer->delete();
@@ -300,6 +408,18 @@ class UserController extends Controller
         $cartendertender->user_id = Auth::user->id;
         $cartendertender->tender = $request->tender;
         $cartender->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarTenderTenderAddedNotification($cartendertender));
         
         return response()->json(['success'=>true]);
     }
@@ -316,6 +436,18 @@ class UserController extends Controller
         if ($cartender->status != 'reserved' || $cartender->status != 'opened') {
             return response()->json(['success'=>false]);
         }
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarTenderTenderCancelledNotification($cartendertender));
 
         if (Auth::user->id == $cartendertender->user_id) {
             $cartendertender->delete();
@@ -346,6 +478,18 @@ class UserController extends Controller
         $carauctionbid->user_id = Auth::user->id;
         $carauctionbid->bid = $request->bid;
         $carauction->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarAuctionBidAddedNotification($carauctionbid));
         
         return response()->json(['success'=>true]);
     }
@@ -362,6 +506,18 @@ class UserController extends Controller
         if ($carauction->status != 'reserved' || $carauction->status != 'opened') {
             return response()->json(['success'=>false]);
         }
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new CarAuctionBidCancelledNotification($carauctionbid));
 
         if (Auth::user->id == $carauctionbid->user_id) {
             $carauctionbid->delete();
@@ -386,6 +542,16 @@ class UserController extends Controller
         $partcomment->part_id = $part->id;
         $partcomment->comment = $request->comment;
 
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new PartCommentAddedNotification($partcomment));
+
         return response()->json(['success'=>true]);
     }
 
@@ -400,6 +566,16 @@ class UserController extends Controller
         if (Auth::user->id == $partcomment->user_id) {
             $partcomment->comment = $request->comment;
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new PartCommentUpdatedNotification($partcomment));
         
         return response()->json(['success'=>true]);
     }
@@ -439,6 +615,16 @@ class UserController extends Controller
                 $partlike_exist->delete();
             }
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new PartLikedNotification($partlike));
         
         return response()->json(['success'=>true]);
     }
@@ -463,6 +649,16 @@ class UserController extends Controller
                 $parttail_exist->delete();
             }
         }
+
+        // Notification
+        // Notify all corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->get();
+
+        Notification::send($users, new PartTailedNotification($partlike));
 
         return response()->json(['success'=>true]);
     }
@@ -489,6 +685,18 @@ class UserController extends Controller
         $partsaleoffer->user_id = Auth::user->id;
         $partsaleoffer->offer = $request->offer;
         $partsale->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new PartSaleOfferAddedNotification($partsaleoffer));
         
         return response()->json(['success'=>true]);
     }
@@ -505,6 +713,18 @@ class UserController extends Controller
         if ($partsale->status != 'reserved' || $partsale->status != 'opened') {
             return response()->json(['success'=>false]);
         }
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $users = DB::table('users')
+            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
+            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.role', 'sales')
+            ->where('corpnotificables.role', 'admin')
+            ->get();
+
+        Notification::send($users, new PartSaleOfferCancelledNotification($partsaleoffer));
 
         if (Auth::user->id == $partsaleoffer->user_id) {
             $partsaleoffer->delete();

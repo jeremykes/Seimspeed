@@ -25,7 +25,7 @@ class CarRentOfferCancelledNotification extends Notification
     {
         $this->carrentoffer = $carrentoffer;
         $this->url = url('/corporate/' . $this->carrentoffer->carrent->corporate->id . '/car/' . $this->carrentoffer->carrent->car->id . '/rent/' . $this->carrentoffer->carrent->id);
-        $this->message = $this->carrentoffer->user->name . ' cancelled their offer.';
+        $this->message = $this->carrentoffer->user->name . ' cancelled your offer.';
     }
 
     /**

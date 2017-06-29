@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use Auth;
+use Notification;
+use DB;
 
 use App\Corporate;
 use App\Car;
@@ -21,6 +23,9 @@ use App\Cartenderreserve;
 use App\Carauction;
 use App\Carauctionbid;
 use App\Carauctionreserve;
+
+// Notifications
+use App\Notifications\CarSaleAddedNotification;
 
 class UserController extends Controller
 {
@@ -85,6 +90,20 @@ class UserController extends Controller
 
         $carsale->save();
 
+        // Notification (if carsale status == open)
+        // Notify all users following corp
+
+        if ($carsale->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $corporate->id)
+                ->where('notificables.model_name', 'corporate')
+                ->get();
+
+            Notification::send($users, new CarSaleOpenedNotification($carsale));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -124,6 +143,20 @@ class UserController extends Controller
         $carsale->note = $request->note;
         $carsale->save();
 
+        // Notification (if carsale status == open)
+        // Notify all users commented, offered, tailed.
+
+        if ($carsale->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarSaleUpdatedNotification($carsale));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -160,6 +193,18 @@ class UserController extends Controller
 
         $carsale->status = 'closed';
 
+        // Notification
+        // Notify all users commented, offered, tailed.
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarSaleClosedNotification($carsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -195,8 +240,24 @@ class UserController extends Controller
         if ($count == 2) {
             $carsale->status = 'reserved';
             $carsale->save();
-            // Fire a reserved notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that carsale is now reserved
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarSaleReservedNotification($carsaleoffer));
         }
+
+        // Notification
+        // Notify user being reserved
+
+        $carsaleoffer->$user->notify(new CarSaleOfferReservedNotification($carsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -226,8 +287,24 @@ class UserController extends Controller
         if ($count == 0) {
             $carsale->status = 'opened';
             $carsale->save();
-            // Fire a opened notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that carsale is now opened
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarSaleOpenedNotification($carsaleoffer));
         }
+
+        // Notification
+        // Notify user whos reserved is cancelled
+
+        $carsaleoffer->$user->notify(new CarSaleOfferReserveCancelledNotification($carsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -270,6 +347,20 @@ class UserController extends Controller
 
         $carsale->status = 'purchased';
         $carsale->save();
+
+        // Notification
+        // Notify user who purchased the car
+        // Notify all users commented, offered, tailed that car has been purchased
+
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarSalePurchasedNotification($carsaleoffer));
+
+        $carsaleoffer->$user->notify(new CarSaleOfferReservePurchasedNotification($carsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -320,6 +411,20 @@ class UserController extends Controller
 
         $carrent->save();
 
+        // Notification if status == open
+        // Notify all users following corp
+
+        if ($carrent->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $corporate->id)
+                ->where('notificables.model_name', 'corporate')
+                ->get();
+
+            Notification::send($users, new CarRentOpenedNotification($carrent));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -360,6 +465,17 @@ class UserController extends Controller
 
         $carrent->save();
 
+        if ($carrent->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarRentUpdatedNotification($carrent));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -396,6 +512,18 @@ class UserController extends Controller
 
         $carrent->status = 'closed';
 
+        // Notification 
+        // Notify all users commented, offered, tailed.
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarRentClosedNotification($carrent));
+
         return response()->json(['success'=>true]);
     }
 
@@ -425,7 +553,21 @@ class UserController extends Controller
 
         $carrent->status = 'reserved';
         $carrent->save();
-        // Fire a reserved notification here!
+        
+        // Notification
+        // Notify all users commented, offered, tailed that carsale is now reserved
+        // Notify user that car is reserved for him now
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarRentReservedNotification($carrentoffer));
+
+        $carrentoffer->$user->notify(new CarRentOfferReservedNotification($carrentoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -452,7 +594,21 @@ class UserController extends Controller
 
         $carrent->status = 'opened';
         $carrent->save();
-        // Fire a opened notification here!
+        
+        // Notification
+        // Notify user whos reserved is cancelled
+        // Notify all users commented, offered, tailed that carrent is now opened
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarRentOpenedNotification($carrentoffer));
+
+        $carrentoffer->$user->notify(new CarRentOfferReserveCancelledNotification($carrentoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -496,6 +652,20 @@ class UserController extends Controller
         $carrent->status = 'hired';
         $carrent->save();
 
+        // Notification
+        // Notify user who purchased the hire of the car
+        // Notify all users commented, offered, tailed that car has been purchased
+
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarRentPurchasedNotification($carrentoffer));
+
+        $carrentoffer->$user->notify(new CarRentOfferReservePurchasedNotification($carrentoffer));
+
         return response()->json(['success'=>true]);
     }
 
@@ -519,7 +689,18 @@ class UserController extends Controller
 
         $carrent->status = 'opened';
         $carrent->save();
-        // Fire a opened notification here!
+        
+        // Notification
+        // Notify all users commented, offered, tailed that car is now open
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarRentOpenedNotification($carrentoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -570,6 +751,20 @@ class UserController extends Controller
 
         $cartender->save();
 
+        // Notification if status == open
+        // Notify all users following corp
+
+        if ($cartender->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $corporate->id)
+                ->where('notificables.model_name', 'corporate')
+                ->get();
+
+            Notification::send($users, new CarTenderOpenedNotification($cartender));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -610,6 +805,17 @@ class UserController extends Controller
 
         $cartender->save();
 
+        if ($cartender->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarTenderUpdatedNotification($cartender));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -646,10 +852,74 @@ class UserController extends Controller
 
         $cartender->status = 'closed';
 
+        // Notification 
+        // Notify all users commented, offered, tailed.
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarTenderClosedNotification($cartender));
+
         return response()->json(['success'=>true]);
     }
 
-    // SHOULD YOU ADD TENDERTENDERRESERVE HERE????????????????????????
+    /**
+     * Tender Tender Reserve
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function tendertenderreserve(Request $request, Corporate $corporate, Car $car, Cartender $cartender, Cartendertender $cartendertender)
+    {
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($car->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
+
+        // This is the check for Cartender status. Move this out to Traits later.
+        if ($cartender->status != 'reserved' || $cartender->status != 'opened') {
+            return response()->json(['success'=>false]);
+        }
+
+        // check how many reserved cartender tenders and stop if minimum 3 of them already exist.
+        $count = Cartenderreserve::where('cartender_id', $cartender_id)->count();
+
+        if ($count < 3) {
+            $cartenderreserve = new Cartenderreserve;
+            $cartenderreserve->cartender_id = $cartender->id;
+            $cartenderreserve->cartendertender_id = $cartendertender->id;
+            $cartenderreserve->note = $request->note;
+            $cartenderreserve->save();
+        } 
+        // That means we now have a total of 3 reserves, so set as reserved.
+        if ($count == 2) {
+            $cartender->status = 'reserved';
+            $cartender->save();
+            
+            // Notification
+            // Notify all users commented, tendered, tailed that cartender is now reserved
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarTenderReservedNotification($cartendertender));
+        }
+
+        // Notification
+        // Notify user being reserved
+
+        $cartendertender->$user->notify(new CarTenderTenderReservedNotification($cartendertender));
+
+        return response()->json(['success'=>true]);
+    }
 
     /**
      * Tender Tender Reserve Cancel
@@ -676,8 +946,24 @@ class UserController extends Controller
         if ($count == 0) {
             $cartender->status = 'opened';
             $cartender->save();
-            // Fire a opened notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that cartender is now opened
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarTenderOpenedNotification($cartendertender));
         }
+
+        // Notification
+        // Notify user whos reserved is cancelled
+
+        $cartendertender->$user->notify(new CarTenderTenderReserveCancelledNotification($cartendertender));
 
         return response()->json(['success'=>true]);
     }
@@ -720,6 +1006,20 @@ class UserController extends Controller
 
         $cartender->status = 'purchased';
         $cartender->save();
+
+        // Notification
+        // Notify user who purchased the car
+        // Notify all users commented, offered, tailed that car has been purchased
+
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarTenderPurchasedNotification($cartendertender));
+
+        $cartendertender->$user->notify(new CarTenderTenderReservePurchasedNotification($cartendertender));
 
         return response()->json(['success'=>true]);
     }
@@ -772,6 +1072,20 @@ class UserController extends Controller
 
         $carauction->save();
 
+        // Notification if status == open
+        // Notify all users following corp
+
+        if ($carauction->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $corporate->id)
+                ->where('notificables.model_name', 'corporate')
+                ->get();
+
+            Notification::send($users, new CarAuctionOpenedNotification($carauction));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -814,6 +1128,17 @@ class UserController extends Controller
 
         $carauction->save();
 
+        if ($carauction->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarAuctionUpdatedNotification($carauction));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -850,6 +1175,18 @@ class UserController extends Controller
 
         $carauction->status = 'closed';
 
+        // Notification 
+        // Notify all users commented, offered, tailed.
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarAuctionClosedNotification($carauction));
+
         return response()->json(['success'=>true]);
     }
 
@@ -871,13 +1208,13 @@ class UserController extends Controller
             return response()->json(['success'=>false]);
         }
 
-        // check how many reserved carauction offers and stop if minimum 3 of them already exist.
+        // check how many reserved carauction bids and stop if minimum 3 of them already exist.
         $count = Carauctionreserve::where('carauction_id', $carauction_id)->count();
 
         if ($count < 3) {
             $carauctionreserve = new Carauctionreserve;
             $carauctionreserve->carauction_id = $carauction->id;
-            $carauctionreserve->carauctionoffer_id = $carauctionoffer->id;
+            $carauctionreserve->carauctionbid_id = $carauctionbid->id;
             $carauctionreserve->note = $request->note;
             $carauctionreserve->save();
         } 
@@ -885,8 +1222,24 @@ class UserController extends Controller
         if ($count == 2) {
             $carauction->status = 'reserved';
             $carauction->save();
-            // Fire a reserved notification here!
+            
+            // Notification
+            // Notify all users commented, bided, tailed that carauction is now reserved
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarAuctionReservedNotification($carauctionbid));
         }
+
+        // Notification
+        // Notify user being reserved
+
+        $carauctionbid->$user->notify(new CarAuctionBidReservedNotification($carauctionbid));
 
         return response()->json(['success'=>true]);
     }
@@ -916,8 +1269,24 @@ class UserController extends Controller
         if ($count == 0) {
             $carauction->status = 'opened';
             $carauction->save();
-            // Fire a opened notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that carauction is now opened
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $car->id)
+                ->where('notificables.model_name', 'car')
+                ->get();
+
+            Notification::send($users, new CarAuctionOpenedNotification($carauctionbid));
         }
+
+        // Notification
+        // Notify user whos reserved is cancelled
+
+        $carauctionbid->$user->notify(new CarAuctionBidReserveCancelledNotification($carauctionbid));
 
         return response()->json(['success'=>true]);
     }
@@ -960,6 +1329,20 @@ class UserController extends Controller
 
         $carauction->status = 'purchased';
         $carauction->save();
+
+        // Notification
+        // Notify user who purchased the car
+        // Notify all users commented, offered, tailed that car has been purchased
+
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $car->id)
+            ->where('notificables.model_name', 'car')
+            ->get();
+
+        Notification::send($users, new CarAuctionPurchasedNotification($carauctionbid));
+
+        $carauctionbid->$user->notify(new CarAuctionBidReservePurchasedNotification($carauctionbid));
 
         return response()->json(['success'=>true]);
     }

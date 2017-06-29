@@ -25,7 +25,7 @@ class PartUpdatedNotification extends Notification
     {
         $this->part = $part;
         $this->url = url('/corporate/' . $this->part->corporate->id . '/part/' . $this->part->id);
-        $this->message = $this->part->corporate->name . ' updated the part.';
+        $this->message = $this->part->corporate->name . ' updated their part.';
     }
 
     /**

@@ -268,4 +268,15 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Userreport', 'report_user_id');
     }
+
+
+
+
+    /**
+    * Get the notificable settings for this user.
+    */
+    public function notificables()
+    {
+        return $this->hasMany('App\Notificable');
+    }
 }

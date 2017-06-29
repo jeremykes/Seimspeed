@@ -25,7 +25,7 @@ class CarSaleOfferReserveCancelledNotification extends Notification
     {
         $this->carsaleoffer = $carsaleoffer;
         $this->url = url('/corporate/' . $this->carsaleoffer->carsale->corporate->id . '/car/' . $this->carsaleoffer->carsale->car->id . '/sale/' . $this->carsaleoffer->carsale->id);
-        $this->message = $this->carsaleoffer->user->name . ' cancelled their offer.';
+        $this->message = $this->carsaleoffer->user->name . ' cancelled your sale reservation.';
     }
 
     /**

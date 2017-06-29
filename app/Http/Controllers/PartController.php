@@ -76,6 +76,20 @@ class UserController extends Controller
 
         $partsale->save();
 
+        // Notification (if partsale status == open)
+        // Notify all users following corp
+
+        if ($partsale->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $corporate->id)
+                ->where('notificables.model_name', 'corporate')
+                ->get();
+
+            Notification::send($users, new PartSaleOpenedNotification($partsale));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -115,6 +129,20 @@ class UserController extends Controller
         $partsale->note = $request->note;
         $partsale->save();
 
+        // Notification (if partsale status == open)
+        // Notify all users commented, offered, tailed.
+
+        if ($partsale->status == 'open') {
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $part->id)
+                ->where('notificables.model_name', 'part')
+                ->get();
+
+            Notification::send($users, new PartSaleUpdatedNotification($partsale));
+        }
+
         return response()->json(['success'=>true]);
     }
 
@@ -151,6 +179,18 @@ class UserController extends Controller
 
         $partsale->status = 'closed';
 
+        // Notification
+        // Notify all users commented, offered, tailed.
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $part->id)
+            ->where('notificables.model_name', 'part')
+            ->get();
+
+        Notification::send($users, new PartSaleClosedNotification($partsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -186,8 +226,24 @@ class UserController extends Controller
         if ($count == 2) {
             $partsale->status = 'reserved';
             $partsale->save();
-            // Fire a reserved notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that partsale is now reserved
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $part->id)
+                ->where('notificables.model_name', 'part')
+                ->get();
+
+            Notification::send($users, new PartSaleReservedNotification($partsaleoffer));
         }
+
+        // Notification
+        // Notify user being reserved
+
+        $partsaleoffer->$user->notify(new PartSaleOfferReservedNotification($partsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -217,8 +273,24 @@ class UserController extends Controller
         if ($count == 0) {
             $partsale->status = 'opened';
             $partsale->save();
-            // Fire a opened notification here!
+            
+            // Notification
+            // Notify all users commented, offered, tailed that partsale is now opened
+
+            // get all users
+            $users = DB::table('users')
+                ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+                ->where('notificables.model_id', $part->id)
+                ->where('notificables.model_name', 'part')
+                ->get();
+
+            Notification::send($users, new PartSaleOpenedNotification($partsaleoffer));
         }
+
+        // Notification
+        // Notify user whos reserved is cancelled
+
+        $partsaleoffer->$user->notify(new PartSaleOfferReserveCancelledNotification($partsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -261,6 +333,20 @@ class UserController extends Controller
 
         $partsale->status = 'purchased';
         $partsale->save();
+
+        // Notification
+        // Notify user who purchased the part
+        // Notify all users commented, offered, tailed that part has been purchased
+
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $part->id)
+            ->where('notificables.model_name', 'part')
+            ->get();
+
+        Notification::send($users, new PartSalePurchasedNotification($partsaleoffer));
+
+        $partsaleoffer->$user->notify(new PartSaleOfferReservePurchasedNotification($partsaleoffer));
 
         return response()->json(['success'=>true]);
     }

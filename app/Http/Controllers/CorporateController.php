@@ -78,7 +78,6 @@ class CorporateController extends Controller
         $corporate->banner_url = $request->banner_url;
         $corporate->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -110,6 +109,8 @@ class CorporateController extends Controller
         $corporateuser->title = $title;
         $corporateuser->save();
 
+        // Notification
+        // Notify user being added
 
         $user->notify(new CorporateUserAddedNotification($corporateuser));
 
@@ -127,6 +128,8 @@ class CorporateController extends Controller
         $corporateuser->title = $title;
         $corporateuser->save();
 
+        // Notification
+        // Notify user being updated
 
         $corporateuser->user->notify(new CorporateUserUpdatedNotification($corporateuser));
 
@@ -158,6 +161,8 @@ class CorporateController extends Controller
 
         $corporateuser->user->attachRole($role);
 
+        // Notification
+        // Notify user role added
 
         $corporateuser->user->notify(new CorporateUserRoleAddedNotification($corporateuser));
 
@@ -175,6 +180,8 @@ class CorporateController extends Controller
         $corporateuser->user->detachRole($corporateuser->user->roles);
         $corporateuser->user->attachRole($role);
 
+        // Notification
+        // Notify user role updated
 
         $corporateuser->user->notify(new CorporateUserRoleUpdatedNotification($corporateuser));
 
@@ -210,7 +217,6 @@ class CorporateController extends Controller
         $car->published = $request->published;
         $car->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -241,6 +247,17 @@ class CorporateController extends Controller
         $car->published = $request->published;
         $car->save();
 
+        // Notification 
+        // Notify all users following corp
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $corporate->id)
+            ->where('notificables.model_name', 'corporate')
+            ->get();
+
+        Notification::send($users, new CarUpdatedNotification($car));
 
         return response()->json(['success'=>true]);
     }
@@ -254,7 +271,6 @@ class CorporateController extends Controller
     public function deletecar(Request $request, Corporate $corporate, Car $car)
     {
         $car->delete();
-
 
         return response()->json(['success'=>true]);
     }
@@ -273,7 +289,6 @@ class CorporateController extends Controller
         $carimage->thumb_img_url = $request->thumb_img_url;
         $carimage->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -286,7 +301,6 @@ class CorporateController extends Controller
     public function deletecarimage(Request $request, Corporate $corporate, Car $car, Carimage $carimage)
     {
         $carimage->delete();
-
 
         return response()->json(['success'=>true]);
     }
@@ -314,7 +328,6 @@ class CorporateController extends Controller
         $cargroup->descript = $request->descript;
         $cargroup->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -339,7 +352,6 @@ class CorporateController extends Controller
         $cargroup->descript = $request->descript;
         $cargroup->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -352,7 +364,6 @@ class CorporateController extends Controller
     public function deletecargroup(Request $request, Corporate $corporate, Cargroup $cargroup)
     {
         $cargroup->delete();
-
 
         return response()->json(['success'=>true]);
     }
@@ -377,7 +388,6 @@ class CorporateController extends Controller
         $part->note = $request->note;
         $part->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -399,6 +409,17 @@ class CorporateController extends Controller
         $part->note = $request->note;
         $part->save();
 
+        // Notification 
+        // Notify all users following corp
+
+        // get all users
+        $users = DB::table('users')
+            ->leftJoin('notificables', 'users.id', '=', 'notificables.user_id')
+            ->where('notificables.model_id', $corporate->id)
+            ->where('notificables.model_name', 'corporate')
+            ->get();
+
+        Notification::send($users, new PartUpdatedNotification($part));
 
         return response()->json(['success'=>true]);
     }
@@ -411,8 +432,7 @@ class CorporateController extends Controller
      */
     public function deletepart(Request $request, Corporate $corporate, Part $part)
     {
-        $part->delete();
-
+        $part->delete(); 
 
         return response()->json(['success'=>true]);
     }
@@ -431,7 +451,6 @@ class CorporateController extends Controller
         $partimage->thumb_img_url = $request->thumb_img_url;
         $partimage->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -444,7 +463,6 @@ class CorporateController extends Controller
     public function deletepartimage(Request $request, Corporate $corporate, Part $part, Partimage $partimage)
     {
         $partimage->delete();
-
 
         return response()->json(['success'=>true]);
     }
@@ -471,7 +489,6 @@ class CorporateController extends Controller
         $partgroup->descript = $request->descript;
         $partgroup->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -495,7 +512,6 @@ class CorporateController extends Controller
         $partgroup->descript = $request->descript;
         $partgroup->save();
 
-
         return response()->json(['success'=>true]);
     }
 
@@ -508,7 +524,6 @@ class CorporateController extends Controller
     public function deletepartgroup(Request $request, Corporate $corporate, Partgroup $partgroup)
     {
         $partgroup->delete();
-
 
         return response()->json(['success'=>true]);
     }

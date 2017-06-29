@@ -7,9 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Carauctionbid;
+use App\Partsale;
 
-class CarAuctionBidCancelledNotification extends Notification
+class PartSalePurchasedNotification extends Notification
 {
     use Queueable;
 
@@ -21,11 +21,11 @@ class CarAuctionBidCancelledNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Carauctionbid $carauctionbid)
+    public function __construct(Partsale $partsale)
     {
-        $this->carauctionbid = $carauctionbid;
-        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
-        $this->message = $this->carauctionbid->user->name . ' cancelled your bid.';
+        $this->partsale = $partsale;
+        $this->url = url('/corporate/' . $this->partsale->corporate->id . '/part/' . $this->partsale->part->id . '/sale/' . $this->partsale->id);
+        $this->message = 'This part has been purchased.';
     }
 
     /**

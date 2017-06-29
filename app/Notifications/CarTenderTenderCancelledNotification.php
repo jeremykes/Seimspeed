@@ -25,7 +25,7 @@ class CarTenderTenderCancelledNotification extends Notification
     {
         $this->cartendertender = $cartendertender;
         $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/tender/' . $this->cartendertender->cartender->id);
-        $this->message = $this->cartendertender->user->name . ' cancelled their tender.';
+        $this->message = $this->cartendertender->user->name . ' cancelled your tender.';
     }
 
     /**

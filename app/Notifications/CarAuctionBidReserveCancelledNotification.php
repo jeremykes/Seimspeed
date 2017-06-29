@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Carauctionbid;
 
-class CarAuctionBidCancelledNotification extends Notification
+class CarAuctionBidReserveCancelledNotification extends Notification
 {
     use Queueable;
 
@@ -25,7 +25,7 @@ class CarAuctionBidCancelledNotification extends Notification
     {
         $this->carauctionbid = $carauctionbid;
         $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
-        $this->message = $this->carauctionbid->user->name . ' cancelled your bid.';
+        $this->message = $this->carauctionbid->user->name . ' cancelled your auction reservation.';
     }
 
     /**

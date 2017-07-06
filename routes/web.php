@@ -40,7 +40,8 @@ Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{notification
 // allpartsales 	
 // partgroup  		
 Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{notification}', 'FrameworkController@partsale'); // partsale 		
-// partsalegroup  	
+// partsalegroup 
+Route::get('/corporate/{corporate}/{notification}', 'FrameworkController@corporatehome'); // corphome 
 
 
 /*
@@ -125,7 +126,7 @@ Route::group(['middleware' => ['auth']], function() {
 		| View Routes
 		|--------------------------------------------------------------------------
 		*/	
-		// dashboard
+		Route::get('/corporate/{corporate}/dashboard', 'FrameworkController@corporatedashboard'); // dashboard
 
 
 		/*

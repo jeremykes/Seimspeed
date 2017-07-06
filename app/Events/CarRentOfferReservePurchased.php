@@ -10,22 +10,21 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\Partsaleoffer;
+use App\Carrent;
 
-class PartSaleOfferAdded implements ShouldBroadcast
+class CarRentOfferReservePurchased implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $partsaleoffer;
-
+    public $carrent;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Partsaleoffer $partsaleoffer)
+    public function __construct(Carrent $carrent)
     {
-        $this->partsaleoffer = $partsaleoffer;
+        $this->carrent = $carrent;
     }
 
     /**
@@ -35,6 +34,6 @@ class PartSaleOfferAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.partsale.'.$this->partsaleoffer->partsale->id);
+        return new Channel('public-channel.carrent.'.$this->carrent->id);
     }
 }

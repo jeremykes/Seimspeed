@@ -39,14 +39,13 @@ class FrameworkController extends Controller
             'reportcorporate',
             'reportcar',
             'reportpart',
-            'corporatesettings',
-            'corporatedashboard',
             'addcorporate',
         ]]);
 
         $this->middleware('corpuser', ['only' => [
-            'corporatesettings',
             'corporatedashboard',
+            'corporatemembers',
+            'corporatesettings',
         ]]);
     }
 
@@ -152,49 +151,62 @@ class FrameworkController extends Controller
             $notification->markAsRead();    
         }
 
-        return view('partsale', [
+        return view('part.partsale', [
             'partsale' => $partsale,
         ]); 
     }
 
-    // /**
-    //  * Show the Corporate Home.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function corporatehome(Corporate $corporate)
-    // {
-    //     return view('corporatehome', [
-    //         'corporate' => $corporate,
-    //         'page' => $page,
-    //     ]); 
-    // }
+    /**
+     * Show the Corporate Home.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function corporatehome(Corporate $corporate, DatabaseNotification $notification = null)
+    {
+        if ($notification != null) {
+            $notification->markAsRead();    
+        }
 
-    // /**
-    //  * Show the Corporate settings.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function corporatesettings(Corporate $corporate)
-    // {
-    //     return view('corporatesettings', [
-    //         'corporate' => $corporate,
-    //         'page' => $page,
-    //     ]); 
-    // }
+        return view('corp.home', [
+            'corporate' => $corporate,
+        ]); 
+    }
 
-    // /**
-    //  * Show the Corporate dashboard.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function corporatedashboard(Corporate $corporate)
-    // {
-    //     return view('corporatedashboard', [
-    //         'corporate' => $corporate,
-    //         'page' => $page,
-    //     ]); 
-    // }
+    /**
+     * Show the Corporate Dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function corporatedashboard(Corporate $corporate)
+    {
+        return view('corp.dashboard', [
+            'corporate' => $corporate,
+        ]); 
+    }
+
+    /**
+     * Show the Corporate members.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function corporatemembers(Corporate $corporate)
+    {
+        return view('corp.members', [
+            'corporate' => $corporate,
+        ]); 
+    }
+
+    /**
+     * Show the Corporate settings.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function corporatesettings(Corporate $corporate)
+    {
+        return view('corp.settings', [
+            'corporate' => $corporate,
+        ]); 
+    }
 
 
     // ===================================================================================

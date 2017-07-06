@@ -10,29 +10,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\User;
-use App\Part;
-use App\Partgroup;
 use App\Partcomment;
 
 class PartCommentUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $user;
-        public $part;
-        public $partgrouup;
         public $partcomment;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, Part $part, Partgroup $partgroup, Partcomment $partcomment)
+    public function __construct(Partcomment $partcomment)
     {
-        $this->user = $user;
-        $this->part = $part;
-        $this->partgroup = $partgroup;
         $this->partcomment = $partcomment;
     }
 
@@ -43,6 +34,6 @@ class PartCommentUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('public-channel');
+        return new Channel('public-channel.part.'.$this->partcomment->part->id);
     }
 }

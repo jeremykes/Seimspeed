@@ -10,18 +10,12 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\User;
-use App\Part;
-use App\Partgroup;
 use App\Partcomment;
 
 class PartCommentAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $user;
-        public $part;
-        public $partgrouup;
         public $partcomment;
 
     /**
@@ -29,11 +23,8 @@ class PartCommentAdded implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(User $user, Part $part, Partgroup $partgroup, Partcomment $partcomment)
+    public function __construct(Partcomment $partcomment)
     {
-        $this->user = $user;
-        $this->part = $part;
-        $this->partgroup = $partgroup;
         $this->partcomment = $partcomment;
     }
 
@@ -44,6 +35,6 @@ class PartCommentAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('public-channel');
+        return new Channel('public-channel.part.'.$this->partcomment->part->id);
     }
 }

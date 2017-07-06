@@ -11,89 +11,89 @@ $(function () {
 // 
 // 
 // ===================================================================================
-function newsfeedbuilder(trades) {
-	// page = newsfeed
-    var htmltext = '<div class="panel panel-primary"><div class="panel-body" style="border-radius:0"><div class="col-md-4"><h5>';
+// function newsfeedbuilder(trades, htmlid) {
+// 	// page = newsfeed
+//     var htmltext = '<div class="panel panel-primary"><div class="panel-body" style="border-radius:0"><div class="col-md-4"><h5>';
 
-    for (var i = 0; i < trades.length; i++) {
+//     for (var i = 0; i < trades.length; i++) {
 
-    	var carOrPart = '';
-    	var image = '';
-    	var corporateName = '';
-    	var timePosted = '';
-    	var type = '';
-    	var description = '';
-    	var numberOfComments = '';
-    	var numberOfTailing = '';
-    	var numberOfOffers = '';
-    	var negotiable = '';
-    	var price = '';
+//     	var carOrPart = '';
+//     	var image = '';
+//     	var corporateName = '';
+//     	var timePosted = '';
+//     	var type = '';
+//     	var description = '';
+//     	var numberOfComments = '';
+//     	var numberOfTailing = '';
+//     	var numberOfOffers = '';
+//     	var negotiable = '';
+//     	var price = '';
 
-    	if (trades[i].carorpart) {
-    		carOrPart = trades[i].carorpart;
-    	}
-    	if (trades[i].image) {
-    		image = trades[i].image;
-    	}
-    	if (trades[i].corporatename) {
-    		corporateName = trades[i].corporatename;
-    	}
-    	if (trades[i].timeposted) {
-    		timePosted = trades[i].timeposted;
-    	}
-    	if (trades[i].type) {
-    		type = trades[i].type;
-    	}
-    	if (trades[i].description) {
-    		description = trades[i].description;
-    	}
-    	if (trades[i].numberofcomments) {
-    		numberofcomments = trades[i].numberofcomments;
-    	}
-    	if (trades[i].numberoftailing) {
-    		numberOfTailing = trades[i].numberoftailing;
-    	}
-    	if (trades[i].numberofoffers) {
-    		numberOfOffers = trades[i].numberofoffers;
-    	}
-    	if (trades[i].negotiable) {
-    		negotiable = trades[i].negotiable;
-    	}
-    	if (trades[i].price) {
-    		price = trades[i].price;
-    	}
+//     	if (trades[i].carorpart) {
+//     		carOrPart = trades[i].carorpart;
+//     	}
+//     	if (trades[i].image) {
+//     		image = trades[i].image;
+//     	}
+//     	if (trades[i].corporatename) {
+//     		corporateName = trades[i].corporatename;
+//     	}
+//     	if (trades[i].timeposted) {
+//     		timePosted = trades[i].timeposted;
+//     	}
+//     	if (trades[i].type) {
+//     		type = trades[i].type;
+//     	}
+//     	if (trades[i].description) {
+//     		description = trades[i].description;
+//     	}
+//     	if (trades[i].numberofcomments) {
+//     		numberofcomments = trades[i].numberofcomments;
+//     	}
+//     	if (trades[i].numberoftailing) {
+//     		numberOfTailing = trades[i].numberoftailing;
+//     	}
+//     	if (trades[i].numberofoffers) {
+//     		numberOfOffers = trades[i].numberofoffers;
+//     	}
+//     	if (trades[i].negotiable) {
+//     		negotiable = trades[i].negotiable;
+//     	}
+//     	if (trades[i].price) {
+//     		price = trades[i].price;
+//     	}
 
-		htmltext += carOrPart;
-		htmltext += '</h5><img class="img-responsive" src="';
-		htmltext += image;
-		htmltext += '"></div><div class="col-md-8"><p><strong>';
-		htmltext += corporateName;
-		htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-		htmltext += timePosted;
-		htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-		htmltext += type;
-		htmltext += '</span></span></p><p>';
-		htmltext += description;
-		htmltext += '</p><p><span style="color:gray;font-size:11px">';
-		htmltext += numberOfComments;
-		htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-		htmltext += numberOfOffers;
-		htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-		htmltext += numberOfTailing;
-		htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-		htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-		htmltext += '</span><span class="pull-right"><span style="font-size:9px;color:grey">';
-		htmltext += negotiable;
-		htmltext += '</span>&nbsp;&nbsp;<span class="label label-default" style="font-size:15px">';
-		htmltext += price;
-		htmltext += '</span></span></p></div></div></div>';
-    }
+// 		htmltext += carOrPart;
+// 		htmltext += '</h5><img class="img-responsive" src="';
+// 		htmltext += image;
+// 		htmltext += '"></div><div class="col-md-8"><p><strong>';
+// 		htmltext += corporateName;
+// 		htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
+// 		htmltext += timePosted;
+// 		htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
+// 		htmltext += type;
+// 		htmltext += '</span></span></p><p>';
+// 		htmltext += description;
+// 		htmltext += '</p><p><span style="color:gray;font-size:11px">';
+// 		htmltext += numberOfComments;
+// 		htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
+// 		htmltext += numberOfOffers;
+// 		htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
+// 		htmltext += numberOfTailing;
+// 		htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
+// 		htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
+// 		htmltext += '</span><span class="pull-right"><span style="font-size:9px;color:grey">';
+// 		htmltext += negotiable;
+// 		htmltext += '</span>&nbsp;&nbsp;<span class="label label-default" style="font-size:15px">';
+// 		htmltext += price;
+// 		htmltext += '</span></span></p></div></div></div>';
+//     }
 
-    $('#newsfeed').append(htmltext);
+//     $('#' + htmlid).prepend(htmltext);
 
-}
+// }
 
-function carsaleBuilder(carsale) {
+function carsaleBuilder(carsale, htmlid) {
 	// page = carsale
 	var htmltext = '';
 
@@ -122,11 +122,11 @@ function carsaleBuilder(carsale) {
 	htmltext += carsale.price;
 	htmltext += '</span></span></p></div></div></div>';
 
-	$('#canvas').append(htmltext);
+	$('#' + htmlid).prepend(htmltext);
 	
 }
 
-function carrentBuilder(carrent) {
+function carrentBuilder(carrent, htmlid) {
 	// page = carrent
     var htmltext = '';
 
@@ -152,11 +152,11 @@ function carrentBuilder(carrent) {
 	htmltext += carrent.price;
 	htmltext += '</span></span></p></div></div></div>';
 
-	$('#canvas').append(htmltext);
+	$('#canvas').prepend(htmltext);
 
 }
 
-function cartenderBuilder(cartender) {
+function cartenderBuilder(cartender, htmlid) {
 	// page = cartender
     var htmltext = '';
 
@@ -180,11 +180,11 @@ function cartenderBuilder(cartender) {
 	htmltext += '</span><span class="pull-right">';
 	htmltext += '</span></p></div></div></div>';
 
-	$('#canvas').append(htmltext);
+	$('#' + htmlid).prepend(htmltext);
 
 }
 
-function carauctionBuilder(carauction) {
+function carauctionBuilder(carauction, htmlid) {
 	// page = carauction
     var htmltext = '';
 
@@ -210,11 +210,11 @@ function carauctionBuilder(carauction) {
 	htmltext += '</span><span class="pull-right">';
 	htmltext += '</span></p></div></div></div>';
 
-	$('#canvas').append(htmltext);
+	$('#' + htmlid).prepend(htmltext);
 
 }
 
-function partsaleBuilder(partsale) {
+function partsaleBuilder(partsale, htmlid) {
 	// page = partsale
     var htmltext = '';
 
@@ -243,182 +243,11 @@ function partsaleBuilder(partsale) {
 	htmltext += carsale.price;
 	htmltext += '</span></span></p></div></div></div>';
 
-	$('#canvas').append(htmltext);
+	$('#' + htmlid).prepend(htmltext);
 
 }
 
-
-
-// ===================================================================================
-// 
-// 
-//     SETTINGS VIEW - Settings, Members, Roles, Account Builder
-// 
-// 
-// ===================================================================================
-function settingsBuilder(settings) {
-	// page = settings
-	var htmltext = '';
-
-	// insert each setting value into a form field here.
-
-    $('#canvas').append(htmltext);
-
-}
-
-function membersBuilder(members) {
-	// members
-	var htmltext = '';
-
-	for (var i = 0; i < members.length; i++) {
-		
-		// insert each member here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function accountBuilder(account) {
-	// page = account
-	var htmltext = '';
-
-	// insert each account value into a form field here.
-
-    $('#canvas').append(htmltext);
-
-}
-
-
-
-// ===================================================================================
-// 
-// 
-//     CORPORATE DASHBOARD VIEW - Dashboard, Transactions, Reports, History, Trades. 
-//     Similar to the above but will append some more details about the trades like 
-//     reservation list, tenders list, bids list, tenderers list, bidders list.
-// 
-// 
-// ===================================================================================
-function dashboardBuilder(dashboard) {
-	// page = dashboard
-	var htmltext = '';
-
-	// insert each dashboard summary value into a form field here.
-
-    $('#canvas').append(htmltext);
-
-}
-
-function reportsBuilder(reports) {
-	// page = reports
-	var htmltext = '';
-
-	// insert each reports generation button here.
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allCarsBuilder(cars) {
-	// page = allcars
-	var htmltext = '';
-
-	for (var i = 0; i < cars.length; i++) {
-		
-		// insert each car here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allPartsBuilder(parts) {
-	// page = allparts
-	var htmltext = '';
-
-	for (var i = 0; i < parts.length; i++) {
-		
-		// insert each part here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allCarsalesBuilder(carsales) {
-	// page = allcarsales
-	var htmltext = '';
-
-	for (var i = 0; i < carsales.length; i++) {
-		
-		// insert each carsale here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allCarrentsBuilder(carrents) {
-	// page = allcarrents
-	var htmltext = '';
-
-	for (var i = 0; i < carrents.length; i++) {
-		
-		// insert each carrent here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allCartendersBuilder(cartenders) {
-	// page = allcartenders
-	var htmltext = '';
-
-	for (var i = 0; i < cartenders.length; i++) {
-		
-		// insert each cartender here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allCarauctionsBuilder(carauctions) {
-	// page = allcarauctions
-	var htmltext = '';
-
-	for (var i = 0; i < carauctions.length; i++) {
-		
-		// insert each carauction here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
-function allPartsalesBuilder(partsales) {
-	// page = allpartsales
-	var htmltext = '';
-
-	for (var i = 0; i < partsales.length; i++) {
-		
-		// insert each partsale here.
-
-	}
-
-    $('#canvas').append(htmltext);
-
-}
-
+// ADD CARGROUP BUILDER AND PARTGROUP BUILDERS HERE TOO
 
 
 // ===================================================================================
@@ -429,7 +258,7 @@ function allPartsalesBuilder(partsales) {
 // 
 // 
 // ===================================================================================
-function commentsListBuilder(comments) {
+function commentsListBuilder(comments, htmlid) {
 
 	var htmltext = '';
 
@@ -447,11 +276,11 @@ function commentsListBuilder(comments) {
         htmltext += '</p></div></div>';
     }
 
-    $('#comments').append(htmltext);
+    $('#' + htmlid).prepend(htmltext);
 
 }
 
-function offersListBuilder(offers) {
+function offersListBuilder(offers, htmlid) {
 
 	var htmltext = '';
 
@@ -481,11 +310,11 @@ function offersListBuilder(offers) {
 	    htmltext += '</p></div></div>';
 	}
 
-	$('#offers').append(htmltext);
+	$('#' + htmlid).prepend(htmltext);
 
 }
 
-function tailsListBuilder(tails) {
+function tailsListBuilder(tails, htmlid) {
 
 	var htmltext = '';
 
@@ -501,11 +330,11 @@ function tailsListBuilder(tails) {
     	htmltext += '</span></span></div></div>';
     }
 
-    $('#tails').append(htmltext);
+    $('#' + htmlid).prepend(htmltext);
 
 }
 
-function reservationListBuilder(reservations) {
+function reservationListBuilder(reservations, htmlid) {
 
 	var htmltext = '';
 
@@ -516,7 +345,7 @@ function reservationListBuilder(reservations) {
 	}
 }
 
-function tendersListBuilder(tenders) {
+function tendersListBuilder(tenders, htmlid) {
 
 	var htmltext = '';
 
@@ -527,7 +356,7 @@ function tendersListBuilder(tenders) {
 	}
 }
 
-function bidsListBuilder(bids) {
+function bidsListBuilder(bids, htmlid) {
 
 	var htmltext = '';
 
@@ -538,7 +367,7 @@ function bidsListBuilder(bids) {
 	}
 }
 
-function tenderersListBuilder(tenderers) {
+function tenderersListBuilder(tenderers, htmlid) {
 
 	var htmltext = '';
 
@@ -549,7 +378,7 @@ function tenderersListBuilder(tenderers) {
 	}
 }
 
-function biddersListBuilder(bidders) {
+function biddersListBuilder(bidders, htmlid) {
 
 	var htmltext = '';
 
@@ -559,3 +388,281 @@ function biddersListBuilder(bidders) {
 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// NEW FUNCTIONS HERE. 
+// Use the above ones if you want to reuse code.
+
+
+// ------------------- Home & CorpHome ------------------ //
+
+// JS Functions
+function checkCorporate(corpID) {
+    // Check if this Trade is for this corporation
+}
+
+function CarSaleAddedBuild(data) {
+    // Add to Newsfeed
+}
+
+function CarRentAddedBuild(data) {
+    // Add to Newsfeed
+}
+
+function CarTenderAddedBuild(data) {
+    // Add to Newsfeed
+}
+
+function CarAuctionAddedBuild(data) {
+    // Add to Newsfeed
+}
+
+function PartSaleAddedBuild(data) {
+    // Add to Newsfeed
+}
+
+function CarSaleClosedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarRentClosedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarTenderClosedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarAuctionClosedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function PartSaleClosedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarSaleOfferReservePurchasedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarRentOfferReservePurchasedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarTenderTenderReservePurchasedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function CarAuctionBidReservePurchasedBuild(data) {
+    // Remove item from newsfeed
+}
+
+function PartSaleOfferReservePurchasedBuild(data) {
+    // Remove item from newsfeed
+}
+
+// ------------------- Home & CorpHome ------------------ //
+
+
+
+// ------------------- Trade ------------------ //
+
+
+// Carsale ==========
+function CarSaleClosedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarSaleOfferReservePurchasedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarSaleOfferReservedBuildTrade(data) {
+    // Tag Offer as Reserved
+}
+
+function CarSaleOfferReserveCancelledBuildTrade(data) {
+    // Remove Reserved Tag 
+}
+
+function CarCommentAddedBuildTrade(data) {
+    // Append comment to comments
+}
+
+function CarCommentUpdatedBuildTrade(data) {
+    // Update specific comment
+}
+
+function CarSaleOfferAddedBuildTrade(data) {
+    // Append offer to offers
+}   
+
+function CarSaleOfferCancelledBuildTrade(data) {
+    // Remove specific offer from offers
+}
+
+
+// Carrent ==========
+function CarRentClosedBuildTrade(data) {
+    // Reload Page
+} 
+
+function CarRentOfferReservePurchasedBuildTrade(data) {
+    // Reload Page
+} 
+
+function CarRentOfferReservedBuildTrade(data) {
+    // Tag Offer as Reserved
+} 
+
+function CarRentOfferReserveCancelledBuildTrade(data) {
+    // Remove Reserved Tag 
+} 
+
+function CarCommentAddedBuildTrade(data) {
+    // Append comment to comments
+} 
+
+function CarCommentUpdatedBuildTrade(data) {
+    // Update specific comment
+} 
+
+function CarRentOfferAddedBuildTrade(data) {
+    // Append offer to offers
+} 
+
+function CarRentOfferCancelledBuildTrade(data) {
+    // Remove specific offer from offers
+} 
+
+
+// Cartender ==========
+function CarTenderClosedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarTenderTenderReservePurchasedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarTenderTenderReservedBuildTrade(data) {
+    // Tag Tender as Reserved
+}
+
+function CarTenderTenderReserveCancelledBuildTrade(data) {
+    // Remove Reserved Tag 
+}
+
+function CarCommentAddedBuildTrade(data) {
+    // Append comment to comments
+}
+
+function CarCommentUpdatedBuildTrade(data) {
+    // Update specific comment
+}
+
+function CarTenderTenderAddedBuildTrade(data) {
+    // Append tender to tenders
+}
+
+function CarTenderTenderCancelledBuildTrade(data) {
+    // Remove specific tender from tenders
+}
+
+
+// Carauction ==========
+function CarAuctionClosedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarAuctionBidReservePurchasedBuildTrade(data) {
+    // Reload Page
+}
+
+function CarAuctionBidReservedBuildTrade(data) {
+    // Tag Bid as Reserved
+}
+
+function CarAuctionBidReserveCancelledBuildTrade(data) {
+    // Remove Reserved Tag 
+}
+
+function CarCommentAddedBuildTrade(data) {
+    // Append comment to comments
+}
+
+function CarCommentUpdatedBuildTrade(data) {
+    // Update specific comment
+}
+
+function CarAuctionBidAddedBuildTrade(data) {
+    // Append bid to bids
+}
+
+function CarAuctionBidCancelledBuildTrade(data)) {
+    // Remove specific bid from bids
+}
+
+
+// Partsale ==========
+function PartSaleClosedBuildTrade(data) {
+    // Reload Page
+}
+
+function PartSaleOfferReservePurchasedBuildTrade(data) {
+    // Reload Page
+}
+
+function PartSaleOfferReservedBuildTrade(data) {
+    // Tag Offer as Reserved
+}
+
+function PartSaleOfferReserveCancelledBuildTrade(data) {
+    // Remove Reserved Tag 
+}
+
+function PartCommentAddedBuildTrade(data) {
+    // Append comment to comments
+}
+
+function PartCommentUpdatedBuildTrade(data) {
+    // Update specific comment
+}
+
+function PartSaleOfferAddedBuildTrade(data) {
+    // Append offer to offers
+}
+
+function PartSaleOfferCancelledBuildTrade(data) {
+    // Remove specific offer from offers
+}
+
+
+// ------------------- Trade ------------------ //
+
+
+
+
+
+
+
+
+
+
+
+

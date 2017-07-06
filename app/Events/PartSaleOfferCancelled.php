@@ -10,18 +10,12 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\User;
-use App\Part;
-use App\Partsale;
 use App\Partsaleoffer;
 
 class PartSaleOfferCancelled implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $user;
-        public $part;
-        public $partsale;
         public $partsaleoffer;
 
     /**
@@ -29,8 +23,9 @@ class PartSaleOfferCancelled implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(User $user, Part $part, Partsale $partsale, Partsaleoffer $partsaleoffer)
+    public function __construct(Partsaleoffer $partsaleoffer)
     {
+        $this->partsaleoffer = $partsaleoffer;
     }
 
     /**
@@ -40,6 +35,6 @@ class PartSaleOfferCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('public-channel');
+        return new Channel('public-channel.partsale.'.$this->partsaleoffer->partsale->id);
     }
 }

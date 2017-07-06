@@ -25,7 +25,7 @@ class CarUpdatedNotification extends Notification
     {
         $this->car = $car;
         $this->url = url('/corporate/' . $this->car->corporate->id . '/car/' . $this->car->id);
-        $this->message = $this->car->corporate->name . ' updated the car.';
+        $this->message = $this->car->corporate->name . ' updated their car.';
     }
 
     /**

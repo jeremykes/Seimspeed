@@ -7,33 +7,22 @@ use App\Http\Requests;
 
 use Auth;
 use Carbon;
+use Illuminate\Notifications\DatabaseNotification;
 
 use App\User;
-
-// use App\Message;
-// use App\Userreport;
-// use App\Corporatereport;
-// use App\Carreport;
-// use App\Partreport;
-// use App\Events\NewMessage;
-// use App\Events\UserReported;
-// use App\Events\CorporateReported;
-// use App\Events\CarReported;
-// use App\Events\PartReported;
-// use App\Events\CorporateCreated;
-// use App\Notifications\NewMessageNotification;
-// use App\Notifications\UserReportedNotification;
-// use App\Notifications\CorporateReportedNotification;
-// use App\Notifications\CarReportedNotification;
-// use App\Notifications\PartReportedNotification;
-
-// use Illuminate\Notifications\DatabaseNotification;
-
+use App\Message;
+use App\Userreport;
+use App\Corporatereport;
+use App\Carreport;
+use App\Partreport;
 use App\Carsale;
 use App\Carrent;
 use App\Cartender;
 use App\Carauction;
 use App\Partsale;
+
+use App\Corporate;
+use App\Car;
 
 class FrameworkController extends Controller
 {
@@ -125,11 +114,11 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carsale(Corporate $corporate, Car $car, Carsale $carsale, DatabaseNotification $notification = null)
+    public function carsale(Corporate $corporate, Car $car, Carsale $carsale)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
+        // if ($notification != null) {
+        //     $notification->markAsRead();    
+        // }
 
         return view('car.carsale', [
             'carsale' => $carsale,
@@ -232,10 +221,7 @@ class FrameworkController extends Controller
         $message->message = $request->message;
         $message->save();
 
-        // event(new NewMessage($receiving_user, $message));
-
-        // $receiving_user->notify(new NewMessageNotification($message));
-        // Auth::user()->notify(new NewMessageNotification($message));
+        $receiving_user->notify(new NewMessageNotification($message));
 
         return response()->json(['success'=>true]);
     }
@@ -263,12 +249,6 @@ class FrameworkController extends Controller
         $userreport->report = $request->report;
         $userreport->save();
 
-        // $reported_user = User::find($request->report_user_id);
-
-        // event(new UserReported($userreport));
-
-        // $reported_user->notify(new UserReportedNotification($userreport));
-
         return response()->json(['success'=>true]);
     }
 
@@ -284,10 +264,6 @@ class FrameworkController extends Controller
         $corporatereport->user_id = $request->user_id;
         $corporatereport->report = $request->report;
         $corporatereport->save();
-
-        // $corporate = Corporate::find($request->corporate_id);
-
-        // event(new CorporateReported($corporatereport));
 
         return response()->json(['success'=>true]);
     }
@@ -305,10 +281,6 @@ class FrameworkController extends Controller
         $carreport->report = $request->report;
         $carreport->save();
 
-        // $car = Car::find($request->car_id);
-
-        // event(new CarReported($carreport));
-
         return response()->json(['success'=>true]);
     }
 
@@ -324,10 +296,6 @@ class FrameworkController extends Controller
         $partreport->user_id = $request->user_id;
         $partreport->report = $request->report;
         $partreport->save();
-
-        // $part = Part::find($request->part_id);
-
-        // event(new PartReported($partreport));
 
         return response()->json(['success'=>true]);
     }
@@ -364,8 +332,6 @@ class FrameworkController extends Controller
         $corporate->subscription_id = $request->subscription_id;
         $corporate->subscriptionexpires = $request->subscriptionexpires;
         $corporate->save();
-
-        // event(new CorporateCreated($corporate));
 
         return response()->json(['success'=>true]);
     }

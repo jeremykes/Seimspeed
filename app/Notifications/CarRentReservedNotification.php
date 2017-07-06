@@ -7,9 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-use App\Carauctionbid;
+use App\Carrent;
 
-class CarAuctionBidCancelledNotification extends Notification
+class CarRentReservedNotification extends Notification
 {
     use Queueable;
 
@@ -21,11 +21,11 @@ class CarAuctionBidCancelledNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Carauctionbid $carauctionbid)
+    public function __construct(Carrent $carrent)
     {
-        $this->carauctionbid = $carauctionbid;
-        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
-        $this->message = $this->carauctionbid->user->name . ' cancelled your bid.';
+        $this->carrent = $carrent;
+        $this->url = url('/corporate/' . $this->carrent->corporate->id . '/car/' . $this->carrent->car->id . '/rent/' . $this->carrent->id);
+        $this->message = 'This car has been reserved pending payment. Please keep following this car as the buyers may drop out.';
     }
 
     /**

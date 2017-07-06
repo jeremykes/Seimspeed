@@ -30,7 +30,7 @@ Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}/{notificati
 // cargroup  
 Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}/{notification}', 'FrameworkController@carrent'); // carrent 			
 // carrentgroup 	
-Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/{notification}', 'FrameworkController@carsale'); // carsale 			
+Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/', 'FrameworkController@carsale'); // carsale 			
 // carsalegroup  		
 Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{notification}', 'FrameworkController@cartender'); // cartender  		
 // cartendergroup  	
@@ -48,6 +48,12 @@ Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{notification
 | Action Routes
 |--------------------------------------------------------------------------
 */		
+// SOCIAL LOGIN
+// Route::get('/social/redirect/{provider}',   ['as' => 'social.redirect',   'uses' => 'Auth\AuthController@getSocialRedirect']);
+// Route::get('/social/handle/{provider}',     ['as' => 'social.handle',     'uses' => 'Auth\AuthController@getSocialHandle']);
+
+// AJAX LOAD CAR MODEL
+// Route::post('/loadcarmodels', 'UserController@loadcarmodels');
 
 
 /*
@@ -88,6 +94,17 @@ Route::group(['middleware' => ['auth']], function() {
 	| Asynchronous Routes
 	|--------------------------------------------------------------------------
 	*/
+	// PUSHER AUTHENTICATION ROUTE
+	// See if you can move this to the FrameworkController
+	// Route::post('/pusher/auth/{id}', function($id) {
+	// 	if ( Auth::user()->id === (int) $id ) {
+	// 	  $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+	// 	  echo $pusher->socket_auth($_POST['channel_name'], $_POST['socket_id']);
+	// 	} else {
+	// 	  header('', true, 403);
+	// 	  echo "Forbidden";
+	// 	}
+	// }); 
 
 
 	Route::group(['middleware' => ['corpuser']], function() {

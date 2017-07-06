@@ -418,6 +418,45 @@ function checkCorporate(corpID) {
 
 function CarSaleAddedBuild(data) {
     // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carsale' + data['carsale']['id'] + '">';
+    htmltext += '<div class="panel-body">';
+    htmltext += '    <div class="col-md-3" id="carimage' + data['carsale']['id'] + '">';
+    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'] +  '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <ul class="nav navbar-nav navbar-right">';
+    htmltext += '          <li class="dropdown">';
+    htmltext += '              <span style="font-size:10px" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">';
+    htmltext += '                  Options <span class="caret"></span>';
+    htmltext += '              </span>';
+    htmltext += '              <ul class="dropdown-menu" role="menu">';
+    htmltext += '                  <li><a href="#"><i class="fa fa-btn fa-edit"></i> Edit</a></li>';
+    htmltext += '              </ul>';
+    htmltext += '          </li>';
+    htmltext += '        </ul>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carsale']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
+    htmltext += '        <p id="carsaledetails' + data['carsale']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
+    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p>';
+    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>5</span>  <i class="fa fa-comment-o"></i></span></a>';
+    htmltext += '          &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>20</span>  <i class="fa fa-money"></i></span></a>';
+    htmltext += '          &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>6</span>  <i class="fa fa-eye"></i></span></a>';
+    htmltext += '        </p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '      <p style="text-align:center"><span style="cursor:pointer" onclick="$(\'#moreinfo\').toggle()"><i class="fa fa-angle-double-down"></i></span></p>';
+    htmltext += '      <div style="display:none;" id="moreinfo' + data['carsale']['id'] + '">';
+    htmltext += '        <h1>Hi hello!</h1>';
+    htmltext += '      </div>';
+    htmltext += '   </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('newsfeed').prepend(htmltext);
 }
 
 function CarRentAddedBuild(data) {

@@ -10,26 +10,20 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\User;
-use App\Car;
 use App\Carauction;
 
 class CarAuctionClosed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $user;
-        public $car;
-        public $carauction;
+    public $carauction;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, Car $car, Carauction $carauction)
+    public function __construct(Carauction $carauction)
     {
-        $this->user = $user;
-        $this->car = $car;
         $this->carauction = $carauction;
     }
 
@@ -40,6 +34,6 @@ class CarAuctionClosed implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('public-channel');
+        return new Channel('public-channel.carauction.'.$this->carauction->id);
     }
 }

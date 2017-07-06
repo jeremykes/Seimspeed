@@ -90,6 +90,9 @@ class UserController extends Controller
             Notification::send($users, new PartSaleOpenedNotification($partsale));
         }
 
+        // Fire Part Sale added event
+        event(new PartSaleAdded($partsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -191,6 +194,9 @@ class UserController extends Controller
 
         Notification::send($users, new PartSaleClosedNotification($partsale));
 
+        // Fire Part Sale closed event
+        event(new PartSaleClosed($partsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -245,6 +251,9 @@ class UserController extends Controller
 
         $partsaleoffer->$user->notify(new PartSaleOfferReservedNotification($partsaleoffer));
 
+        // Fire Part Sale Offer reserved event
+        event(new PartSaleOfferReserved($partsaleoffer));
+
         return response()->json(['success'=>true]);
     }
 
@@ -291,6 +300,9 @@ class UserController extends Controller
         // Notify user whos reserved is cancelled
 
         $partsaleoffer->$user->notify(new PartSaleOfferReserveCancelledNotification($partsaleoffer));
+
+        // Fire Part Sale Offer reserve cancelled event
+        event(new PartSaleOfferReserveCancelled($partsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -347,6 +359,9 @@ class UserController extends Controller
         Notification::send($users, new PartSalePurchasedNotification($partsaleoffer));
 
         $partsaleoffer->$user->notify(new PartSaleOfferReservePurchasedNotification($partsaleoffer));
+
+        // Fire Part purchased event
+        event(new PartSaleOfferReservePurchased($partsale));
 
         return response()->json(['success'=>true]);
     }

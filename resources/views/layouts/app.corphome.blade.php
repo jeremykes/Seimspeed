@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name') }}</title>
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url('css/seimspeed.css') }}">
@@ -18,56 +18,69 @@
 
     <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
 
-    @if (Auth::check())
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
 
-        <script>
-            // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
+        var pusher = new Pusher('41b9b7f7d7c0187461f6', {
 
-            var pusher = new Pusher('41b9b7f7d7c0187461f6', {
+            // If logged ok add the authEndpoint option
+            @if (Auth::check())
                 authEndpoint: "{{ url('/pusher/auth/' . Auth::user()->id) }}",
-                auth: {
-                    headers: {
-                        'X-CSRF-Token': "{{ csrf_token() }}"
-                        }
-                    },
-                encrypted: true
-            });
+            @endif
 
-            /*
-            |
-            | 1. Subscribe to the Channels
-            |
-            */
+            auth: {
+                headers: {
+                    'X-CSRF-Token': "{{ csrf_token() }}"
+                    }
+                },
+            encrypted: true
+        });
 
-            // PRIVATE
+        /*
+        |
+        | 1. Subscribe to the channels and bind
+        |
+        */
+
+        @if (Auth::check())
             var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
 
-            // PUBLIC
-            var publicChannel = pusher.subscribe('public-channel');
-
-            // Bind the the Private Notification Event
             privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
                 BroadcastNotificationCreated(data);
             });
 
-            // Function for the Notification Events
             function BroadcastNotificationCreated(data) {
                 if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                    if (data.user_sending_id == {{ Auth::user()->id }}) {
-                        var sending_name = 'you';
-                    } else {
-                        var sending_name = data.user_sending_name;
-                    }
-                    $('#newsfeed').append('<div>'+sending_name+' - '+data.message+'<div><hr>');
-                } else {
-                    // NOTIFICATION APPENDING HAPPENS HERE
+                    // New Message Notification appending happens here.
+                } else { 
+                    // Notification appending happens here.
                 }
             }
 
-        </script>
+        @endif
 
-    @endif
+        var publicChannel = pusher.subscribe('public-channel');
+
+        publicChannel.bind('App\\Events\\CarSaleAdded', CarSaleAddedBuild(data));
+        publicChannel.bind('App\\Events\\CarRentAdded', CarRentAddedBuild(data));
+        publicChannel.bind('App\\Events\\CarTenderAdded', CarTenderAddedBuild(data));
+        publicChannel.bind('App\\Events\\CarAuctionAdded', CarAuctionAddedBuild(data));
+        publicChannel.bind('App\\Events\\PartSaleAdded', PartSaleAddedBuild(data));
+
+        publicChannel.bind('App\\Events\\CarSaleClosed', CarSaleClosedBuild(data));
+        publicChannel.bind('App\\Events\\CarRentClosed', CarRentClosedBuild(data));
+        publicChannel.bind('App\\Events\\CarTenderClosed', CarTenderClosedBuild(data));
+        publicChannel.bind('App\\Events\\CarAuctionClosed', CarAuctionClosedBuild(data));
+        publicChannel.bind('App\\Events\\PartSaleClosed', PartSaleClosedBuild(data));
+        
+        publicChannel.bind('App\\Events\\CarSaleOfferReservePurchased', CarSaleOfferReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\CarRentOfferReservePurchased', CarRentOfferReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\CarTenderTenderReservePurchased', CarTenderTenderReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\CarAuctionBidReservePurchased', CarAuctionBidReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\PartSaleOfferReservePurchased', PartSaleOfferReservePurchasedBuild(data));
+
+    </script>
 
     @yield('realtime')
 
@@ -84,7 +97,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name') }}
                     </a>
                 </div>
 
@@ -158,8 +171,31 @@
             </div>
         </nav>
 
-        @yield('content')
-        
+
+        <div class="container">
+            <div class="col-md-12" style="height:200px;background-color:grey">
+                <h1>Corporate</h1>
+            </div>
+
+            <div class="col-md-2">
+                <ul class="list-group">
+                    <li class="list-group-item">Item 1</li>
+                    <li class="list-group-item">Item 2</li>
+                    <li class="list-group-item">Item 3</li>
+                    <li class="list-group-item">Item 4</li>
+                    <li class="list-group-item">Item 5</li>
+                </ul> 
+            </div>
+
+            <div class="col-md-8">
+                @yield('content')
+            </div>
+
+            <div class="col-md-2">
+                <!-- Right column -->
+            </div>
+        </div>
+
     </div>
 
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>

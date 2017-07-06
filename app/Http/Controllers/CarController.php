@@ -104,6 +104,9 @@ class UserController extends Controller
             Notification::send($users, new CarSaleOpenedNotification($carsale));
         }
 
+        // Fire Car Sale added event
+        event(new CarSaleAdded($carsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -205,6 +208,9 @@ class UserController extends Controller
 
         Notification::send($users, new CarSaleClosedNotification($carsale));
 
+        // Fire Car Sale closed event
+        event(new CarSaleClosed($carsale));
+
         return response()->json(['success'=>true]);
     }
 
@@ -259,6 +265,9 @@ class UserController extends Controller
 
         $carsaleoffer->$user->notify(new CarSaleOfferReservedNotification($carsaleoffer));
 
+        // Fire Car Sale Offer reserved event
+        event(new CarSaleOfferReserved($carsaleoffer));
+
         return response()->json(['success'=>true]);
     }
 
@@ -305,6 +314,9 @@ class UserController extends Controller
         // Notify user whos reserved is cancelled
 
         $carsaleoffer->$user->notify(new CarSaleOfferReserveCancelledNotification($carsaleoffer));
+
+        // Fire Car Sale Offer reserve cancelled event
+        event(new CarSaleOfferReserveCancelled($carsaleoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -361,6 +373,9 @@ class UserController extends Controller
         Notification::send($users, new CarSalePurchasedNotification($carsaleoffer));
 
         $carsaleoffer->$user->notify(new CarSaleOfferReservePurchasedNotification($carsaleoffer));
+
+        // Fire Car purchased event
+        event(new CarSaleOfferReservePurchased($carsale));
 
         return response()->json(['success'=>true]);
     }
@@ -424,6 +439,9 @@ class UserController extends Controller
 
             Notification::send($users, new CarRentOpenedNotification($carrent));
         }
+
+        // Fire Car Rent added event
+        event(new CarRentAdded($carrent));
 
         return response()->json(['success'=>true]);
     }
@@ -524,6 +542,9 @@ class UserController extends Controller
 
         Notification::send($users, new CarRentClosedNotification($carrent));
 
+        // Fire Car Rent closed event
+        event(new CarRentClosed($carrent));
+
         return response()->json(['success'=>true]);
     }
 
@@ -569,6 +590,9 @@ class UserController extends Controller
 
         $carrentoffer->$user->notify(new CarRentOfferReservedNotification($carrentoffer));
 
+        // Fire Car Rent Offer reserved event
+        event(new CarRentOfferReserved($carrentoffer));
+
         return response()->json(['success'=>true]);
     }
 
@@ -609,6 +633,9 @@ class UserController extends Controller
         Notification::send($users, new CarRentOpenedNotification($carrentoffer));
 
         $carrentoffer->$user->notify(new CarRentOfferReserveCancelledNotification($carrentoffer));
+
+        // Fire Car Rent Offer reserve cancelled event
+        event(new CarRentOfferReserveCancelled($carrentoffer));
 
         return response()->json(['success'=>true]);
     }
@@ -665,6 +692,9 @@ class UserController extends Controller
         Notification::send($users, new CarRentPurchasedNotification($carrentoffer));
 
         $carrentoffer->$user->notify(new CarRentOfferReservePurchasedNotification($carrentoffer));
+
+        // Fire Car purchased event
+        event(new CarRentOfferReservePurchased($carrent));
 
         return response()->json(['success'=>true]);
     }
@@ -765,6 +795,9 @@ class UserController extends Controller
             Notification::send($users, new CarTenderOpenedNotification($cartender));
         }
 
+        // Fire Car Tender added event
+        event(new CarTenderAdded($cartender));
+
         return response()->json(['success'=>true]);
     }
 
@@ -863,6 +896,9 @@ class UserController extends Controller
             ->get();
 
         Notification::send($users, new CarTenderClosedNotification($cartender));
+
+        // Fire Car Tender closed event
+        event(new CarTenderClosed($cartender--));
 
         return response()->json(['success'=>true]);
     }
@@ -1021,6 +1057,9 @@ class UserController extends Controller
 
         $cartendertender->$user->notify(new CarTenderTenderReservePurchasedNotification($cartendertender));
 
+        // Fire Car purchased event
+        event(new CarTenderTenderReservePurchased($cartender));
+
         return response()->json(['success'=>true]);
     }
 
@@ -1085,6 +1124,9 @@ class UserController extends Controller
 
             Notification::send($users, new CarAuctionOpenedNotification($carauction));
         }
+
+        // Fire Car Auction added event
+        event(new CarAuctionAdded($carauction));
 
         return response()->json(['success'=>true]);
     }
@@ -1187,6 +1229,9 @@ class UserController extends Controller
 
         Notification::send($users, new CarAuctionClosedNotification($carauction));
 
+        // Fire Car Auction closed event
+        event(new CarAuctionClosed($carauction));
+
         return response()->json(['success'=>true]);
     }
 
@@ -1241,6 +1286,9 @@ class UserController extends Controller
 
         $carauctionbid->$user->notify(new CarAuctionBidReservedNotification($carauctionbid));
 
+        // Fire Car Auction Bid reserved event
+        event(new CarAuctionBidReserved($carauctionbid));
+
         return response()->json(['success'=>true]);
     }
 
@@ -1287,6 +1335,9 @@ class UserController extends Controller
         // Notify user whos reserved is cancelled
 
         $carauctionbid->$user->notify(new CarAuctionBidReserveCancelledNotification($carauctionbid));
+
+        // Fire Car Auction Bid reserve cancelled event
+        event(new CarAuctionBidReserveCancelled($carauctionbid));
 
         return response()->json(['success'=>true]);
     }
@@ -1343,6 +1394,9 @@ class UserController extends Controller
         Notification::send($users, new CarAuctionPurchasedNotification($carauctionbid));
 
         $carauctionbid->$user->notify(new CarAuctionBidReservePurchasedNotification($carauctionbid));
+
+        // Fire Car purchased event
+        event(new CarAuctionBidReservePurchased($carauction));
 
         return response()->json(['success'=>true]);
     }

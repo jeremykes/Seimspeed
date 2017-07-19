@@ -7,8 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url('css/seimspeed.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/font-awesome.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
+
+    @yield('css')
 
     <script>
         window.Laravel = {!! json_encode([
@@ -96,7 +99,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/') }}" style="color:white">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
@@ -109,7 +112,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" data-count="7">
-                                  <i class="fa fa-bell-o fa-stack-1x"></i>
+                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
@@ -126,7 +129,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" data-count="99">
-                                  <i class="fa fa-envelope-o fa-stack-1x"></i>
+                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
@@ -143,11 +146,11 @@
                         <li></li>
                         <li></li>
                         @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
+                            <li><a href="{{ route('register') }}" style="color:white">Register</a></li>
                         @else
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:white">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
@@ -155,7 +158,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                                     document.getElementById('logout-form').submit();" style="color:white">
                                             Logout
                                         </a>
 

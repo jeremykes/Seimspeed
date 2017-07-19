@@ -992,7 +992,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .navbar-right{float:right!important;margin-right:-15px}
 .navbar-right~.navbar-right{margin-right:0}
 }
-.navbar-default{background-color:#f8f8f8;border-color:#e7e7e7}
+.navbar-default{background-color:#158cba;border-color:#127ba3}
 .navbar-default .navbar-brand{color:#333}
 .navbar-default .navbar-brand:focus,.navbar-default .navbar-brand:hover{color:#333;background-color:transparent}
 .navbar-default .navbar-text{color:#555}

@@ -1,136 +1,169 @@
-@extends('layouts.app')
+@extends('layouts.trade')
+
+@section('css')
+  <link href="{{ asset('css/lightslider/lightslider.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/lightbox/lightbox.min.css') }}" rel="stylesheet">
+@endsection
 
 @section('content')
 
+<!-- Build initially with PHP -->
+
+<!-- Later you update each element with JS -->
+
 <div class="col-md-12">
-	<div class="panel panel-primary">
-	  <div class="panel-body">
-	      <div class="col-md-3" id="car_images">
-	          
-	      </div>
+    <div class="panel" style="padding-bottom:0;margin-bottom:0">
+        <div class="panel-body">
+            <div class="col-md-3" id="car_images">
+                <ul id="lightSlider">
 
-	      <div class="col-md-9">
+                @foreach ($carsale->car->images as $carimage)
 
-	        
-	      </div>
-	    </div>
-	</div>
-</div>
+                    <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->thumb_img_url }}">
+                      <a href="{{ $carimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $carimage->thumb_img_url }}"/></a>
+                    </li>
 
+                @endforeach
 
-@if (Auth::check())
-	<div class="col-md-12">
-		<div class="col-md-12">
-	      	<div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
-		        <form class="form-inline" id="offerform">
-			        <div class="form-group">
-			            <label>Your offer</label>
-			            <div class="input-group">
-			              	<div class="input-group-addon">K</div>
-			              	<input type="text" class="form-control" placeholder="Amount" name="myoffer" id="myoffer">
-			            </div>
-			        </div>
-			        <a class="btn btn-success btn-xs" onclick="submitoffer()">Offer</a>
-		        </form>
-		        <div class="col-md-12">
-			        &nbsp;
-			        <div class="alert alert-danger" style="display:none" id="offer_error"></div>
-			        <div class="alert alert-success" style="display:none" id="offer_success"></div>
-		        </div>
-	      	</div>
-	    </div>
-	</div>
-@endif
+                </ul>
+            </div>
+            <div class="col-md-9">
 
-<div id="offers">
+                <p>
+                    <span style="text-decoration:bold;font-size:14px;color:gray">
+                        <span id="carmake">{{ $carsale->car->make }}</span> 
+                        <span id="carmodel">{{ $carsale->car->model }}</span>, 
+                        <span id="carcolor">{{ $carsale->car->color }}</span>, 
+                        <span id="cardrive"></span>
+                    </span>
+                    &nbsp;&nbsp;&nbsp;
+                    <label class="label label-danger" style="font-size:16px">sale</label>
+                    <span class="pull-right">
+                        <span style="font-size:20px" id="carprice">K{{ number_format($carsale->price, 2) }}</span>
+                    </span>
+                </p>
+                <p id="cardetails">
+                    Body type: <span style="font-weight:bold">{{ $carsale->car->bodytype }}</span>. 
+                    Weight: <span style="font-weight:bold">{{ $carsale->car->weight }}</span>Kg's. 
+                    Fuel Type: <span style="font-weight:bold">{{ $carsale->car->fueltype }}</span>. 
+                    Transmission: <span style="font-weight:bold">{{ $carsale->car->transmissiontype }}</span>. 
+                    Steering side: <span style="font-weight:bold">{{ $carsale->car->steeringside }}</span>. 
+                    Location: <span style="font-weight:bold">{{ $carsale->car->physicallocation }}</span>. 
+                    <br>
+                    <span style="font-size:11px;color:grey">{{ $carsale->car->note }}
+                </p>
+                <p id="carsalenegotiable">
+                    @if ($carsale->negotiable == 0) 
+                        <span class="label label-warning">Negotiable</span>
+                    @else
+                        <span class="label label-warning">Not negotiable</span>
+                    @endif
+                </p>
+                <p id="carsalenote"><hr style="margin:2px"><span style="font-size:11px;color:grey">{{ $carsale->note }}</span></p>
+                
+                @if ($carsale->group)
+                    <p>In group <a href="#"><span class="label label-primary">go to group</span></a></p>
+                @endif
 
-	@foreach ($offers as $offer)
+            </div>
 
-	    <div class="list-group-item col-md-12" id="list-group-item-{{ $offer->id }}">
-		    <div class="col-md-2">
-		        <img class="img-responsive" src="{{ asset($offer->user->propic) }}"> 
-		    </div>
-		    <div class="col-md-10">
-		        <p><strong><a href="#">{{ $offer->user->name }}</a></strong> <span class="pull-right"><span style="color:gray;font-size:11px" id="user-offer-created-at-{{ $offer->id }}">{{ $offer->created_at }}</span></span></p>
-		        <p style="font-size:18px">K{{ number_format($offer->offer, 2, '.', ',') }} 
+            <div class="col-md-12">
+                <hr style="margin:10px">
+                <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>
+            </div>
 
-			        <span class="pull-right" id="reserved-offer-{{ $offer->id }}">
-
-		                @if ($offer->reserve)
-		                
-		                  	<span class="label label-primary">reserved</span>  
-		                
-		                @endif
-
-			        </span>
-
-		        </p>
-
-		        @if ($carsale->reserves()->count() < 3)
-		        	<p class="pull-right" id="offer-options-{{ $offer->id }}">
-
-			            @allowed('corporate.user', $corporate)
-
-				            @role('sales|administrator')
-				                
-				                <span class="label label-danger" id="offerlisterror{{ $offer->id }}"></span>
-				                <a style="font-size:9px" class="btn btn-xs btn-success" onclick="acceptOffer({{ $offer->id }})">accept offer</a> 
-				                <a style="font-size:9px" class="btn btn-xs btn-default" onclick="deleteOffer({{ $offer->id }})">delete offer</a> 
-
-				            @endrole
-
-			            @endallowed
-
-		        	</p>
-		        @endif
-
-		    </div>
-	    </div>
-
-	@endforeach
-
-</div>
-
-<div id="comments" style="display:none">
-  <div id="commentslist" class="list-group" style="padding-top:0;margin-top:0">
-    <div class="list-group-item col-md-12" style="border:10px solid rgb(231,231,231)">
-      <div class="col-md-12">
-            <input type="text" class="form-control" aria-label="Your comment" style="margin-bottom:5px">
-            <a class="btn btn-default btn-xs">Comment</a>
-      </div>
+        </div>
     </div>
-
-    <!-- Comments are appended here -->
-    @foreach ($comments as $comment)
-
-    	<div class="list-group-item col-md-12">
-    		<div class="col-md-1">
-    			<img class="img-responsive" src="{{ $comments->comment_user_propic }}" style="height:40px;width:auto">
-    		</div>
-    		<div class="col-md-11">
-    			<p>
-    				<strong><a href="{{ $comments->comment_user_url'] }}">{{ $comments->comment_user_name'] }}</a></strong> 
-    				<span class="pull-right">
-    					<span style="color:gray;font-size:11px">{{ $comments->comment_created_at'] }}</span>
-    				</span>
-    			</p>
-    			<p>
-    				$comments->comment_comment'];
-    			</p>
-    		</div>
-    	</div>
-
-    @endforeach
-
-  </div>
 </div>
 
-<div id="tails" style="display:none">
-  	<div id="tailslist" class="list-group" style="padding-top:0;margin-top:0">
+<div class="col-md-12" id="list">
 
-  	<!-- Tails are appended here -->
-
-  	</div>
 </div>
         
+@endsection
+
+
+@section('script')
+
+<script src="{{ asset('js/lightslider/lightslider.min.js') }}"></script>
+<script src="{{ asset('js/lightbox/lightbox.min.js') }}"></script>
+
+<script>
+
+    $(document).ready(function(e) {
+        $('#lightSlider').lightSlider({
+            gallery: false,
+            item: 1,
+            loop: true,
+            slideMargin: 0,
+            thumbItem: 3,
+            autowidth: true,
+            auto: true,
+            pauseOnHover: true,
+            speed: 1000,
+            pause: 5000
+        });
+
+    });
+
+    /*
+    |
+    | Some initial JS variables
+    |
+    */
+
+
+    /*
+    |
+    | 1. Subscribe to the channels and bind
+    |
+    */
+
+    @if (Auth::check())
+        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+            BroadcastNotificationCreated(data);
+        });
+
+        function BroadcastNotificationCreated(data) {
+            if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                // New Message Notification appending happens here.
+            } else { 
+                // Notification appending happens here.
+            }
+        }
+
+    @endif
+
+    var publicCarTradeChannel = pusher.subscribe('public-channel.carsale.{{ $carsale->id }}');
+
+    publicCarTradeChannel.bind('App\\Events\\CarSaleClosed', function(data) {
+    	CarSaleClosedBuildTrade(data); 
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReservePurchased', function(data) {
+    	CarSaleOfferReservePurchasedBuildTrade(data);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserved', function(data) {
+    	CarSaleOfferReservedBuildTrade(data);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserveCancelled', function(data) {
+    	CarSaleOfferReserveCancelledBuildTrade(data);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
+    	CarCommentAddedBuildTrade(data);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferAdded', function(data) {
+    	CarSaleOfferAddedBuildTrade(data);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferCancelled', function(data) {
+    	CarSaleOfferCancelledBuildTrade(data);
+    }); 
+
+</script>
+
 @endsection

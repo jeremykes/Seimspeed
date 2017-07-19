@@ -58,16 +58,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addsale(Request $request, Corporate $corporate, Car $car)
+    public function addsale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'car_id' => 'required|numeric',
+            'price' => 'required|numeric',
+        ]);
+
+        $car = Car::findOrFail($request->car_id);
+
         // This is the check for Corp Car. Move this out to Traits later.
         if ($car->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'price' => 'required|numeric',
-        ]);
 
         $carsale = new Carsale;
         $carsale->corporate_id = $corporate->id;
@@ -116,16 +119,20 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function updatesale(Request $request, Corporate $corporate, Car $car, Carsale $carsale)
+    public function updatesale(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'carsale_id' => 'required|numeric',
             'price' => 'required|numeric',
         ]);
+
+        $carsale = Carsale::findOrFail($request->carsale_id);
+        $car = $carsale->car;
+
+        // This is the check for Corp Carsale. Move this out to Traits later.
+        if ($carsale->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
 
         $carsale->corporate_id = $corporate->id;
         $carsale->car_id = $car->id;
@@ -169,10 +176,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deletesale(Request $request, Corporate $corporate, Car $car, Carsale $carsale)
+    public function deletesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carsale_id' => 'required|numeric',
+        ]);
+
+        $carsale = Carsale::findOrFail($request->carsale_id);
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -187,14 +200,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function closesale(Request $request, Corporate $corporate, Car $car, Carsale $carsale)
+    public function closesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carsale_id' => 'required|numeric',
+        ]);
+
+        $carsale = Carsale::findOrFail($request->carsale_id);
+        $car = $carsale->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
         $carsale->status = 'closed';
+        $carsale->save();
 
         // Notification
         // Notify all users commented, offered, tailed.
@@ -220,10 +241,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function saleofferreserve(Request $request, Corporate $corporate, Car $car, Carsale $carsale, Carsaleoffer $carsaleoffer)
+    public function saleofferreserve(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $carsaleoffer = Carsaleoffer::findOrFail($request->carsaleoffer_id);
+        $carsale = $carsaleoffer->carsale;
+        $car = $carsaleoffer->carsale->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -277,10 +306,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function saleofferreservecancel(Request $request, Corporate $corporate, Car $car, Carsale $carsale, Carsaleoffer $carsaleoffer)
+    public function saleofferreservecancel(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $carsaleoffer = Carsaleoffer::findOrFail($request->carsaleoffer_id);
+        $carsale = $carsaleoffer->carsale;
+        $car = $carsaleoffer->carsale->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -327,10 +364,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function purchasesale(Request $request, Corporate $corporate, Car $car, Carsale $carsale, Carsaleoffer $carsaleoffer, Carsalereserve $carsalereserve)
+    public function purchasesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carsalereserve_id' => 'required|numeric',
+        ]);
+
+        $carsalereserve = Carsalereserve::findOrFail($request->carsalereserve_id);
+        $carsaleoffer = $carsalereserve->carsaleoffer;
+        $carsale = $carsalereserve->carsale;
+        $car = $carsalereserve->carsale->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -394,18 +440,21 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addrent(Request $request, Corporate $corporate, Car $car)
+    public function addrent(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'car_id' => 'required|numeric',
             'rateperday' => 'numeric',
             'rateperhour' => 'numeric',
             'bondfee' => 'numeric',
         ]);
+
+        $car = Car::findOrFail($request->car_id);
+
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($car->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
 
         $carrent = new Carrent;
         $carrent->corporate_id = $corporate->id;
@@ -452,18 +501,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function updaterent(Request $request, Corporate $corporate, Car $car, Carrent $carrent)
+    public function updaterent(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'carrent_id' => 'required|numeric',
             'rateperday' => 'numeric',
             'rateperhour' => 'numeric',
             'bondfee' => 'numeric',
         ]);
+
+        $carrent = Carrent::findOrFail($request->carrent_id);
+        $car = $carrent->car;
+
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($carrent->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
 
         $carrent->corporate_id = $corporate->id;
         $carrent->car_id = $car->id;
@@ -503,10 +556,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deleterent(Request $request, Corporate $corporate, Car $car, Carrent $carrent)
+    public function deleterent(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrent_id' => 'required|numeric',
+        ]);
+
+        $carrent = Carrent::findOrFail($request->carrent_id);
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -521,14 +580,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function closerent(Request $request, Corporate $corporate, Car $car, Carrent $carrent)
+    public function closerent(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrent_id' => 'required|numeric',
+        ]);
+
+        $carrent = Carrent::findOrFail($request->carrent_id);
+        $car = $carrent->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
         $carrent->status = 'closed';
+        $carrent->save();
 
         // Notification 
         // Notify all users commented, offered, tailed.
@@ -554,10 +621,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function rentofferreserve(Request $request, Corporate $corporate, Car $car, Carrent $carrent, Carrentoffer $carrentoffer)
+    public function rentofferreserve(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrentoffer_id' => 'required|numeric',
+        ]);
+
+        $carrentoffer = Carrentoffer::findOrFail($request->carrentoffer_id);
+        $carrent = $carrentoffer->carrent;
+        $car = $carrentoffer->carrent->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -602,10 +677,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function rentofferreservecancel(Request $request, Corporate $corporate, Car $car, Carrent $carrent, Carrentoffer $carrentoffer)
+    public function rentofferreservecancel(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrentoffer_id' => 'required|numeric',
+        ]);
+
+        $carrentoffer = Carrentoffer::findOrFail($request->carrentoffer_id);
+        $carrent = $carrentoffer->carrent;
+        $car = $carrentoffer->carrent->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -646,10 +729,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function purchaserent(Request $request, Corporate $corporate, Car $car, Carrent $carrent, Carrentoffer $carrentoffer, Carrentreserve $carrentreserve)
+    public function purchaserent(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrentreserve_id' => 'required|numeric',
+        ]);
+
+        $carrentreserve = Carrentreserve::findOrFail($request->carrentreserve_id);
+        $carrentoffer = $carrentreserve->carrentoffer;
+        $carrent = $carrentreserve->carrent;
+        $car = $carrentreserve->carrent->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -705,10 +797,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function rentreturned(Request $request, Corporate $corporate, Car $car, Carrent $carrent, Carrentoffer $carrentoffer, Carrentpurchase $carrentpurchase)
+    public function rentreturned(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carrentpurchase_id' => 'required|numeric',
+        ]);
+
+        $carrentpurchase = Carrentpurchase::findOrFail($request->carrentpurchase_id);
+        $carrent = $carrentpurchase->carrent;
+        $carrentoffer = $carrentpurchase->carrentreserve->carrentoffer;
+        $car = $carrentpurchase->carrent->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carrent->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -749,17 +850,20 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addtender(Request $request, Corporate $corporate, Car $car)
+    public function addtender(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'car_id' => 'required|numeric',
+            'startdate' => 'required',
+            'enddate' => 'required',
+        ]);
+
+        $car = Car::findOrFail($request->car_id);
+
         // This is the check for Corp Car. Move this out to Traits later.
         if ($car->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'startdate' => 'required',
-            'enddate' => 'required',
-        ]);
 
         $cartender = new Cartender;
         $cartender->corporate_id = $corporate->id;
@@ -807,17 +911,21 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function updatetender(Request $request, Corporate $corporate, Car $car)
+    public function updatetender(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'cartender_id' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
         ]);
+
+        $cartender = Cartender::findOrFail($request->cartender_id);
+        $car = $cartender->car;
+
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($cartender->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
 
         $cartender->corporate_id = $corporate->id;
         $cartender->car_id = $car->id;
@@ -858,10 +966,17 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deletetender(Request $request, Corporate $corporate, Car $car, Cartender $cartender)
+    public function deletetender(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'cartender_id' => 'required|numeric',
+        ]);
+
+        $cartender = Cartender::findOrFail($request->cartender_id);
+        $car = $cartender->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($cartender->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -876,14 +991,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function closetender(Request $request, Corporate $corporate, Car $car, Cartender $cartender)
+    public function closetender(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'cartender_id' => 'required|numeric',
+        ]);
+
+        $cartender = Cartender::findOrFail($request->cartender_id);
+        $car = $cartender->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($cartender->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
         $cartender->status = 'closed';
+        $cartender->save();
 
         // Notification 
         // Notify all users commented, offered, tailed.
@@ -909,10 +1032,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function tendertenderreserve(Request $request, Corporate $corporate, Car $car, Cartender $cartender, Cartendertender $cartendertender)
+    public function tendertenderreserve(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'cartendertender_id' => 'required|numeric',
+        ]);
+
+        $cartendertender = Cartendertender::findOrFail($request->cartendertender_id);
+        $cartender = $cartendertender->cartender;
+        $car = $cartendertender->cartender->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($cartender->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -963,10 +1094,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function tendertenderreservecancel(Request $request, Corporate $corporate, Car $car, Cartender $cartender, Cartendertender $cartendertender)
+    public function tendertenderreservecancel(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'cartendertender_id' => 'required|numeric',
+        ]);
+
+        $cartendertender = Cartendertender::findOrFail($request->cartendertender_id);
+        $cartender = $cartendertender->cartender;
+        $car = $cartendertender->cartender->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($cartender->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -1010,10 +1149,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function purchasetender(Request $request, Corporate $corporate, Car $car, Cartender $cartender, Cartendertender $cartendertender, Cartenderreserve $cartenderreserve)
+    public function purchasetender(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'cartenderreserve_id' => 'required|numeric',
+        ]);
+
+        $cartenderreserve = Cartenderreserve::findOrFail($request->cartenderreserve_id);
+        $cartendertender = $cartenderreserve->cartendertender;
+        $cartender = $cartenderreserve->cartender;
+        $car = $cartenderreserve->cartender->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($cartender->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -1077,19 +1225,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addauction(Request $request, Corporate $corporate, Car $car)
+    public function addauction(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'car_id' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
             'startbidprice' => 'numeric',
             'signupfee' => 'numeric',
         ]);
+
+        $car = Car::findOrFail($request->car_id);
+
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($car->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
 
         $carauction = new Carauction;
         $carauction->corporate_id = $corporate->id;
@@ -1137,19 +1288,25 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function updateauction(Request $request, Corporate $corporate, Car $car)
+    public function updateauction(Request $request, Corporate $corporate)
     {
-        // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
-
         $this->validate($request, [
+            'carauction_id' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
             'startbidprice' => 'numeric',
             'signupfee' => 'numeric',
         ]);
+
+        $carauction = Carauction::findOrFail($request->carauction_id);
+        $car = $carauction->car;
+
+        // This is the check for Corp Car. Move this out to Traits later.
+        if ($carauction->corporate->id != $corporate->id) {
+            return response()->json(['success'=>false]);
+        }
+
+        
 
         $carauction->corporate_id = $corporate->id;
         $carauction->car_id = $car->id;
@@ -1190,10 +1347,17 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deleteauction(Request $request, Corporate $corporate, Car $car, Carauction $carauction)
+    public function deleteauction(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carauction_id' => 'required|numeric',
+        ]);
+
+        $carauction = Carauction::findOrFail($request->carauction_id);
+        $car = $carauction->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carauction->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -1208,14 +1372,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function closeauction(Request $request, Corporate $corporate, Car $car, Carauction $carauction)
+    public function closeauction(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carauction_id' => 'required|numeric',
+        ]);
+
+        $carauction = Carauction::findOrFail($request->carauction_id);
+        $car = $carauction->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carauction->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
         $carauction->status = 'closed';
+        $carauction->save();
 
         // Notification 
         // Notify all users commented, offered, tailed.
@@ -1241,10 +1413,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function auctionbidreserve(Request $request, Corporate $corporate, Car $car, Carauction $carauction, Carauctionbid $carauctionbid)
+    public function auctionbidreserve(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carauctionbid_id' => 'required|numeric',
+        ]);
+
+        $carauctionbid = Carauctionbid::findOrFail($request->carauctionbid_id);
+        $carauction = $carauctionbid->carauction;
+        $car = $carauctionbid->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carauction->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -1298,10 +1478,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function auctionbidreservecancel(Request $request, Corporate $corporate, Car $car, Carauction $carauction, Carauctionbid $carauctionbid)
+    public function auctionbidreservecancel(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'carauctionbid_id' => 'required|numeric',
+        ]);
+
+        $carauctionbid = Carauctionbid::findOrFail($request->carauctionbid_id);
+        $carauction = $carauctionbid->carauction;
+        $car = $carauctionbid->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carauction->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -1350,8 +1538,17 @@ class UserController extends Controller
      */
     public function purchaseauction(Request $request, Corporate $corporate, Car $car, Carauction $carauction, Carauctionbid $carauctionbid, Carauctionreserve $carauctionreserve)
     {
+        $this->validate($request, [
+            'carauctionreserve_id' => 'required|numeric',
+        ]);
+
+        $carauctionreserve = Carauctionreserve::findOrFail($request->carauctionreserve_id);
+        $carauctionbid = $carauctionreserve->carauctionbid;
+        $carauction = $carauctionreserve->carauction;
+        $car = $carauctionreserve->carauction->car;
+
         // This is the check for Corp Car. Move this out to Traits later.
-        if ($car->corporate->id != $corporate->id) {
+        if ($carauction->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 

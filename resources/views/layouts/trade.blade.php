@@ -7,8 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url('css/seimspeed.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/font-awesome.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
+
+    @yield('css')
 
     <script>
         window.Laravel = {!! json_encode([
@@ -37,52 +40,7 @@
             encrypted: true
         });
 
-        /*
-        |
-        | 1. Subscribe to the channels and bind
-        |
-        */
-
-        @if (Auth::check())
-            var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-            privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-                BroadcastNotificationCreated(data);
-            });
-
-            function BroadcastNotificationCreated(data) {
-                if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                    // New Message Notification appending happens here.
-                } else { 
-                    // Notification appending happens here.
-                }
-            }
-
-        @endif
-
-        var publicChannel = pusher.subscribe('public-channel');
-
-        publicChannel.bind('App\\Events\\CarSaleAdded', CarSaleAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentAdded', CarRentAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderAdded', CarTenderAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionAdded', CarAuctionAddedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleAdded', PartSaleAddedBuild(data));
-
-        publicChannel.bind('App\\Events\\CarSaleClosed', CarSaleClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentClosed', CarRentClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderClosed', CarTenderClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionClosed', CarAuctionClosedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleClosed', PartSaleClosedBuild(data));
-        
-        publicChannel.bind('App\\Events\\CarSaleOfferReservePurchased', CarSaleOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentOfferReservePurchased', CarRentOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderTenderReservePurchased', CarTenderTenderReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionBidReservePurchased', CarAuctionBidReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleOfferReservePurchased', PartSaleOfferReservePurchasedBuild(data));
-
     </script>
-
-    @yield('realtime')
 
 </head>
 <body>
@@ -96,7 +54,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/') }}" style="color:white">
                         {{ config('app.name') }}
                     </a>
                 </div>
@@ -109,7 +67,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" data-count="7">
-                                  <i class="fa fa-bell-o fa-stack-1x"></i>
+                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
@@ -126,7 +84,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" data-count="99">
-                                  <i class="fa fa-envelope-o fa-stack-1x"></i>
+                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
@@ -143,11 +101,11 @@
                         <li></li>
                         <li></li>
                         @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
+                            <li><a href="{{ route('register') }}" style="color:white">Register</a></li>
                         @else
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:white">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
@@ -155,7 +113,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                                     document.getElementById('logout-form').submit();" style="color:white">
                                             Logout
                                         </a>
 
@@ -171,31 +129,49 @@
             </div>
         </nav>
 
-
         <div class="container">
-            <div class="col-md-12" style="height:200px;background-color:grey">
-                <h1>Corporate</h1>
-            </div>
-
-            <div class="col-md-2">
-                <ul class="list-group">
-                    <li class="list-group-item">Item 1</li>
-                    <li class="list-group-item">Item 2</li>
-                    <li class="list-group-item">Item 3</li>
-                    <li class="list-group-item">Item 4</li>
-                    <li class="list-group-item">Item 5</li>
-                </ul> 
+            
+            <div class="col-md-1">
+                    <!-- Left Column -->
             </div>
 
             <div class="col-md-8">
-                @yield('content')
+                    @yield('content')
             </div>
 
-            <div class="col-md-2">
-                <!-- Right column -->
+            <div class="col-md-3">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 1
+                    </div>
+                    <div class="panel-body">
+                        Advert 1 content
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 2
+                    </div>
+                    <div class="panel-body">
+                        Advert 2 content
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 3
+                    </div>
+                    <div class="panel-body">
+                        Advert 3 content
+                    </div>
+                </div>
+
             </div>
+
         </div>
-
+        
     </div>
 
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>

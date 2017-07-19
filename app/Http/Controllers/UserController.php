@@ -29,7 +29,8 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');   
+        $this->middleware('auth');  
+        // 
     }
 
     /**
@@ -41,8 +42,11 @@ class UserController extends Controller
     public function rate(Request $request, Corporate $corporate)
     {
         $this->validate($request, [
-            'rating' => 'required',
+            'corporate_id' => 'required|numeric',
+            'rating' => 'required|numeric',
         ]);
+
+        $corporate = Corporate::findOfFail($request->corporate_id);
 
         $corporaterating_exist = Corporaterating::where('corporate_id', $corporate->id)->where('user_id', Auth::user->id)->first();
 
@@ -79,8 +83,14 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function tailcorporate(Request $request, Corporate $corporate)
+    public function tailcorporate(Request $request)
     {
+        $this->validate($request, [
+            'corporate_id' => 'required|numeric',
+        ]);
+
+        $corporate = Corporate::findOfFail($request->corporate_id);
+
         $corporatetail_exist = Corporatetail::where('corporate_id', $corporate->id)->where('user_id', Auth::user->id)->first();
 
         if ($corporatetail_exist === null) {
@@ -113,22 +123,29 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addcarcomment(Request $request, Car $car)
+    public function addcarcomment(Request $request)
     {
+        $this->validate($request, [
+            'car_id' => 'required|numeric',
+            'parent_comment_id' => 'numeric',
+            'comment' => 'required',
+        ]);
+
         $carcomment = New Carcomment;
         if ($request->parent_comment_id) {
             $carcomment->parent_comment_id = $request->parent_comment_id;
         }
         $carcomment->user_id = Auth::user->id;
-        $carcomment->car_id = $car->id;
+        $carcomment->car_id = $request->car_id;
         $carcomment->comment = $request->comment;
+        $carcomment->save();
 
         // Notification
         // Notify all corpusers
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carcomment->car->corporate->id)
             ->get();
 
         Notification::send($users, new CarCommentAddedNotification($carcomment));
@@ -150,13 +167,14 @@ class UserController extends Controller
         if (Auth::user->id == $carcomment->user_id) {
             $carcomment->comment = $request->comment;
         }
+        $carcomment->save();
 
         // Notification
         // Notify all corpusers
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $car->corporate->id)
             ->get();
 
         Notification::send($users, new CarCommentUpdatedNotification($carcomment));
@@ -173,8 +191,15 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deletecarcomment(Request $request, Car $car, Carcomment $carcomment)
+    public function deletecarcomment(Request $request)
     {
+        $this->validate($request, [
+            'car_id' => 'required|numeric',
+            'comment_id' => 'required|numeric',
+        ]);
+
+        $carcomment = Carcomment::findOfFail($request->comment_id);
+
         if (Auth::user->id == $carcomment->user_id) {
             $carcomment->delete();
         }
@@ -223,8 +248,14 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function tailcar(Request $request, Car $car)
+    public function tailcar(Request $request)
     {
+        $this->validate($request, [
+            'car_id' => 'required|numeric',
+        ]);
+
+        $car = Car::findOfFail($request->car_id);
+
         $cartail_exist = Cartail::where('car_id', $car->id)->where('user_id', Auth::user->id)->first();
 
         if ($cartail_exist === null) {
@@ -238,10 +269,10 @@ class UserController extends Controller
 
             $users = DB::table('users')
                 ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $corporate->id)
+                ->where('corpnotificables.corporate_id', $car->corporate->id)
                 ->get();
 
-            Notification::send($users, new CarTailedNotification($carlike));
+            Notification::send($users, new CarTailedNotification($cartail));
 
         } else {
             if (Auth::user->id == $cartail_exist->user_id) {
@@ -258,29 +289,32 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carsaleoffer(Request $request, Carsale $carsale)
+    public function carsaleoffer(Request $request)
     {
+        $this->validate($request, [
+            'carsale_id' => 'required|numeric',
+            'offer' => 'required|numeric',
+        ]);
+
+        $carsale = Carsale::find($request->carsale_id);
+
         // This is the check for Carsale status. Move this out to Traits later.
         if ($carsale->status != 'opened') {
             return response()->json(['success'=>false]);
         }
 
-        $this->validate($request, [
-            'offer' => 'required|numeric',
-        ]);
-
         $carsaleoffer = new Carsaleoffer;
-        $carsaleoffer->carsale_id = $carsale->id;
+        $carsaleoffer->carsale_id = $request->carsale_id;
         $carsaleoffer->user_id = Auth::user->id;
         $carsaleoffer->offer = $request->offer;
-        $carsale->save();
+        $carsaleoffer->save();
 
         // Notification
         // Notify sales,admin corpusers
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carsale->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -299,8 +333,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carsaleoffercancel(Request $request, Carsale $carsale, Carsaleoffer $carsaleoffer)
+    public function carsaleoffercancel(Request $request)
     {
+        $this->validate($request, [
+            'carsale_id' => 'required|numeric',
+            'carsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $carsale = Carsale::findOfFail($request->carsale_id);
+        $carsaleoffer = Carsaleoffer::findOfFail($request->carsaleoffer_id);
+
         // This is the check for Carsale status. Move this out to Traits later.
         if ($carsale->status != 'reserved' || $carsale->status != 'opened') {
             return response()->json(['success'=>false]);
@@ -314,7 +356,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carsale->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -334,17 +376,20 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carrentoffer(Request $request, Carrent $carrent)
+    public function carrentoffer(Request $request)
     {
+        $this->validate($request, [
+            'carrent_id' => 'required|numeric',
+            'offer' => 'required|numeric',
+            'daysofrent' => 'required|numeric',
+        ]);
+
+        $carrent = Carrent::findOfFail($request->carrent_id);
+
         // This is the check for Carrent status. Move this out to Traits later.
         if ($carrent->status != 'opened') {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'offer' => 'required|numeric',
-            'daysofrent' => 'required|numeric',
-        ]);
 
         $carrentoffer = new Carrentoffer;
         $carrentoffer->carrent_id = $carrent->id;
@@ -358,7 +403,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carrent->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -377,8 +422,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carrentoffercancel(Request $request, Carrent $carrent, Carrentoffer $carrentoffer)
+    public function carrentoffercancel(Request $request)
     {
+        $this->validate($request, [
+            'carrent_id' => 'required|numeric',
+            'carrentoffer_id' => 'required|numeric',
+        ]);
+
+        $carrent = Carrent::findOfFail($request->carrent_id);
+        $carrentoffer = Carrentoffer::findOfFail($request->carrentoffer_id);
+
         // This is the check for Carrent status. Move this out to Traits later.
         if ($carrent->status != 'reserved' || $carrent->status != 'opened') {
             return response()->json(['success'=>false]);
@@ -392,7 +445,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carrent->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -412,16 +465,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function cartendertender(Request $request, Cartender $cartender)
+    public function cartendertender(Request $request)
     {
+        $this->validate($request, [
+            'cartender_id' => 'required|numeric',
+            'tender' => 'required|numeric',
+        ]);
+
+        $cartender = Cartender::findOfFail($request->cartender_id);
+
         // This is the check for Cartender status. Move this out to Traits later.
         if ($cartender->status != 'opened') {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'tender' => 'required|numeric',
-        ]);
 
         $cartendertender = new Cartendertender;
         $cartendertender->cartender_id = $cartender->id;
@@ -434,7 +490,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $cartender->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -453,8 +509,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function cartendertendercancel(Request $request, Cartender $cartender, Cartendertender $cartendertender)
+    public function cartendertendercancel(Request $request)
     {
+        $this->validate($request, [
+            'cartender_id' => 'required|numeric',
+            'cartendertender_id' => 'required|numeric',
+        ]);
+
+        $cartender = Cartender::findOfFail($request->cartender_id);
+        $cartendertender = Cartendertender::findOfFail($request->cartendertender_id);
+
         // This is the check for Cartender status. Move this out to Traits later.
         if ($cartender->status != 'reserved' || $cartender->status != 'opened') {
             return response()->json(['success'=>false]);
@@ -468,7 +532,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $cartender->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -488,16 +552,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carauctionbid(Request $request, Carauction $carauction)
+    public function carauctionbid(Request $request)
     {
+        $this->validate($request, [
+            'carauction_id' => 'required|numeric',
+            'bid' => 'required|numeric',
+        ]);
+
+        $carauction = Carauction::findOfFail($request->carauction_id);
+
         // This is the check for Carauction status. Move this out to Traits later.
         if ($carauction->status != 'opened') {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'bid' => 'required|numeric',
-        ]);
 
         $carauctionbid = new Carauctionbid;
         $carauctionbid->carauction_id = $carauction->id;
@@ -510,7 +577,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carauction->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -529,8 +596,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function carauctionbidcancel(Request $request, Carauction $carauction, Carauctionbid $carauctionbid)
+    public function carauctionbidcancel(Request $request)
     {
+        $this->validate($request, [
+            'carauction_id' => 'required|numeric',
+            'carauctionbid_id' => 'required|numeric',
+        ]);
+
+        $carauction = Carauction::findOfFail($request->carauction_id);
+        $carauctionbid = Carauctionbid::findOfFail($request->carauctionbid_id);
+
         // This is the check for Carauction status. Move this out to Traits later.
         if ($carauction->status != 'reserved' || $carauction->status != 'opened') {
             return response()->json(['success'=>false]);
@@ -544,7 +619,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $carauction->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -564,22 +639,29 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addpartcomment(Request $request, Part $part)
+    public function addpartcomment(Request $request)
     {
+        $this->validate($request, [
+            'part_id' => 'required|numeric',
+            'parent_comment_id' => 'numeric',
+            'comment' => 'required',
+        ]);
+
         $partcomment = New Partcomment;
         if ($request->parent_comment_id) {
             $partcomment->parent_comment_id = $request->parent_comment_id;
         }
         $partcomment->user_id = Auth::user->id;
-        $partcomment->part_id = $part->id;
+        $partcomment->part_id = $partcomment->part_id;
         $partcomment->comment = $request->comment;
+        $partcomment->save();
 
         // Notification
         // Notify all corpusers
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $partcomment->part->corporate->id)
             ->get();
 
         Notification::send($users, new PartCommentAddedNotification($partcomment));
@@ -601,6 +683,7 @@ class UserController extends Controller
         if (Auth::user->id == $partcomment->user_id) {
             $partcomment->comment = $request->comment;
         }
+        $partcomment->save();
 
         // Notification
         // Notify all corpusers
@@ -674,8 +757,14 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function tailpart(Request $request, Part $part)
+    public function tailpart(Request $request)
     {
+        $this->validate($request, [
+            'part_id' => 'required|numeric',
+        ]);
+
+        $part = Part::findOfFail($request->part_id);
+
         $parttail_exist = Parttail::where('part_id', $part->id)->where('user_id', Auth::user->id)->first();
 
         if ($parttail_exist === null) {
@@ -689,10 +778,10 @@ class UserController extends Controller
 
             $users = DB::table('users')
                 ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $corporate->id)
+                ->where('corpnotificables.corporate_id', $part->corporate->id)
                 ->get();
 
-            Notification::send($users, new PartTailedNotification($partlike));
+            Notification::send($users, new PartTailedNotification($parttail));
 
         } else {
             if (Auth::user->id == $parttail_exist->user_id) {
@@ -709,16 +798,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function partsaleoffer(Request $request, Partsale $partsale)
+    public function partsaleoffer(Request $request)
     {
+        $this->validate($request, [
+            'partsale_id' => 'required|numeric',
+            'offer' => 'required|numeric',
+        ]);
+
+        $partsale = Partsale::findOfFail($request->partsale_id);
+
         // This is the check for Partsale status. Move this out to Traits later.
         if ($partsale->status != 'opened') {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'offer' => 'required|numeric',
-        ]);
 
         $partsaleoffer = new Partsaleoffer;
         $partsaleoffer->partsale_id = $partsale->id;
@@ -731,7 +823,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $partsale->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();
@@ -750,8 +842,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function partsaleoffercancel(Request $request, Partsale $partsale, Partsaleoffer $partsaleoffer)
+    public function partsaleoffercancel(Request $request)
     {
+        $this->validate($request, [
+            'partsale_id' => 'required|numeric',
+            'partsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $partsale = Partsale::findOfFail($request->partsale_id);
+        $partsaleoffer = Partsaleoffer::findOfFail($request->partsaleoffer_id);
+
         // This is the check for Partsale status. Move this out to Traits later.
         if ($partsale->status != 'reserved' || $partsale->status != 'opened') {
             return response()->json(['success'=>false]);
@@ -765,7 +865,7 @@ class UserController extends Controller
 
         $users = DB::table('users')
             ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
+            ->where('corpnotificables.corporate_id', $partsale->corporate->id)
             ->where('corpnotificables.role', 'sales')
             ->where('corpnotificables.role', 'admin')
             ->get();

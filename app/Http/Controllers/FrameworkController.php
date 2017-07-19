@@ -40,6 +40,9 @@ class FrameworkController extends Controller
             'reportcar',
             'reportpart',
             'addcorporate',
+            'pusherauthenticate',
+            'iscorpuser',
+            'hascorpuserrole',
         ]]);
 
         $this->middleware('corpuser', ['only' => [
@@ -48,6 +51,8 @@ class FrameworkController extends Controller
             'corporatesettings',
         ]]);
     }
+
+
 
     // ===================================================================================
     // 
@@ -81,12 +86,8 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carauction(Corporate $corporate, Car $car, Carauction $carauction, DatabaseNotification $notification = null)
+    public function carauction(Corporate $corporate, Car $car, Carauction $carauction)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
         return view('car.carauction', [
             'carauction' => $carauction,
         ]); 
@@ -97,12 +98,8 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carrent(Corporate $corporate, Car $car, Carrent $carrent, DatabaseNotification $notification = null)
+    public function carrent(Corporate $corporate, Car $car, Carrent $carrent)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
         return view('car.carrent', [
             'carrent' => $carrent,
         ]); 
@@ -115,10 +112,6 @@ class FrameworkController extends Controller
      */
     public function carsale(Corporate $corporate, Car $car, Carsale $carsale)
     {
-        // if ($notification != null) {
-        //     $notification->markAsRead();    
-        // }
-
         return view('car.carsale', [
             'carsale' => $carsale,
         ]); 
@@ -129,12 +122,8 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function cartender(Corporate $corporate, Car $car, Cartender $cartender, DatabaseNotification $notification = null)
+    public function cartender(Corporate $corporate, Car $car, Cartender $cartender)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
         return view('car.cartender', [
             'cartender' => $cartender,
         ]); 
@@ -145,12 +134,8 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function partsale(Corporate $corporate, Part $part, Partsale $partsale, DatabaseNotification $notification = null)
+    public function partsale(Corporate $corporate, Part $part, Partsale $partsale)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
         return view('part.partsale', [
             'partsale' => $partsale,
         ]); 
@@ -161,12 +146,8 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function corporatehome(Corporate $corporate, DatabaseNotification $notification = null)
+    public function corporatehome(Corporate $corporate)
     {
-        if ($notification != null) {
-            $notification->markAsRead();    
-        }
-
         return view('corp.home', [
             'corporate' => $corporate,
         ]); 
@@ -207,6 +188,161 @@ class FrameworkController extends Controller
             'corporate' => $corporate,
         ]); 
     }
+
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Getters
+    // 
+    // 
+    // ===================================================================================
+
+    /**
+     * Get the Carsale offers
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarsaleoffers(Request $request) {
+        // get car offers
+        $this->validate($request, [
+            'carsale_id' => 'required|integer',
+        ]);
+
+        $carsaleoffers = Carsaleoffers::get($request->carsale_id);
+
+        return response()->json(['success'=>true, 'carsaleoffers'=>$carsaleoffers]);
+    }
+
+    /**
+     * Get the Carrent offers
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarrentoffers(Request $request) {
+        // get car offers
+        $this->validate($request, [
+            'carrent_id' => 'required|integer',
+        ]);
+
+        $carrentoffers = Carrentoffers::get($request->carrent_id);
+
+        return response()->json(['success'=>true, 'carrentoffers'=>$carrentoffers]);
+    }
+
+    /**
+     * Get the Cartender tenders
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcartendertenders(Request $request) {
+        // get car tenders
+        $this->validate($request, [
+            'cartender_id' => 'required|integer',
+        ]);
+
+        $cartendertenders = Cartendertenders::get($request->cartender_id);
+
+        return response()->json(['success'=>true, 'cartendertenders'=>$cartendertenders]);
+    }
+
+    /**
+     * Get the Carauction bids
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarauctionbids(Request $request) {
+        // get car bids
+        $this->validate($request, [
+            'carauction_id' => 'required|integer',
+        ]);
+
+        $carauctionbids = Carauctionbids::get($request->carauction_id);
+
+        return response()->json(['success'=>true, 'carauctionbids'=>$carauctionbids]);
+    }
+
+    /**
+     * Get the Partsale offers
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getpartsaleoffers(Request $request) {
+        // get part comments
+        $this->validate($request, [
+            'partsale_id' => 'required|integer',
+        ]);
+
+        $partsaleoffers = partsaleoffers::get($request->partsale_id);
+
+        return response()->json(['success'=>true, 'partsaleoffers'=>$partsaleoffers]);
+    }
+
+    /**
+     * Get the car comments
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarcomments(Request $request) {
+        // get car comments
+        $this->validate($request, [
+            'car_id' => 'required|integer',
+        ]);
+
+        $carcomments = Carcomment::get($request->car_id);
+
+        return response()->json(['success'=>true, 'carcomments'=>$carcomments]);
+    }
+
+    /**
+     * Get the part comments
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getpartcomments(Request $request) {
+        // get part comments
+        $this->validate($request, [
+            'part_id' => 'required|integer',
+        ]);
+
+        $partcomments = partcomment::get($request->part_id);
+
+        return response()->json(['success'=>true, 'partcomments'=>$partcomments]);
+    }
+
+    /**
+     * Get the Car tails
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcartails(Request $request) {
+        // get car tails
+        $this->validate($request, [
+            'car_id' => 'required|integer',
+        ]);
+
+        $cartails = Cartail::get($request->car_id);
+
+        return response()->json(['success'=>true, 'cartails'=>$cartails]);
+    }
+
+    /**
+     * Get the Part tails
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getparttails(Request $request) {
+        // get part tails
+        $this->validate($request, [
+            'part_id' => 'required|integer',
+        ]);
+
+        $parttails = parttail::get($request->part_id);
+
+        return response()->json(['success'=>true, 'parttails'=>$parttails]);
+    }
+
 
 
     // ===================================================================================
@@ -347,4 +483,89 @@ class FrameworkController extends Controller
 
         return response()->json(['success'=>true]);
     }
+
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Checks and Misc Ajax Calls
+    // 
+    // 
+    // ===================================================================================
+
+    /**
+     * Authenticate User to Pusher Channel
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function pusherauthenticate($id) {
+         if ( Auth::user()->id === (int) $id ) {
+           $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+           echo $pusher->socket_auth($_POST['channel_name'], $_POST['socket_id']);
+         } else {
+           header('', true, 403);
+           echo "Forbidden";
+         }
+    }
+
+    /**
+     * Check if user is a Corporate user
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function iscorpuser(Request $request)
+    {
+        $this->validate($request, [
+            'corp_id' => 'required|integer',
+        ]);
+
+        $success = false;
+
+        if (Auth::user()->corporateuser) {
+            if (Auth::user()->corporateuser->corporate->id == $request->corp_id) {
+                $success = true;
+            }
+        }
+
+        return response()->json(['success'=>$success]);
+    }
+
+    /**
+     * Check if user is a Corporate user and has role
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function hascorpuserrole(Request $request)
+    {
+        $this->validate($request, [
+            'corp_id' => 'required|integer',
+            'role' => 'required',
+        ]);
+
+        $success = false;
+
+        if (Auth::user()->corporateuser) {
+            if (Auth::user()->corporateuser->corporate->id == $request->corp_id && Auth::user()->hasRole($request->role)) {
+                $success = true;
+            }
+        }
+
+        return response()->json(['success'=>$success]);
+    }
+
+    /**
+     * Return the Car models
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function loadcarmodels(Request $request)
+    {
+        $carmodels = Carmakemodel::where('make', $request->make)->groupBy('model')->pluck('model')->toArray();
+
+        return response()->json($carmodels);
+    }
+
 }

@@ -44,16 +44,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addsale(Request $request, Corporate $corporate, Part $part)
+    public function addsale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'part_id' => 'required|numeric',
+            'price' => 'required|numeric',
+        ]);
+
+        $part = Part::findOrFail($request->part_id);
+
         // This is the check for Corp part. Move this out to Traits later.
         if ($part->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
-
-        $this->validate($request, [
-            'price' => 'required|numeric',
-        ]);
 
         $partsale = new Partsale;
         $partsale->corporate_id = $corporate->id;
@@ -102,10 +105,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function updatesale(Request $request, Corporate $corporate, Part $part, Partsale $partsale)
+    public function updatesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsale_id' => 'required|numeric',
+            'price' => 'required|numeric',
+        ]);
+
+        $partsale = Partsale::findOrFail($request->partsale_id);
+        $part = $partsale->part;
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -155,10 +166,16 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deletesale(Request $request, Corporate $corporate, Part $part, Partsale $partsale)
+    public function deletesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsale_id' => 'required|numeric',
+        ]);
+
+        $partsale = Partsale::findOrFail($request->partsale_id);
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -173,14 +190,22 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function closesale(Request $request, Corporate $corporate, Part $part, Partsale $partsale)
+    public function closesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsale_id' => 'required|numeric',
+        ]);
+
+        $partsale = Partsale::findOrFail($request->partsale_id);
+        $part = $partsale->part;
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
         $partsale->status = 'closed';
+        $partsale->save();
 
         // Notification
         // Notify all users commented, offered, tailed.
@@ -206,10 +231,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function saleofferreserve(Request $request, Corporate $corporate, Part $part, Partsale $partsale, Partsaleoffer $partsaleoffer)
+    public function saleofferreserve(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $partsaleoffer = Partsaleoffer::findOrFail($request->partsaleoffer_id);
+        $partsale = $partsaleoffer->partsale;
+        $part = $partsaleoffer->partsale->part;
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -263,10 +296,18 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function saleofferreservecancel(Request $request, Corporate $corporate, Part $part, Partsale $partsale, Partsaleoffer $partsaleoffer)
+    public function saleofferreservecancel(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsaleoffer_id' => 'required|numeric',
+        ]);
+
+        $partsaleoffer = Partsaleoffer::findOrFail($request->partsaleoffer_id);
+        $partsale = $partsaleoffer->partsale;
+        $part = $partsaleoffer->partsale->part;
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 
@@ -313,10 +354,19 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function purchasesale(Request $request, Corporate $corporate, Part $part, Partsale $partsale, Partsaleoffer $partsaleoffer, Partsalereserve $partsalereserve)
+    public function purchasesale(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'partsalereserve_id' => 'required|numeric',
+        ]);
+
+        $partsalereserve = Partsalereserve::findOrFail($request->partsalereserve_id);
+        $partsaleoffer = $partsalereserve->partsaleoffer;
+        $partsale = $partsalereserve->partsale;
+        $part = $partsalereserve->partsale->part;
+
         // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
+        if ($partsale->corporate->id != $corporate->id) {
             return response()->json(['success'=>false]);
         }
 

@@ -4,695 +4,1268 @@ $(function () {
     });
 });
 
-// ===================================================================================
-// 
-// 
-//     HOME AND CORPORATE HOME VIEWS   -   Dynamic Page Builders (add car and part groups later)
-// 
-// 
-// ===================================================================================
-// function newsfeedbuilder(trades, htmlid) {
-// 	// page = newsfeed
-//     var htmltext = '<div class="panel panel-primary"><div class="panel-body" style="border-radius:0"><div class="col-md-4"><h5>';
 
-//     for (var i = 0; i < trades.length; i++) {
-
-//     	var carOrPart = '';
-//     	var image = '';
-//     	var corporateName = '';
-//     	var timePosted = '';
-//     	var type = '';
-//     	var description = '';
-//     	var numberOfComments = '';
-//     	var numberOfTailing = '';
-//     	var numberOfOffers = '';
-//     	var negotiable = '';
-//     	var price = '';
-
-//     	if (trades[i].carorpart) {
-//     		carOrPart = trades[i].carorpart;
-//     	}
-//     	if (trades[i].image) {
-//     		image = trades[i].image;
-//     	}
-//     	if (trades[i].corporatename) {
-//     		corporateName = trades[i].corporatename;
-//     	}
-//     	if (trades[i].timeposted) {
-//     		timePosted = trades[i].timeposted;
-//     	}
-//     	if (trades[i].type) {
-//     		type = trades[i].type;
-//     	}
-//     	if (trades[i].description) {
-//     		description = trades[i].description;
-//     	}
-//     	if (trades[i].numberofcomments) {
-//     		numberofcomments = trades[i].numberofcomments;
-//     	}
-//     	if (trades[i].numberoftailing) {
-//     		numberOfTailing = trades[i].numberoftailing;
-//     	}
-//     	if (trades[i].numberofoffers) {
-//     		numberOfOffers = trades[i].numberofoffers;
-//     	}
-//     	if (trades[i].negotiable) {
-//     		negotiable = trades[i].negotiable;
-//     	}
-//     	if (trades[i].price) {
-//     		price = trades[i].price;
-//     	}
-
-// 		htmltext += carOrPart;
-// 		htmltext += '</h5><img class="img-responsive" src="';
-// 		htmltext += image;
-// 		htmltext += '"></div><div class="col-md-8"><p><strong>';
-// 		htmltext += corporateName;
-// 		htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-// 		htmltext += timePosted;
-// 		htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-// 		htmltext += type;
-// 		htmltext += '</span></span></p><p>';
-// 		htmltext += description;
-// 		htmltext += '</p><p><span style="color:gray;font-size:11px">';
-// 		htmltext += numberOfComments;
-// 		htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-// 		htmltext += numberOfOffers;
-// 		htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-// 		htmltext += numberOfTailing;
-// 		htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-// 		htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-// 		htmltext += '</span><span class="pull-right"><span style="font-size:9px;color:grey">';
-// 		htmltext += negotiable;
-// 		htmltext += '</span>&nbsp;&nbsp;<span class="label label-default" style="font-size:15px">';
-// 		htmltext += price;
-// 		htmltext += '</span></span></p></div></div></div>';
-//     }
-
-//     $('#' + htmlid).prepend(htmltext);
-
-// }
-
-function carsaleBuilder(carsale, htmlid) {
-	// page = carsale
-	var htmltext = '';
-
-    htmltext += 'Car';
-	htmltext += '</h5><img class="img-responsive" src="';
-	htmltext += carsale.image;
-	htmltext += '"></div><div class="col-md-8"><p><strong>';
-	htmltext += carsale.corporateName;
-	htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-	htmltext += carsale.timePosted;
-	htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-	htmltext += carsale.type;
-	htmltext += '</span></span></p><p>';
-	htmltext += carsale.description;
-	htmltext += '</p><p><span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfComments;
-	htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfOffers;
-	htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfTailing;
-	htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-	htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-	htmltext += '</span><span class="pull-right"><span style="font-size:9px;color:grey">';
-	htmltext += carsale.negotiable;
-	htmltext += '</span>&nbsp;&nbsp;<span class="label label-default" style="font-size:15px">';
-	htmltext += carsale.price;
-	htmltext += '</span></span></p></div></div></div>';
-
-	$('#' + htmlid).prepend(htmltext);
-	
-}
-
-function carrentBuilder(carrent, htmlid) {
-	// page = carrent
-    var htmltext = '';
-
-    htmltext += 'Car';
-	htmltext += '</h5><img class="img-responsive" src="';
-	htmltext += carrent.image;
-	htmltext += '"></div><div class="col-md-8"><p><strong>';
-	htmltext += carrent.corporateName;
-	htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-	htmltext += carrent.timePosted;
-	htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-	htmltext += carrent.type;
-	htmltext += '</span></span></p><p>';
-	htmltext += carrent.description;
-	htmltext += '</p><p><span style="color:gray;font-size:11px">';
-	htmltext += carrent.numberOfComments;
-	htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carrent.numberOfTailing;
-	htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-	htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-	htmltext += '</span><span class="pull-right">';
-	htmltext += '<span class="label label-default" style="font-size:15px">';
-	htmltext += carrent.price;
-	htmltext += '</span></span></p></div></div></div>';
-
-	$('#canvas').prepend(htmltext);
-
-}
-
-function cartenderBuilder(cartender, htmlid) {
-	// page = cartender
-    var htmltext = '';
-
-    htmltext += 'Car';
-	htmltext += '</h5><img class="img-responsive" src="';
-	htmltext += cartender.image;
-	htmltext += '"></div><div class="col-md-8"><p><strong>';
-	htmltext += cartender.corporateName;
-	htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-	htmltext += cartender.timePosted;
-	htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-	htmltext += cartender.type;
-	htmltext += '</span></span></p><p>';
-	htmltext += cartender.description;
-	htmltext += '</p><p><span style="color:gray;font-size:11px">';
-	htmltext += cartender.numberOfComments;
-	htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += cartender.numberOfTailing;
-	htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-	htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-	htmltext += '</span><span class="pull-right">';
-	htmltext += '</span></p></div></div></div>';
-
-	$('#' + htmlid).prepend(htmltext);
-
-}
-
-function carauctionBuilder(carauction, htmlid) {
-	// page = carauction
-    var htmltext = '';
-
-    htmltext += 'Car';
-	htmltext += '</h5><img class="img-responsive" src="';
-	htmltext += carauction.image;
-	htmltext += '"></div><div class="col-md-8"><p><strong>';
-	htmltext += carauction.corporateName;
-	htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-	htmltext += carauction.timePosted;
-	htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-	htmltext += carauction.type;
-	htmltext += '</span></span></p><p>';
-	htmltext += carauction.description;
-	htmltext += '</p><p><span style="color:gray;font-size:11px">';
-	htmltext += carauction.numberOfComments;
-	htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carauction.numberOfOffers;
-	htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carauction.numberOfTailing;
-	htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-	htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-	htmltext += '</span><span class="pull-right">';
-	htmltext += '</span></p></div></div></div>';
-
-	$('#' + htmlid).prepend(htmltext);
-
-}
-
-function partsaleBuilder(partsale, htmlid) {
-	// page = partsale
-    var htmltext = '';
-
-    htmltext += 'Part';
-	htmltext += '</h5><img class="img-responsive" src="';
-	htmltext += carsale.image;
-	htmltext += '"></div><div class="col-md-8"><p><strong>';
-	htmltext += carsale.corporateName;
-	htmltext += '</strong> <span class="pull-right" style="font-size:10px;color:gray">';
-	htmltext += carsale.timePosted;
-	htmltext += '&nbsp;&nbsp;<span class="label label-danger" style="font-size:15px">';
-	htmltext += carsale.type;
-	htmltext += '</span></span></p><p>';
-	htmltext += carsale.description;
-	htmltext += '</p><p><span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfComments;
-	htmltext += ' <i class="fa fa-comment-o"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfOffers;
-	htmltext += ' <i class="fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:gray;font-size:11px">';
-	htmltext += carsale.numberOfTailing;
-	htmltext += ' <i class="fa fa-eye"></i></span></p><p><span style="color:rgb(0,139,188)"><a href="#" style="text-decoration:underline;" onclick="showComments(this)">comment</a>';
-	htmltext += '&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline;" onclick="tail(this)">tail</a>';
-	htmltext += '</span><span class="pull-right"><span style="font-size:9px;color:grey">';
-	htmltext += carsale.negotiable;
-	htmltext += '</span>&nbsp;&nbsp;<span class="label label-default" style="font-size:15px">';
-	htmltext += carsale.price;
-	htmltext += '</span></span></p></div></div></div>';
-
-	$('#' + htmlid).prepend(htmltext);
-
-}
-
-// ADD CARGROUP BUILDER AND PARTGROUP BUILDERS HERE TOO
-
-
-// ===================================================================================
-// 
-// 
-//     LIST BUILDERS   -   Comments, Offers, Tails, Reservations, Tenders, Bids, 
-//     Tenderers, Bidders Builder
-// 
-// 
-// ===================================================================================
-function commentsListBuilder(comments, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < comments.length; i++) {
-        htmltext += '<div class="list-group-item col-md-12"><div class="col-md-1"><img class="img-responsive" src="';
-        htmltext += comments[i]['comment_user_propic'];
-        htmltext += '" style="height:40px;width:auto"></div><div class="col-md-11"><p><strong><a href="';
-        htmltext += comments[i]['comment_user_url'];
-        htmltext += '">';
-        htmltext += comments[i]['comment_user_name'];
-        htmltext += '</a></strong> <span class="pull-right"><span style="color:gray;font-size:11px">';
-        htmltext += comments[i]['comment_created_at'];
-        htmltext += '</span></span></p><p>';
-        htmltext += comments[i]['comment_comment'];
-        htmltext += '</p></div></div>';
-    }
-
-    $('#' + htmlid).prepend(htmltext);
-
-}
-
-function offersListBuilder(offers, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < offers.length; i++) {
-	    htmltext += '<div class="list-group-item col-md-12"><div class="col-md-2"><img class="img-responsive" src="';
-	    htmltext += offers[i]['offer_user_propic'];
-	    htmltext += '"> </div><div class="col-md-10"><p><strong><a href="';
-	    htmltext += offers[i]['offer_user_url'];
-	    htmltext += '">';
-	    htmltext += offers[i]['offer_user_name'];
-	    htmltext += '</a></strong><span class="pull-right"><span style="color:gray;font-size:11px">';
-	    htmltext += offers[i]['offer_created_at'];
-	    htmltext += '</span></span></p><p style="font-size:18px">K';
-	    htmltext += offers[i]['offer_offer'];
-	    htmltext += '</p><p class="pull-right">';
-	    
-	    if (offers['offer_reserves_count'] < 3 && offers['corporate_user'] == true && offers['has_role_sales_or_admin'] == true) {
-	      htmltext += '<span class="label label-danger" id="offerlisterror';
-	      htmltext += offers[i]['offer_id'];
-	      htmltext += '"></span><a style="font-size:9px" class="btn btn-xs btn-success" onclick="acceptOffer(';
-	      htmltext += offers[i]['offer_id'];
-	      htmltext += ')">accept offer</a><a style="font-size:9px" class="btn btn-xs btn-default" onclick="deleteOffer(';
-	      htmltext += offers[i]['offer_id'];
-	      htmltext += ')">delete offer</a>';
-	    }
-
-	    htmltext += '</p></div></div>';
-	}
-
-	$('#' + htmlid).prepend(htmltext);
-
-}
-
-function tailsListBuilder(tails, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < tail.length; i++) {
-    	htmltext += '<div class="list-group-item col-md-12"><div class="col-md-12" style="padding:10px;"><a href="';
-    	htmltext += tail[i]['tail_user_url'];
-    	htmltext += '"><img src="';
-    	htmltext += tail[i]['tail_user_propic'];
-    	htmltext += '" style="height:50px;width:auto">&nbsp;&nbsp;&nbsp;<strong>';
-    	htmltext += tail[i]['tail_user_name'];
-    	htmltext += '</strong></a><span class="pull-right"><span style="color:gray;font-size:11px">';
-    	htmltext += tail[i]['tail_created_at'];
-    	htmltext += '</span></span></div></div>';
-    }
-
-    $('#' + htmlid).prepend(htmltext);
-
-}
-
-function reservationListBuilder(reservations, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < reservations.length; i++) {
-		
-		// insert each reservation here
-
-	}
-}
-
-function tendersListBuilder(tenders, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < tenders.length; i++) {
-		
-		// insert each tender here
-
-	}
-}
-
-function bidsListBuilder(bids, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < bids.length; i++) {
-		
-		// insert each bid here
-
-	}
-}
-
-function tenderersListBuilder(tenderers, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < tenderers.length; i++) {
-		
-		// insert each tenderer here
-
-	}
-}
-
-function biddersListBuilder(bidders, htmlid) {
-
-	var htmltext = '';
-
-	for (var i = 0; i < bidders.length; i++) {
-		
-		// insert each bidder here
-
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// NEW FUNCTIONS HERE. 
-// Use the above ones if you want to reuse code.
-
-
-// ------------------- Home & CorpHome ------------------ //
-
-// JS Functions
-function checkCorporate(corpID) {
-    // Check if this Trade is for this corporation
-}
+// ------------------- Home & CorpHome Builders ------------------ //
 
 function CarSaleAddedBuild(data) {
     // Add to Newsfeed
     var htmltext = '';
 
     htmltext += '<div class="panel" id="carsale' + data['carsale']['id'] + '">';
-    htmltext += '<div class="panel-body">';
+    htmltext += '  <div class="panel-body">';
     htmltext += '    <div class="col-md-3" id="carimage' + data['carsale']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'] +  '"></img>';
+    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <ul class="nav navbar-nav navbar-right">';
-    htmltext += '          <li class="dropdown">';
-    htmltext += '              <span style="font-size:10px" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">';
-    htmltext += '                  Options <span class="caret"></span>';
-    htmltext += '              </span>';
-    htmltext += '              <ul class="dropdown-menu" role="menu">';
-    htmltext += '                  <li><a href="#"><i class="fa fa-btn fa-edit"></i> Edit</a></li>';
-    htmltext += '              </ul>';
-    htmltext += '          </li>';
-    htmltext += '        </ul>';
     htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carsale']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
     htmltext += '        <p id="carsaledetails' + data['carsale']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
     htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
-    htmltext += '        <p>';
-    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>5</span>  <i class="fa fa-comment-o"></i></span></a>';
-    htmltext += '          &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>20</span>  <i class="fa fa-money"></i></span></a>';
-    htmltext += '          &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '          <a style="cursor:pointer"><span style="color:gray;font-size:11px"><span>6</span>  <i class="fa fa-eye"></i></span></a>';
-    htmltext += '        </p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
-    htmltext += '      <p style="text-align:center"><span style="cursor:pointer" onclick="$(\'#moreinfo\').toggle()"><i class="fa fa-angle-double-down"></i></span></p>';
-    htmltext += '      <div style="display:none;" id="moreinfo' + data['carsale']['id'] + '">';
-    htmltext += '        <h1>Hi hello!</h1>';
-    htmltext += '      </div>';
-    htmltext += '   </div>';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
-    $('newsfeed').prepend(htmltext);
+    $('#newsfeed').prepend(htmltext);
 }
 
 function CarRentAddedBuild(data) {
     // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carrent' + data['carrent']['id'] + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3" id="carimage' + data['carrent']['id'] + '">';
+    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carrent']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
+    htmltext += '        <p id="carrentdetails' + data['carrent']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
+    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#newsfeed').prepend(htmltext);
 }
 
 function CarTenderAddedBuild(data) {
     // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="cartender' + data['cartender']['id'] + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3" id="carimage' + data['cartender']['id'] + '">';
+    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['cartender']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
+    htmltext += '        <p id="cartenderdetails' + data['cartender']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
+    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Tender</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#newsfeed').prepend(htmltext);
 }
 
 function CarAuctionAddedBuild(data) {
     // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carauction' + data['carauction']['id'] + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3" id="carimage' + data['carauction']['id'] + '">';
+    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carauction']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
+    htmltext += '        <p id="carauctiondetails' + data['carauction']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
+    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Bid</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#newsfeed').prepend(htmltext);
 }
 
 function PartSaleAddedBuild(data) {
     // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="partsale' + data['partsale']['id'] + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3" id="partimage' + data['partsale']['id'] + '">';
+    htmltext += '      <img class="img-responsive" src="' + data['part']['imgurl'][0] +  '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="partmake' + data['partsale']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
+    htmltext += '        <p id="partsaledetails' + data['partsale']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
+    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#newsfeed').prepend(htmltext);
 }
 
 function CarSaleClosedBuild(data) {
     // Remove item from newsfeed
+    $('#carsale' + data['carsale']['id']).remove();
 }
 
 function CarRentClosedBuild(data) {
     // Remove item from newsfeed
+    $('#carrent' + data['carrent']['id']).remove();
 }
 
 function CarTenderClosedBuild(data) {
     // Remove item from newsfeed
+    $('#cartender' + data['cartender']['id']).remove();
 }
 
 function CarAuctionClosedBuild(data) {
     // Remove item from newsfeed
+    $('#carauction' + data['carauction']['id']).remove();
 }
 
 function PartSaleClosedBuild(data) {
     // Remove item from newsfeed
+    $('#partsale' + data['partsale']['id']).remove();
 }
 
 function CarSaleOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
+    $('#carsale' + data['carsale']['id']).remove();
 }
 
 function CarRentOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
+    $('#carrent' + data['carrent']['id']).remove();
 }
 
 function CarTenderTenderReservePurchasedBuild(data) {
     // Remove item from newsfeed
+    $('#cartender' + data['cartender']['id']).remove();
 }
 
 function CarAuctionBidReservePurchasedBuild(data) {
     // Remove item from newsfeed
+    $('#carauction' + data['carauction']['id']).remove();
 }
 
 function PartSaleOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
+    $('#partsale' + data['partsale']['id']).remove();
 }
 
-// ------------------- Home & CorpHome ------------------ //
 
 
 
-// ------------------- Trade ------------------ //
+// ------------------- Trade Builders ------------------ //
 
 
 // Carsale ==========
 function CarSaleClosedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarSaleOfferReservePurchasedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
+    $('#offer_is_reserved' + data['carsale']['id']).html('<span class="label label-primary">reserved</span>');
 }
 
 function CarSaleOfferReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
+    CarSaleOfferCancelledBuildTrade(data);
 }
 
 function CarCommentAddedBuildTrade(data) {
     // Append comment to comments
-}
+    var htmltext = '';
 
-function CarCommentUpdatedBuildTrade(data) {
-    // Update specific comment
+    htmltext =+ '<div class="list-group-item col-md-12" id="carcomment' + data['carsale']['id'] + '">';
+    htmltext =+ '  <div class="col-md-1">';
+    htmltext =+ '    <img class="img-responsive" src="' + data[i]['comment_user_propic'] + '" style="height:40px;width:auto">';
+    htmltext =+ '  </div>';
+
+    htmltext =+ '  <div class="col-md-11">';
+    htmltext =+ '    <p>';
+    htmltext =+ '      <strong><a href="'+data[i]['comment_user_url']+'">' + data[i]['comment_user_name'] + '</a></strong> ';
+    htmltext =+ '      <span class="pull-right">';
+    htmltext =+ '        <span style="color:gray;font-size:11px">' + data[i]['comment_created_at'] + '</span>';
+    htmltext =+ '      </span>';
+    htmltext =+ '    </p>';
+    htmltext =+ '    <p>' + data[i]['comment_comment'] + '</p>';
+    htmltext =+ '  </div>';
+    htmltext =+ '</div>';
+
+    $('#list').prepend(htmltext);
 }
 
 function CarSaleOfferAddedBuildTrade(data) {
     // Append offer to offers
-}   
+    var htmltext = '';
+
+    htmltext += '<div class="list-group-item col-md-12" id="caroffer' + data['carsale']['id'] + '">';
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carsale']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carsale']['offer']['user'] + '">' + data['carsale']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carsale']['id'] + '">' + data['carsale']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data['carsale']['id'] + '">' + data['carsale']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['carsale']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#list').prepend(htmltext);
+}  
+
+function CarSaleOfferChangedBuildTrade(data) {
+    // Update offer
+    var htmltext = '';
+
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carsale']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carsale']['offer']['user'] + '">' + data['carsale']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carsale']['id'] + '">' + data['carsale']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data['carsale']['id'] + '">' + data['carsale']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['carsale']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+
+    $('#caroffer' + data['carsale']['id']).html(htmltext);
+}
 
 function CarSaleOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
+    $('#carsale' + data['carsale']['id']).remove();
 }
 
 
 // Carrent ==========
 function CarRentClosedBuildTrade(data) {
     // Reload Page
+    location.reload();
 } 
 
 function CarRentOfferReservePurchasedBuildTrade(data) {
     // Reload Page
+    location.reload();
 } 
 
 function CarRentOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
+    $('#offer_is_reserved' + data['carrent']['id']).html('<span class="label label-primary">reserved</span>');
 } 
 
 function CarRentOfferReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
+    CarRentOfferCancelledBuildTrade(data);
 } 
 
 function CarCommentAddedBuildTrade(data) {
     // Append comment to comments
-} 
+    var htmltext = '';
 
-function CarCommentUpdatedBuildTrade(data) {
-    // Update specific comment
+    htmltext =+ '<div class="list-group-item col-md-12" id="carcomment' + data['carrent']['id'] + '">';
+    htmltext =+ '  <div class="col-md-1">';
+    htmltext =+ '    <img class="img-responsive" src="' + data[i]['comment_user_propic'] + '" style="height:40px;width:auto">';
+    htmltext =+ '  </div>';
+
+    htmltext =+ '  <div class="col-md-11">';
+    htmltext =+ '    <p>';
+    htmltext =+ '      <strong><a href="'+data[i]['comment_user_url']+'">' + data[i]['comment_user_name'] + '</a></strong> ';
+    htmltext =+ '      <span class="pull-right">';
+    htmltext =+ '        <span style="color:gray;font-size:11px">' + data[i]['comment_created_at'] + '</span>';
+    htmltext =+ '      </span>';
+    htmltext =+ '    </p>';
+    htmltext =+ '    <p>' + data[i]['comment_comment'] + '</p>';
+    htmltext =+ '  </div>';
+    htmltext =+ '</div>';
+
+    $('#list').prepend(htmltext);
 } 
 
 function CarRentOfferAddedBuildTrade(data) {
     // Append offer to offers
+    var htmltext = '';
+
+    htmltext += '<div class="list-group-item col-md-12" id="caroffer' + data['carrent']['id'] + '">';
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carrent']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carrent']['offer']['user'] + '">' + data['carrent']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carrent']['id'] + '">' + data['carrent']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carrentofferamount' + data['carrent']['id'] + '">' + data['carrent']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['carrent']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#list').prepend(htmltext);
 } 
+
+function CarRentOfferChangedBuildTrade(data) {
+    // Update offer
+    var htmltext = '';
+
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carrent']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carrent']['offer']['user'] + '">' + data['carrent']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carrent']['id'] + '">' + data['carrent']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carrentofferamount' + data['carrent']['id'] + '">' + data['carrent']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['carrent']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+
+    $('#caroffer' + data['carrent']['id']).html(htmltext);
+}
 
 function CarRentOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
+    $('#carrent' + data['carrent']['id']).remove();
 } 
 
 
 // Cartender ==========
 function CarTenderClosedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarTenderTenderReservePurchasedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarTenderTenderReservedBuildTrade(data) {
     // Tag Tender as Reserved
+    // No action taken
 }
 
 function CarTenderTenderReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
+    // No action taken
 }
 
 function CarCommentAddedBuildTrade(data) {
     // Append comment to comments
-}
+    var htmltext = '';
 
-function CarCommentUpdatedBuildTrade(data) {
-    // Update specific comment
+    htmltext =+ '<div class="list-group-item col-md-12" id="carcomment' + data['cartender']['id'] + '">';
+    htmltext =+ '  <div class="col-md-1">';
+    htmltext =+ '    <img class="img-responsive" src="' + data[i]['comment_user_propic'] + '" style="height:40px;width:auto">';
+    htmltext =+ '  </div>';
+
+    htmltext =+ '  <div class="col-md-11">';
+    htmltext =+ '    <p>';
+    htmltext =+ '      <strong><a href="'+data[i]['comment_user_url']+'">' + data[i]['comment_user_name'] + '</a></strong> ';
+    htmltext =+ '      <span class="pull-right">';
+    htmltext =+ '        <span style="color:gray;font-size:11px">' + data[i]['comment_created_at'] + '</span>';
+    htmltext =+ '      </span>';
+    htmltext =+ '    </p>';
+    htmltext =+ '    <p>' + data[i]['comment_comment'] + '</p>';
+    htmltext =+ '  </div>';
+    htmltext =+ '</div>';
+
+    $('#list').prepend(htmltext);
 }
 
 function CarTenderTenderAddedBuildTrade(data) {
-    // Append tender to tenders
+    // Append offer to offers
+    // No action taken
+}
+
+function CarTenderTenderChangedBuildTrade(data) {
+    // Update tender
+    // No action taken
 }
 
 function CarTenderTenderCancelledBuildTrade(data) {
     // Remove specific tender from tenders
+    // No action taken
 }
 
 
 // Carauction ==========
 function CarAuctionClosedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarAuctionBidReservePurchasedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function CarAuctionBidReservedBuildTrade(data) {
     // Tag Bid as Reserved
+    $('#offer_is_reserved' + data['carauction']['id']).html('<span class="label label-primary">reserved</span>');
 }
 
 function CarAuctionBidReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
+    CarAuctionBidCancelledBuildTrade(data);
 }
 
 function CarCommentAddedBuildTrade(data) {
     // Append comment to comments
-}
+    var htmltext = '';
 
-function CarCommentUpdatedBuildTrade(data) {
-    // Update specific comment
+    htmltext =+ '<div class="list-group-item col-md-12" id="carcomment' + data['carauction']['id'] + '">';
+    htmltext =+ '  <div class="col-md-1">';
+    htmltext =+ '    <img class="img-responsive" src="' + data[i]['comment_user_propic'] + '" style="height:40px;width:auto">';
+    htmltext =+ '  </div>';
+
+    htmltext =+ '  <div class="col-md-11">';
+    htmltext =+ '    <p>';
+    htmltext =+ '      <strong><a href="'+data[i]['comment_user_url']+'">' + data[i]['comment_user_name'] + '</a></strong> ';
+    htmltext =+ '      <span class="pull-right">';
+    htmltext =+ '        <span style="color:gray;font-size:11px">' + data[i]['comment_created_at'] + '</span>';
+    htmltext =+ '      </span>';
+    htmltext =+ '    </p>';
+    htmltext =+ '    <p>' + data[i]['comment_comment'] + '</p>';
+    htmltext =+ '  </div>';
+    htmltext =+ '</div>';
+
+    $('#list').prepend(htmltext);
 }
 
 function CarAuctionBidAddedBuildTrade(data) {
     // Append bid to bids
+    var htmltext = '';
+
+    htmltext += '<div class="list-group-item col-md-12" id="carbid' + data['carauction']['id'] + '">';
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carauction']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carauction']['offer']['user'] + '">' + data['carauction']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carauction']['id'] + '">' + data['carauction']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carauctionofferamount' + data['carauction']['id'] + '">' + data['carauction']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="bid_is_reserved' + data['carauction']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#list').prepend(htmltext);
 }
 
-function CarAuctionBidCancelledBuildTrade(data)) {
+function CarAuctionBidChangedBuildTrade(data) {
+    // Update Bid
+    var htmltext = '';
+
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['carauction']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['carauction']['offer']['user'] + '">' + data['carauction']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['carauction']['id'] + '">' + data['carauction']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="carauctionofferamount' + data['carauction']['id'] + '">' + data['carauction']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['carauction']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+
+    $('#carbid' + data['carauction']['id']).html(htmltext);
+}
+
+function CarAuctionBidCancelledBuildTrade(data) {
     // Remove specific bid from bids
+    $('#cartender' + data['cartender']['id']).remove();
 }
 
 
 // Partsale ==========
 function PartSaleClosedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function PartSaleOfferReservePurchasedBuildTrade(data) {
     // Reload Page
+    location.reload();
 }
 
 function PartSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
+    $('#offer_is_reserved' + data['partsale']['id']).html('<span class="label label-primary">reserved</span>');
 }
 
 function PartSaleOfferReserveCancelledBuildTrade(data) {
-    // Remove Reserved Tag 
+    // Remove Reserved Tag
+    PartSaleOfferCancelledBuildTrade(data);
 }
 
 function PartCommentAddedBuildTrade(data) {
     // Append comment to comments
-}
+    var htmltext = '';
 
-function PartCommentUpdatedBuildTrade(data) {
-    // Update specific comment
+    htmltext =+ '<div class="list-group-item col-md-12" id="carcomment' + data['partsale']['id'] + '">';
+    htmltext =+ '  <div class="col-md-1">';
+    htmltext =+ '    <img class="img-responsive" src="' + data[i]['comment_user_propic'] + '" style="height:40px;width:auto">';
+    htmltext =+ '  </div>';
+
+    htmltext =+ '  <div class="col-md-11">';
+    htmltext =+ '    <p>';
+    htmltext =+ '      <strong><a href="'+data[i]['comment_user_url']+'">' + data[i]['comment_user_name'] + '</a></strong> ';
+    htmltext =+ '      <span class="pull-right">';
+    htmltext =+ '        <span style="color:gray;font-size:11px">' + data[i]['comment_created_at'] + '</span>';
+    htmltext =+ '      </span>';
+    htmltext =+ '    </p>';
+    htmltext =+ '    <p>' + data[i]['comment_comment'] + '</p>';
+    htmltext =+ '  </div>';
+    htmltext =+ '</div>';
+
+    $('#list').prepend(htmltext);
 }
 
 function PartSaleOfferAddedBuildTrade(data) {
     // Append offer to offers
+    var htmltext = '';
+
+    htmltext += '<div class="list-group-item col-md-12" id="partoffer' + data['partsale']['id'] + '">';
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['partsale']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['partsale']['offer']['user'] + '">' + data['partsale']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['partsale']['id'] + '">' + data['partsale']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="partsaleofferamount' + data['partsale']['id'] + '">' + data['partsale']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['partsale']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    $('#list').prepend(htmltext);
+}
+
+function PartSaleOfferChangedBuildTrade(data) {
+    // Update offer
+    var htmltext = '';
+
+    htmltext += '  <div class="col-md-2">';
+    htmltext += '    <img class="img-responsive" src="' + data['partsale']['offer']['user']['imgurl'] + '"> ';
+    htmltext += '  </div>';
+
+    htmltext += '  <div class="col-md-10">';
+    htmltext += '    <p>';
+    htmltext += '      <strong><a href="' + data['partsale']['offer']['user'] + '">' + data['partsale']['offer']['user']['name'] + '</a></strong> ';
+    htmltext += '      <span class="pull-right">';
+    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data['partsale']['id'] + '">' + data['partsale']['created_at'] + '</span>';
+    htmltext += '      </span>';
+    htmltext += '    </p>';
+    htmltext += '    <p style="font-size:18px"><span id="partsaleofferamount' + data['partsale']['id'] + '">' + data['partsale']['offer'] + '</span>';
+    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data['partsale']['id'] + '"></span>';
+    htmltext += '    </p>';
+    htmltext += '  </div>';
+
+    $('#partoffer' + data['partsale']['id']).html(htmltext);
 }
 
 function PartSaleOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
+    $('#partsale' + data['partsale']['id']).remove();
 }
 
 
-// ------------------- Trade ------------------ //
+// ------------------- Ajax Call Functions ------------------ //
+
+
+function belongsToThisCorp(corpID,dataCorpID) {
+    // Check events to see if they belong to THIS corporate (CorpHome Events)
+    if (corpID == dataCorpID) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Submit/Cancel Offers/Bids/Tenders ============
+function submitCarSaleOffer(carsaleID) {
+    // Submit Offer for CarSale
+    $.ajax({
+        url: "/auth/carsaleoffer",
+        type: "POST",
+        data: { 
+            'carsale_id': carsaleID,
+            'offer': $('#offer').val()
+        },
+        success: function(data) {
+            $('#offer').val('');
+
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function cancelCarSaleOffer(carsaleID, carsaleOfferID) {
+    // cancel Offer for CarSale
+    $.ajax({
+        url: "/auth/carsaleoffercancel",
+        type: "POST",
+        data: { 
+            'carsale_id': carsaleID,
+            'carsaleoffer_id': carsaleOfferID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function submitCarRentOffer(carrentID) {
+    // Submit Offer for CarRent
+    $.ajax({
+        url: "/auth/carrentoffer",
+        type: "POST",
+        data: { 
+            'carrent_id': carrentID,
+            'offer': $('#offer').val()
+        },
+        success: function(data) {
+            $('#offer').val('');
+
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function cancelCarRentOffer(carrentID, carrentOfferID) {
+    // cancel Offer for CarRent
+    $.ajax({
+        url: "/auth/carrentoffercancel",
+        type: "POST",
+        data: { 
+            'carrent_id': carrentID,
+            'carrentoffer_id': carrentOfferID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function submitCarTenderTender(cartenderID) {
+    // Submit Tender for CarTender
+    $.ajax({
+        url: "/auth/cartendertender",
+        type: "POST",
+        data: { 
+            'cartender_id': cartenderID,
+            'tender': $('#tender').val()
+        },
+        success: function(data) {
+            $('#tender').val('');
+
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function cancelCarTenderTender(cartenderID, cartenderTenderID) {
+    // cancel Tender for CarTender
+    $.ajax({
+        url: "/auth/carrentoffercancel",
+        type: "POST",
+        data: { 
+            'cartender_id': cartenderID,
+            'cartendertender_id': cartenderTenderID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function submitCarAuctionBid(carauctionID) {
+    // Submit Bid for CarAuction
+    $.ajax({
+        url: "/auth/carauctionbid",
+        type: "POST",
+        data: { 
+            'carauction_id': carauctionID,
+            'bid': $('#bid').val()
+        },
+        success: function(data) {
+            $('#bid').val('');
+
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function cancelCarAuctionBid(carauctionID, carauctionBidID) {
+    // cancel Bid for CarAuction
+    $.ajax({
+        url: "/auth/carauctionbidcancel",
+        type: "POST",
+        data: { 
+            'carauction_id': carauctionID,
+            'carauctionbid_id': carauctionBidID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function submitPartSaleOffer(partsaleID) {
+    // Submit Offer for PartSale
+    $.ajax({
+        url: "/auth/partsaleoffer",
+        type: "POST",
+        data: { 
+            'partsale_id': partsaleID,
+            'offer': $('#offer').val()
+        },
+        success: function(data) {
+            $('#offer').val('');
+
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+function cancelPartSaleOffer(partsaleID, partsaleOfferID) {
+    // cancel Offer for PartSale
+    $.ajax({
+        url: "/auth/partsaleoffercancel",
+        type: "POST",
+        data: { 
+            'partsale_id': partsaleID,
+            'partsaleoffer_id': partsaleOfferID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // small model to display status
+            } else {
+                // small model to display status
+            }
+        }
+    });
+}
+
+// Get Offers/Bids/Tenders ============
+function getCarSaleOffers(carsaleID) {
+    // get car offers and append
+    $.ajax({
+        url: "/getcarsaleoffers",
+        type: "GET",
+        data: { 
+            'carsale_id': carsaleID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                var carSaleOffers = data['carsaleoffers'];
+
+                for (var i = 0; i < carSaleOffers; i++) {
+                    CarSaleOfferAddedBuildTrade(carSaleOffers[i]);
+                }
+            }
+        }
+    });
+}
+
+function getCarRentOffers(carrentID) {
+    // get car offers and append
+    $.ajax({
+        url: "/getcarrentoffers",
+        type: "GET",
+        data: { 
+            'carrent_id': carrentID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                var carRentOffers = data['carrentoffers'];
+
+                for (var i = 0; i < carRentOffers; i++) {
+                    CarRentOfferAddedBuildTrade(carRentOffers[i]);
+                }
+            }
+        }
+    });
+}
+
+function getCarTenderTenders(cartenderID) {
+    // get car tenders and append
+    $.ajax({
+        url: "/getcartendertenders",
+        type: "GET",
+        data: { 
+            'cartender_id': cartenderID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                var carTenderTenders = data['cartendertenders'];
+
+                for (var i = 0; i < carTenderTenders; i++) {
+                    CarTenderTenderAddedBuildTrade(carTenderTenders[i]);
+                }
+            }
+        }
+    });
+}
+
+function getCarAuctionBids(carauctionID) {
+    // get car bids and append
+    $.ajax({
+        url: "/getcarauctionbids",
+        type: "GET",
+        data: { 
+            'carauction_id': carauctionID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                var carAuctionBids = data['carauctionbids'];
+
+                for (var i = 0; i < carAuctionBids; i++) {
+                    CarAuctionBidAddedBuildTrade(carAuctionBids[i]);
+                }
+            }
+        }
+    });
+}
+
+function getPartSaleOffers(partsaleID) {
+    // get part comments and append
+    $.ajax({
+        url: "/getpartsaleoffers",
+        type: "GET",
+        data: { 
+            'partsale_id': partsaleID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                var PartSaleOffers = data['Partsaleoffers'];
+
+                for (var i = 0; i < PartSaleOffers; i++) {
+                    partSaleOfferAddedBuildTrade(PartSaleOffers[i]);
+                }
+            }
+        }
+    });
+}
+
+// Get Comments/Tails ============
+function getCarComments(carID) {
+	// get car comments and append
+    $.ajax({
+        url: "/getcarcomments",
+        type: "GET",
+        data: { 
+            'car_id': carID
+        },
+        success: function(data) {
+            for (var i = 0; i < data.length; i++) {
+                CarCommentAddedBuildTrade(data[i]);
+            }
+        }
+    });
+}
+
+function getPartComments(partID) {
+	// get part comments and append
+    $.ajax({
+        url: "/getpartcomments",
+        type: "GET",
+        data: { 
+            'part_id': partID
+        },
+        success: function(data) {
+            for (var i = 0; i < data.length; i++) {
+                PartCommentAddedBuildTrade(data[i]);
+            }
+        }
+    });
+}
+
+function getCarTails(carID) {
+	// get car Tails and append
+    $.ajax({
+        url: "/getcartails",
+        type: "GET",
+        data: { 
+            'car_id': carID
+        },
+        success: function(data) {
+            htmltext = '';
+            for (var i = 0; i < data.length; i++) {
+                htmltext += '<div class="list-group-item col-md-12">';
+                htmltext += '  <div class="col-md-12" style="padding:10px;">';
+                htmltext += '    <a href="' + data[i]['tail_user_url'] + '">';
+                htmltext += '      <img src="' + data[i]['tail_user_propic'] + '" style="height:50px;width:auto">';
+                htmltext += '      &nbsp;&nbsp;&nbsp;';
+                htmltext += '      <strong>' + data[i]['tail_user_name'] + '</strong>';
+                htmltext += '    </a>';
+                htmltext += '  </div>';
+                htmltext += '</div>';
+            }
+
+            $('#list').append(htmltext);
+        }
+    });
+}
+
+function getPartTails(partID) {
+	// get part Tails and append
+    $.ajax({
+        url: "/getparttails",
+        type: "GET",
+        data: { 
+            'part_id': partID
+        },
+        success: function(data) {
+            htmltext = '';
+            for (var i = 0; i < data.length; i++) {
+                htmltext += '<div class="list-group-item col-md-12">';
+                htmltext += '  <div class="col-md-12" style="padding:10px;">';
+                htmltext += '    <a href="' + data[i]['tail_user_url'] + '">';
+                htmltext += '      <img src="' + data[i]['tail_user_propic'] + '" style="height:50px;width:auto">';
+                htmltext += '      &nbsp;&nbsp;&nbsp;';
+                htmltext += '      <strong>' + data[i]['tail_user_name'] + '</strong>';
+                htmltext += '    </a>';
+                htmltext += '  </div>';
+                htmltext += '</div>';
+            }
+
+            $('#list').append(htmltext);
+        }
+    });
+}
+
+
+// ------------------- Post Functions ------------------ //
+
+
+function rate(corporateID, rate) {
+    // tail the corporate/also untail corporate is same function (backend function toggles it)
+    $.ajax({
+        url: "/auth/rate",
+        type: "POST",
+        data: { 
+            'corporate_id': corporateID,
+            'rate': rate
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // color icon
+            }
+        }
+    });
+}
+
+function tailCorporate(corporateID) {
+    // tail the corporate/also untail corporate is same function (backend function toggles it)
+    $.ajax({
+        url: "/auth/tailcorporate",
+        type: "POST",
+        data: { 
+            'corporate_id': corporateID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // color icon
+            }
+        }
+    });
+}
+
+function postNewCarComment(carID) {
+	// post new comment from user
+    $.ajax({
+        url: "/auth/addcarcomment",
+        type: "POST",
+        data: { 
+            'comment': $('#comment').val(),
+            'car_id': carID
+        },
+        success: function(data) {
+            $('#comment').val('');
+        }
+    });
+}
+
+function postReplyCarComment(carID, parentCommentID) {
+	// post reply comment from user to another comment
+    $.ajax({
+        url: "/auth/addcarcomment",
+        type: "POST",
+        data: { 
+            'comment': $('#commentreply').val(),
+            'parentcomment_id': parentCommentID,
+            'car_id': carID
+        },
+        success: function(data) {
+            $('#commentreply').val('');
+        }
+    });
+}
+
+function deleteCarComment(carID, commentID) {
+	// delete users car comment
+    $.ajax({
+        url: "/auth/deletecarcomment",
+        type: "POST",
+        data: { 
+            'comment_id': commentID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                $('#comment' + commentID).remove();
+            }
+        }
+    });
+}
+
+function postNewPartComment(partID) {
+	// post new comment from user
+    $.ajax({
+        url: "/auth/addpartcomment",
+        type: "POST",
+        data: { 
+            'comment': $('#comment').val(),
+            'part_id': partID
+        },
+        success: function(data) {
+            $('#comment').val('');
+        }
+    });
+}
+
+function postReplyPartComment(partID, parentCommentID) {
+	// post reply comment from user to another comment
+    $.ajax({
+        url: "/auth/addpartcomment",
+        type: "POST",
+        data: { 
+            'comment': $('#commentreply').val(),
+            'parentcomment_id': parentCommentID,
+            'part_id': partID
+        },
+        success: function(data) {
+            $('#commentreply').val('');
+        }
+    });
+}
+
+function deletePartComment(partID) {
+	// delete users part comment
+    $.ajax({
+        url: "/auth/deletepartcomment",
+        type: "POST",
+        data: { 
+            'comment_id': commentID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                $('#comment' + commentID).remove();
+            }
+        }
+    });
+}
+
+function tailCar(carID) {
+	// tail the car/also untail car is same function (backend function toggles it)
+    $.ajax({
+        url: "/auth/tailcar",
+        type: "POST",
+        data: { 
+            'car_id': carID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // color icon
+            }
+        }
+    });
+}
+
+function tailPart(partID) {
+	// tail the part/also untail part is same function (backend function toggles it)
+    $.ajax({
+        url: "/auth/tailcar",
+        type: "POST",
+        data: { 
+            'part_id': partID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // color icon
+            }
+        }
+    });
+}
+
+
+// ------------------- Misc. Functions ------------------ //
+
+function isCorpUser(corpID) {
+    // check if the current user is a corp user for this corp.
+    $.ajax({
+        url: "/iscorpuser",
+        type: "POST",
+        data: { 
+            'corp_id': corpID
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // continue
+                return true;
+            } else {
+                // discontinue
+                return false;
+            }
+        }
+    });
+}
+
+function hasCorpUserRole(corpID, role) {
+    // check if the current user has this corp user role for this corp.
+    $.ajax({
+        url: "/hascorpuserrole",
+        type: "POST",
+        data: { 
+            'corp_id': corpID,
+            'role': role,
+        },
+        success: function(data) {
+            if (data['success'] == true) {
+                // continue
+                return true;
+            } else {
+                // discontinue
+                return false;
+            }
+        }
+    });
+}
+
+
+
+
 
 
 

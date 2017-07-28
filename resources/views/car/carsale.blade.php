@@ -7,14 +7,10 @@
 
 @section('content')
 
-<!-- Build initially with PHP -->
-
-<!-- Later you update each element with JS -->
-
 <div class="col-md-12">
     <div class="panel" style="padding-bottom:0;margin-bottom:0">
         <div class="panel-body">
-            <div class="col-md-3" id="car_images">
+            <div class="col-md-4" id="car_images">
                 <ul id="lightSlider">
 
                 @foreach ($carsale->car->images as $carimage)
@@ -27,7 +23,7 @@
 
                 </ul>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8">
 
                 <p>
                     <span style="text-decoration:bold;font-size:14px;color:gray">
@@ -42,6 +38,7 @@
                         <span style="font-size:20px" id="carprice">K{{ number_format($carsale->price, 2) }}</span>
                     </span>
                 </p>
+                <p id="carsale_created_at{{ $carsale->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                 <p id="cardetails">
                     Body type: <span style="font-weight:bold">{{ $carsale->car->bodytype }}</span>. 
                     Weight: <span style="font-weight:bold">{{ $carsale->car->weight }}</span>Kg's. 
@@ -69,11 +66,11 @@
 
             <div class="col-md-12">
                 <hr style="margin:10px">
-                <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarSaleOffers({{ $carsale->car->id }});"><i class="fa fa-money"></i> Offer</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarComments({{ $carsale->car->id }});"><i class="fa fa-comment"></i> Comment</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarTails({{ $carsale->car->id }});"><i class="fa fa-eye"></i> Tail</a>
             </div>
 
         </div>
@@ -94,7 +91,37 @@
 
 <script>
 
+    /*
+    |
+    | Some initial JS variables
+    |
+    */
+    var reserves_count = 0;
+    @if (Auth::check())
+        @if (Auth::user()->hasRole('administrator'))
+            var corp_user_role = 'administrator';
+        @elseif (Auth::user()->hasRole('sales'))
+            var corp_user_role = 'sales';
+        @elseif (Auth::user()->hasRole('maintainer'))
+            var corp_user_role = 'maintainer';
+        @elseif (Auth::user()->hasRole('manager'))
+            var corp_user_role = 'manager';
+        @endif
+    @endif
+    var timeArray = [];
+    var base_url = "{{ url('/') }}";
+
+    /*
+    |
+    | Execute initial scripts when document is ready
+    |
+    */
     $(document).ready(function(e) {
+
+        // Set carsale_created_at timestamp
+        timeArray.push(['carsale_created_at{{ $carsale->car->id }}', '{{ $carsale->created_at }}']);
+
+        // Initialize small slider of car images
         $('#lightSlider').lightSlider({
             gallery: false,
             item: 1,
@@ -108,14 +135,15 @@
             pause: 5000
         });
 
+        // Moment.js script to update all timestamps on the page
+        updateTimestamps();
+        window.setInterval(function(){
+            updateTimestamps();
+        }, 60000);
+
+        getCarSaleOffers({{ $carsale->car->id }});
+
     });
-
-    /*
-    |
-    | Some initial JS variables
-    |
-    */
-
 
     /*
     |

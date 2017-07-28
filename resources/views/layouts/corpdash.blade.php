@@ -191,8 +191,17 @@
 
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/seimspeed.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+
+    <script>
+
+        var timeArray = [];
+
+        var base_url = "{{ url('/') }}";
+ 
+    </script>
 
     @yield('script')
 

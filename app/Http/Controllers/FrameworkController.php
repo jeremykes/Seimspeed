@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use Auth;
 use Carbon;
+use DB;
 use Illuminate\Notifications\DatabaseNotification;
 
 use App\User;
@@ -23,6 +24,11 @@ use App\Partsale;
 
 use App\Corporate;
 use App\Car;
+use App\Carcomment;
+use App\Cartail;
+use App\Part;
+use App\Partcomment;
+use App\Parttail;
 
 class FrameworkController extends Controller
 {
@@ -210,7 +216,10 @@ class FrameworkController extends Controller
             'carsale_id' => 'required|integer',
         ]);
 
-        $carsaleoffers = Carsaleoffers::get($request->carsale_id);
+        $carsaleoffers = DB::table('carsaleoffers')
+                    ->leftJoin('users', 'users.id', '=', 'carsaleoffers.user_id')
+                    ->select('carsaleoffers.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'carsaleoffers'=>$carsaleoffers]);
     }
@@ -226,7 +235,10 @@ class FrameworkController extends Controller
             'carrent_id' => 'required|integer',
         ]);
 
-        $carrentoffers = Carrentoffers::get($request->carrent_id);
+        $carrentoffers = DB::table('carrentoffers')
+                    ->leftJoin('users', 'users.id', '=', 'carrentoffers.user_id')
+                    ->select('carrentoffers.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'carrentoffers'=>$carrentoffers]);
     }
@@ -242,7 +254,10 @@ class FrameworkController extends Controller
             'cartender_id' => 'required|integer',
         ]);
 
-        $cartendertenders = Cartendertenders::get($request->cartender_id);
+        $cartendertenders = DB::table('cartendertenders')
+                    ->leftJoin('users', 'users.id', '=', 'cartendertenders.user_id')
+                    ->select('cartendertenders.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'cartendertenders'=>$cartendertenders]);
     }
@@ -258,7 +273,10 @@ class FrameworkController extends Controller
             'carauction_id' => 'required|integer',
         ]);
 
-        $carauctionbids = Carauctionbids::get($request->carauction_id);
+        $carauctionbids = DB::table('carauctionbids')
+                    ->leftJoin('users', 'users.id', '=', 'carauctionbids.user_id')
+                    ->select('carauctionbids.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'carauctionbids'=>$carauctionbids]);
     }
@@ -274,7 +292,10 @@ class FrameworkController extends Controller
             'partsale_id' => 'required|integer',
         ]);
 
-        $partsaleoffers = partsaleoffers::get($request->partsale_id);
+        $partsaleoffers = DB::table('partsaleoffers')
+                    ->leftJoin('users', 'users.id', '=', 'partsaleoffers.user_id')
+                    ->select('partsaleoffers.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'partsaleoffers'=>$partsaleoffers]);
     }
@@ -290,7 +311,10 @@ class FrameworkController extends Controller
             'car_id' => 'required|integer',
         ]);
 
-        $carcomments = Carcomment::get($request->car_id);
+        $carcomments = DB::table('carcomments')
+                    ->leftJoin('users', 'users.id', '=', 'carcomments.user_id')
+                    ->select('carcomments.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'carcomments'=>$carcomments]);
     }
@@ -306,7 +330,10 @@ class FrameworkController extends Controller
             'part_id' => 'required|integer',
         ]);
 
-        $partcomments = partcomment::get($request->part_id);
+        $partcomments = DB::table('partcomments')
+                    ->leftJoin('users', 'users.id', '=', 'partcomments.user_id')
+                    ->select('partcomments.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'partcomments'=>$partcomments]);
     }
@@ -322,7 +349,10 @@ class FrameworkController extends Controller
             'car_id' => 'required|integer',
         ]);
 
-        $cartails = Cartail::get($request->car_id);
+        $cartails = DB::table('cartails')
+                    ->leftJoin('users', 'users.id', '=', 'cartails.user_id')
+                    ->select('cartails.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'cartails'=>$cartails]);
     }
@@ -338,7 +368,10 @@ class FrameworkController extends Controller
             'part_id' => 'required|integer',
         ]);
 
-        $parttails = parttail::get($request->part_id);
+        $cartails = DB::table('parttails')
+                    ->leftJoin('users', 'users.id', '=', 'parttails.user_id')
+                    ->select('parttails.*', 'users.propic', 'users.name')
+                    ->get();
 
         return response()->json(['success'=>true, 'parttails'=>$parttails]);
     }

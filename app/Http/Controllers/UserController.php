@@ -34,6 +34,19 @@ class UserController extends Controller
     }
 
     /**
+     * Go to User page
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function user(Request $request, User $user)
+    {
+        return view('user.home', [
+            'user' => $user,
+        ]); 
+    }
+
+    /**
      * Rate Corporate
      *
      * @param  Request $request

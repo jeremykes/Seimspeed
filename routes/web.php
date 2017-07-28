@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth']], function() {
 	| View Routes
 	|--------------------------------------------------------------------------
 	*/	
+	Route::post('/user/{user}', 'UserController@user');
 
 
 	/*
@@ -308,27 +309,27 @@ Route::group(['middleware' => ['auth']], function() {
 			| Action Routes
 			|--------------------------------------------------------------------------
 			*/	
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuser', 'CorporateController@addcorporateuser');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuser', 'CorporateController@updatecorporateuser');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletecorporateuser', 'CorporateController@deletecorporateuser');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuserrole', 'CorporateController@addcorporateuserrole');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuserrole', 'CorporateController@updatecorporateuserrole');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addcar', 'CorporateController@addcar');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatecar', 'CorporateController@updatecar');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletecar', 'CorporateController@deletecar');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addcarimage', 'CorporateController@addcarimage');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletecarimage', 'CorporateController@deletecarimage');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addcargroup', 'CorporateController@addcargroup');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatecargroup', 'CorporateController@updatecargroup');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletecargroup', 'CorporateController@deletecargroup');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addpart', 'CorporateController@addpart');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatepart', 'CorporateController@updatepart');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletepart', 'CorporateController@deletepart');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addpartimage', 'CorporateController@addpartimage');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletepartimage', 'CorporateController@deletepartimage');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/addpartgroup', 'CorporateController@addpartgroup');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/updatepartgroup', 'CorporateController@updatepartgroup');
-			Routes::post('/corporate/{corporate}/corpuser/maintainer/deletepartgroup	', 'CorporateController@deletepartgroup');	
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuser', 'CorporateController@addcorporateuser');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuser', 'CorporateController@updatecorporateuser');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecorporateuser', 'CorporateController@deletecorporateuser');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuserrole', 'CorporateController@addcorporateuserrole');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuserrole', 'CorporateController@updatecorporateuserrole');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addcar', 'CorporateController@addcar');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecar', 'CorporateController@updatecar');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecar', 'CorporateController@deletecar');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addcarimage', 'CorporateController@addcarimage');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecarimage', 'CorporateController@deletecarimage');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addcargroup', 'CorporateController@addcargroup');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecargroup', 'CorporateController@updatecargroup');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecargroup', 'CorporateController@deletecargroup');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addpart', 'CorporateController@addpart');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatepart', 'CorporateController@updatepart');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletepart', 'CorporateController@deletepart');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addpartimage', 'CorporateController@addpartimage');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletepartimage', 'CorporateController@deletepartimage');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/addpartgroup', 'CorporateController@addpartgroup');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatepartgroup', 'CorporateController@updatepartgroup');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/deletepartgroup	', 'CorporateController@deletepartgroup');	
 
 
 			/*
@@ -408,8 +409,8 @@ Route::group(['middleware' => ['auth']], function() {
 			| Action Routes
 			|--------------------------------------------------------------------------
 			*/		
-			Routes::post('/corporate/{corporate}/corpuser/administrator/updatecorporate', 'CorporateController@updatecorporate');
-			Routes::post('/corporate/{corporate}/corpuser/administrator/deactivatecorporate', 'CorporateController@deactivatecorporate');
+			Route::post('/corporate/{corporate}/corpuser/administrator/updatecorporate', 'CorporateController@updatecorporate');
+			Route::post('/corporate/{corporate}/corpuser/administrator/deactivatecorporate', 'CorporateController@deactivatecorporate');
 
 
 			/*

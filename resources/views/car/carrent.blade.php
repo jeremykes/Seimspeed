@@ -60,10 +60,6 @@
                     <span style="font-size:11px;color:grey">{{ $carrent->car->note }}
                 </p>
                 <p id="carrentnote"><hr style="margin:2px"><span style="font-size:11px;color:grey">{{ $carrent->note }}</span></p>
-                
-                @if ($carrent->group)
-                    <p>In group <a href="#"><span class="label label-primary">go to group</span></a></p>
-                @endif
 
             </div>
 

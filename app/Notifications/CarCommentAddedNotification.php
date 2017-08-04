@@ -26,13 +26,13 @@ class CarCommentAddedNotification extends Notification
         $this->carcomment = $carcomment;
 
         if ($this->carcomment->car->sale->exists()) {
-           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/sale/' . $this->carcomment->car->sale->id);
+           $this->url = url('/corporate/' . $this->carcomment->car->corporate->id . '/car/' . $this->carcomment->car->id . '/sale/' . $this->carcomment->car->sale->id);
         } else if ($this->carcomment->car->rent->exists()) {
-           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/rent/' . $this->carcomment->car->rent->id);
+           $this->url = url('/corporate/' . $this->carcomment->car->corporate->id . '/car/' . $this->carcomment->car->id . '/rent/' . $this->carcomment->car->rent->id);
         } else if ($this->carcomment->car->auction->exists()) {
-           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/auction/' . $this->carcomment->car->auction->id);
+           $this->url = url('/corporate/' . $this->carcomment->car->corporate->id . '/car/' . $this->carcomment->car->id . '/auction/' . $this->carcomment->car->auction->id);
         } else if ($this->carcomment->car->tender->exists()) {
-           $this->url = url('/corporate/' . $this->carcomment->corporate->id . '/car/' . $this->carcomment->car->id . '/tender/' . $this->carcomment->car->tender->id);
+           $this->url = url('/corporate/' . $this->carcomment->car->corporate->id . '/car/' . $this->carcomment->car->id . '/tender/' . $this->carcomment->car->tender->id);
         }
 
         $this->message = $this->carcomment->user->name . ' added a comment.';

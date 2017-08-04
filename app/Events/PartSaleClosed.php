@@ -35,6 +35,6 @@ class PartSaleClosed implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.partsale.'.$this->partsale->id);
+        return new Channel('public-channel.part.'.$this->partsale->part->id);
     }
 }

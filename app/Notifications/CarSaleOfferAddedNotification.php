@@ -24,7 +24,7 @@ class CarSaleOfferAddedNotification extends Notification
     public function __construct(Carsaleoffer $carsaleoffer)
     {
         $this->carsaleoffer = $carsaleoffer;
-        $this->url = url('/corporate/' . $this->carsaleoffer->carsale->corporate->id . '/car/' . $this->carsaleoffer->carsale->car->id . '/sale/' . $this->carsaleoffer->carsale->id);
+        $this->url = url('/corporate/' . $carsaleoffer->carsale->corporate->id . '/car/' . $carsaleoffer->carsale->car->id . '/sale/' . $carsaleoffer->carsale->id);
         $this->message = $this->carsaleoffer->user->name . ' placed an offer.';
     }
 

@@ -46,42 +46,23 @@
         |
         */
 
-        @if (Auth::check())
-            var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-            privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-                BroadcastNotificationCreated(data);
-            });
-
-            function BroadcastNotificationCreated(data) {
-                if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                    // New Message Notification appending happens here.
-                } else { 
-                    // Notification appending happens here.
-                }
-            }
-
-        @endif
-
         var publicChannel = pusher.subscribe('public-channel');
 
-        publicChannel.bind('App\\Events\\CarSaleAdded', CarSaleAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentAdded', CarRentAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderAdded', CarTenderAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionAdded', CarAuctionAddedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleAdded', PartSaleAddedBuild(data));
-
-        publicChannel.bind('App\\Events\\CarSaleClosed', CarSaleClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentClosed', CarRentClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderClosed', CarTenderClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionClosed', CarAuctionClosedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleClosed', PartSaleClosedBuild(data));
-        
-        publicChannel.bind('App\\Events\\CarSaleOfferReservePurchased', CarSaleOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentOfferReservePurchased', CarRentOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderTenderReservePurchased', CarTenderTenderReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionBidReservePurchased', CarAuctionBidReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleOfferReservePurchased', PartSaleOfferReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\CarSaleAdded', function(data) {
+            CarSaleAddedBuild(data);
+        });
+        publicChannel.bind('App\\Events\\CarRentAdded', function(data) {
+            CarRentAddedBuild(data);
+        });
+        publicChannel.bind('App\\Events\\CarTenderAdded', function(data) {
+            CarTenderAddedBuild(data);
+        });
+        publicChannel.bind('App\\Events\\CarAuctionAdded', function(data) {
+            CarAuctionAddedBuild(data);
+        });
+        publicChannel.bind('App\\Events\\PartSaleAdded', function(data) {
+            PartSaleAddedBuild(data);
+        });
 
     </script>
 
@@ -111,34 +92,28 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" data-count="7">
+                                <span class="fa-stack has-badge" id="notificationCount">
                                   <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="#">Noti 1</a>
-                                    <a href="#">Noti 2</a>
-                                    <a href="#">Noti 3</a>
-                                    <a href="#">Noti 4</a>
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                <li id="notificationList">
+
                                 </li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" data-count="99">
+                                <span class="fa-stack has-badge" id="messageCount">
                                   <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li id="message-list">
-                                    <a href="#">Message 1</a>
-                                    <a href="#">Message 2</a>
-                                    <a href="#">Message 3</a>
-                                    <a href="#">Message 4</a>
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                <li id="messageList">
+
                                 </li>
                             </ul>
                         </li>
@@ -158,7 +133,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();" style="color:white">
+                                                     document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
 
@@ -188,7 +163,24 @@
             </div>
 
             <div class="col-md-8">
+
+                <!-- Main center column -->
+
+                <div class="col-md-12">
+                    <!-- Some top level adverts here -->
+                </div>
+
+                <div class="col-md-12">
+                    <!-- Search and advanced search (hidden) here -->
+                </div>
+
+                <div class="col-md-12">
+                    <!-- All trades newsfeed here -->
+
                     @yield('content')
+                
+                </div>
+                    
             </div>
 
             <div class="col-md-2">
@@ -238,9 +230,24 @@
 
     <script>
 
-        var timeArray = [];
-
+        var reserves_count = 0;
+        var user_id = 0;
         var base_url = "{{ url('/') }}";
+
+        @if (Auth::check())
+
+            getNotifications();
+
+            // User ID
+            var user_id = {{ Auth::user()->id }};
+
+        @endif
+
+        var timeArray = [];
+        var tradesArray = [];
+
+        var nextPageURL = base_url + '/getnewsfeed';
+        var noNextPage = false;
  
     </script>
 

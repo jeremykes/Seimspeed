@@ -34,6 +34,6 @@ class CarSaleOfferReservePurchased implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carsale.'.$this->carsale->id);
+        return new Channel('public-channel.car.'.$this->carsale->car->id);
     }
 }

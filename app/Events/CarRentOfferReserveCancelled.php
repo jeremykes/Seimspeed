@@ -35,6 +35,6 @@ class CarRentOfferReserveCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carrent.'.$this->carrentoffer->carrent->id);
+        return new Channel('public-channel.car.'.$this->carrentoffer->carrent->car->id);
     }
 }

@@ -19,7 +19,7 @@ class Carsaleoffer extends Model
     /**
 	* Get the carsale that owns this offer.
 	*/
-	public function sale()
+	public function carsale()
 	{
 		return $this->BelongsTo('App\Carsale');
 	}

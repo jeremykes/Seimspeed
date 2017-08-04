@@ -25,9 +25,57 @@ use App\Carauctionbid;
 use App\Carauctionreserve;
 
 // Notifications
-use App\Notifications\CarSaleAddedNotification;
+use App\Notifications\CarSaleOpenedNotification;
+use App\Notifications\CarSaleUpdatedNotification;
+use App\Notifications\CarSaleClosedNotification;
+use App\Notifications\CarSaleOfferReservedNotification;
+use App\Notifications\CarSaleOfferReserveCancelledNotification;
+use App\Notifications\CarSaleOfferReservePurchasedNotification;
+use App\Notifications\CarSalePurchasedNotification;
+use App\Notifications\CarRentOpenedNotification;
+use App\Notifications\CarRentUpdatedNotification;
+use App\Notifications\CarRentClosedNotification;
+use App\Notifications\CarRentOfferReservedNotification;
+use App\Notifications\CarRentOfferReserveCancelledNotification;
+use App\Notifications\CarRentOfferReservePurchasedNotification;
+use App\Notifications\CarRentPurchasedNotification;
+use App\Notifications\CarTenderOpenedNotification;
+use App\Notifications\CarTenderUpdatedNotification;
+use App\Notifications\CarTenderClosedNotification;
+use App\Notifications\CarTenderTenderReservedNotification;
+use App\Notifications\CarTenderTenderReserveCancelledNotification;
+use App\Notifications\CarTenderTenderReservePurchasedNotification;
+use App\Notifications\CarTenderPurchasedNotification;
+use App\Notifications\CarAuctionOpenedNotification;
+use App\Notifications\CarAuctionUpdatedNotification;
+use App\Notifications\CarAuctionClosedNotification;
+use App\Notifications\CarAuctionBidReservedNotification;
+use App\Notifications\CarAuctionBidReserveCancelledNotification;
+use App\Notifications\CarAuctionBidReservePurchasedNotification;
+use App\Notifications\CarAuctionPurchasedNotification;
 
-class UserController extends Controller
+// Events
+use App\Events\CarSaleAdded;
+use App\Events\CarSaleClosed;
+use App\Events\CarSaleOfferReserved;
+use App\Events\CarSaleOfferReservePurchased;
+use App\Events\CarRentAdded;
+use App\Events\CarRentUpdated;
+use App\Events\CarRentClosed;
+use App\Events\CarRentOfferReserved;
+use App\Events\CarRentOfferReservePurchased;
+use App\Events\CarTenderAdded;
+use App\Events\CarTenderUpdated;
+use App\Events\CarTenderClosed;
+use App\Events\CarTenderTenderReserved;
+use App\Events\CarTenderTenderReservePurchased;
+use App\Events\CarAuctionAdded;
+use App\Events\CarAuctionUpdated;
+use App\Events\CarAuctionClosed;
+use App\Events\CarAuctionBidReserved;
+use App\Events\CarAuctionBidReservePurchased;
+
+class CarController extends Controller
 {
     /**
      * Create a new controller instance.

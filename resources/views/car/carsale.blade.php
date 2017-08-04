@@ -5,6 +5,64 @@
   <link href="{{ asset('css/lightbox/lightbox.min.css') }}" rel="stylesheet">
 @endsection
 
+@section('realtime')
+
+<script>
+
+    /*
+    |
+    | 1. Subscribe to the channels and bind
+    |
+    */
+
+    @if (Auth::check())
+        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+            BroadcastNotificationCreated(data);
+        });
+
+        function BroadcastNotificationCreated(data) {
+            if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                // New Message Notification appending happens here.
+                getMessages();
+            } else { 
+                // Notification appending happens here.
+                getNotifications();
+            }
+        }
+
+    @endif
+
+    var publicCarTradeChannel = pusher.subscribe('public-channel.car.{{ $carsale->car->id }}');
+
+    publicCarTradeChannel.bind('App\\Events\\CarSaleClosed', function(data) {
+        CarSaleClosedBuildTrade(data.carsale[0]); 
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReservePurchased', function(data) {
+        CarSaleOfferReservePurchasedBuildTrade(data.carsale[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserved', function(data) {
+        CarSaleOfferReservedBuildTrade(data.carsaleoffer[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserveCancelled', function(data) {
+        CarSaleOfferReserveCancelledBuildTrade(data.carsaleoffer[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
+        CarCommentAddedBuildTrade(data.carcomment[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferAdded', function(data) {
+        CarSaleOfferAddedBuildTrade(data.carsaleoffer[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferCancelled', function(data) {
+        CarSaleOfferCancelledBuildTrade(data.carsaleoffer);
+    }); 
+
+</script>
+
+@endsection
+
+
 @section('content')
 
 <div class="col-md-12">
@@ -39,6 +97,13 @@
                     </span>
                 </p>
                 <p id="carsale_created_at{{ $carsale->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
+                <p class="pull-right" id="carsalenegotiable" style="font-size:11px">
+                    @if ($carsale->negotiable == 0) 
+                        <span class="label label-warning">Negotiable</span>
+                    @else
+                        <span class="label label-warning">Not negotiable</span>
+                    @endif
+                </p>
                 <p id="cardetails">
                     Body type: <span style="font-weight:bold">{{ $carsale->car->bodytype }}</span>. 
                     Weight: <span style="font-weight:bold">{{ $carsale->car->weight }}</span>Kg's. 
@@ -49,18 +114,7 @@
                     <br>
                     <span style="font-size:11px;color:grey">{{ $carsale->car->note }}
                 </p>
-                <p id="carsalenegotiable">
-                    @if ($carsale->negotiable == 0) 
-                        <span class="label label-warning">Negotiable</span>
-                    @else
-                        <span class="label label-warning">Not negotiable</span>
-                    @endif
-                </p>
                 <p id="carsalenote"><hr style="margin:2px"><span style="font-size:11px;color:grey">{{ $carsale->note }}</span></p>
-                
-                @if ($carsale->group)
-                    <p>In group <a href="#"><span class="label label-primary">go to group</span></a></p>
-                @endif
 
             </div>
 
@@ -77,6 +131,54 @@
     </div>
 </div>
 
+<div class="col-md-12" id="commentinput" style="text-align:center;padding-top:20px">
+    @if (Auth::check())
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10" style="padding-right:1px">
+                    <input type="text" class="form-control" id="comment" placeholder="Add comment">
+                </div>
+                <div class="col-sm-2" style="padding-top:6px;padding-left:1px"><button class="btn btn-primary btn-xs" onclick="postNewCarComment({{ $carsale->car->id }})">post</button></div>
+            </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-bottom:20px;color:grey;">
+            You have to be logged in to post comments.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="amountinput">
+    @if (Auth::check())
+        <div class="col-md-12">
+          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+            <div class="form-inline">
+              <div class="form-group">
+                <label>Your offer</label>
+                <div class="input-group">
+                  <div class="input-group-addon">K</div>
+                  <input type="text" class="form-control" placeholder="Amount" name="offer" id="offer">
+                </div>
+              </div>
+              <a class="btn btn-success btn-xs" onclick="submitCarSaleOffer({{ $carsale->car->id }})">Offer</a>
+            </div>
+          </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+            You have to be logged in to post an offer.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+    @if (Auth::check())
+        <button class="btn btn-primary" onclick="tailCar({{ $carsale->car->id }})" id="cartailbutton"></button>
+    @else
+        You have to be logged in to tail this car.
+    @endif
+</div>
+
 <div class="col-md-12" id="list">
 
 </div>
@@ -90,26 +192,6 @@
 <script src="{{ asset('js/lightbox/lightbox.min.js') }}"></script>
 
 <script>
-
-    /*
-    |
-    | Some initial JS variables
-    |
-    */
-    var reserves_count = 0;
-    @if (Auth::check())
-        @if (Auth::user()->hasRole('administrator'))
-            var corp_user_role = 'administrator';
-        @elseif (Auth::user()->hasRole('sales'))
-            var corp_user_role = 'sales';
-        @elseif (Auth::user()->hasRole('maintainer'))
-            var corp_user_role = 'maintainer';
-        @elseif (Auth::user()->hasRole('manager'))
-            var corp_user_role = 'manager';
-        @endif
-    @endif
-    var timeArray = [];
-    var base_url = "{{ url('/') }}";
 
     /*
     |
@@ -141,56 +223,10 @@
             updateTimestamps();
         }, 60000);
 
-        getCarSaleOffers({{ $carsale->car->id }});
+        // Initially get offers
+        getCarSaleOffers({{ $carsale->id }});
 
     });
-
-    /*
-    |
-    | 1. Subscribe to the channels and bind
-    |
-    */
-
-    @if (Auth::check())
-        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-            BroadcastNotificationCreated(data);
-        });
-
-        function BroadcastNotificationCreated(data) {
-            if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                // New Message Notification appending happens here.
-            } else { 
-                // Notification appending happens here.
-            }
-        }
-
-    @endif
-
-    var publicCarTradeChannel = pusher.subscribe('public-channel.carsale.{{ $carsale->id }}');
-
-    publicCarTradeChannel.bind('App\\Events\\CarSaleClosed', function(data) {
-    	CarSaleClosedBuildTrade(data); 
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReservePurchased', function(data) {
-    	CarSaleOfferReservePurchasedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserved', function(data) {
-    	CarSaleOfferReservedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserveCancelled', function(data) {
-    	CarSaleOfferReserveCancelledBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
-    	CarCommentAddedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferAdded', function(data) {
-    	CarSaleOfferAddedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarSaleOfferCancelled', function(data) {
-    	CarSaleOfferCancelledBuildTrade(data);
-    }); 
 
 </script>
 

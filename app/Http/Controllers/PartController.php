@@ -13,7 +13,22 @@ use App\Partsale;
 use App\Partsaleoffer;
 use App\Partsalereserve;
 
-class UserController extends Controller
+// Notifications
+use App\Notifications\PartSaleOpenedNotification;
+use App\Notifications\PartSaleUpdatedNotification;
+use App\Notifications\PartSaleClosedNotification;
+use App\Notifications\PartSaleOfferReservedNotification;
+use App\Notifications\PartSaleOfferReserveCancelledNotification;
+use App\Notifications\PartSaleOfferReservePurchasedNotification;
+use App\Notifications\PartSalePurchasedNotification;
+
+// Events
+use App\Events\PartSaleAdded;
+use App\Events\PartSaleClosed;
+use App\Events\PartSaleOfferReserved;
+use App\Events\PartSaleOfferReservePurchased;
+
+class PartController extends Controller
 {
     /**
      * Create a new controller instance.

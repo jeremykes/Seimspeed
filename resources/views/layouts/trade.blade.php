@@ -42,6 +42,8 @@
 
     </script>
 
+    @yield('realtime')
+
 </head>
 <body>
     <div id="app">
@@ -66,34 +68,28 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" data-count="7">
+                                <span class="fa-stack has-badge" id="notificationCount">
                                   <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="#">Noti 1</a>
-                                    <a href="#">Noti 2</a>
-                                    <a href="#">Noti 3</a>
-                                    <a href="#">Noti 4</a>
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                <li id="notificationList">
+
                                 </li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" data-count="99">
+                                <span class="fa-stack has-badge" id="messageCount">
                                   <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
                                 </span>
                             </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li id="message-list">
-                                    <a href="#">Message 1</a>
-                                    <a href="#">Message 2</a>
-                                    <a href="#">Message 3</a>
-                                    <a href="#">Message 4</a>
+                            <ul class="dropdown-menu scrollable-menu" role="menu">
+                                <li id="messageList">
+
                                 </li>
                             </ul>
                         </li>
@@ -113,7 +109,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();" style="color:white">
+                                                     document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
 
@@ -129,24 +125,14 @@
             </div>
         </nav>
 
-        <!-- Modals -->
-
         <!-- Status alert modal -->
-
         <div class="modal fade" tabindex="-1" role="dialog" id="statusModal">
-          <div class="modal-dialog model-sm" role="document">
+          <div class="modal-dialog model-sm" role="document" style="top:40%">
             <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Hey friend, just FYI...</h4>
+              <div class="modal-header" style="padding:0;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px"><span aria-hidden="true">&times;</span></button>
               </div>
-              <div class="modal-body" id="statudModalBody">
-                
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
+              <div class="modal-body" id="statusModalBody" style="text-align:center"></div>
             </div>
           </div>
         </div>
@@ -203,6 +189,35 @@
     <script src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/seimspeed.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+
+    <script>
+
+        var reserves_count = 0;
+        var user_id = 0;
+        var base_url = "{{ url('/') }}";
+
+        @if (Auth::check())
+
+            getNotifications();
+
+            // User ID
+            var user_id = {{ Auth::user()->id }};
+
+            @if (Auth::user()->hasRole('administrator'))
+                var corp_user_role = 'administrator';
+            @elseif (Auth::user()->hasRole('sales'))
+                var corp_user_role = 'sales';
+            @elseif (Auth::user()->hasRole('maintainer'))
+                var corp_user_role = 'maintainer';
+            @elseif (Auth::user()->hasRole('manager'))
+                var corp_user_role = 'manager';
+            @endif
+
+        @endif
+
+        var timeArray = [];
+    
+    </script>
 
     @yield('script')
 

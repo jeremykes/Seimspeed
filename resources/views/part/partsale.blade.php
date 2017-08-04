@@ -14,7 +14,7 @@
 <div class="col-md-12">
     <div class="panel" style="padding-bottom:0;margin-bottom:0">
         <div class="panel-body">
-            <div class="col-md-3" id="car_images">
+            <div class="col-md-3" id="part_images">
                 <ul id="lightSlider">
 
                 @foreach ($partsale->part->images as $partimage)
@@ -39,6 +39,14 @@
                         <span style="font-size:20px" id="partprice">K{{ number_format($partsale->price, 2) }}</span>
                     </span>
                 </p>
+                <p id="partsale_created_at{{ $partsale->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
+                <p class="pull-right" id="partsalenegotiable">
+                    @if ($partsale->negotiable == 0) 
+                        <span class="label label-warning">Negotiable</span>
+                    @else
+                        <span class="label label-warning">Not negotiable</span>
+                    @endif
+                </p>
                 <p id="partdetails">
                     Serial: <span style="font-weight:bold">{{ $partsale->part->bodytype }}</span>. 
                     Location: <span style="font-weight:bold">{{ $partsale->part->physicallocation }}</span>. 
@@ -46,13 +54,6 @@
                     <span id="partdesc">{{ $partsale->part->descript }}</span>
                     <br>
                     <span style="font-size:11px;color:grey">{{ $partsale->part->note }}
-                </p>
-                <p id="partsalenegotiable">
-                    @if ($partsale->negotiable == 0) 
-                        <span class="label label-warning">Negotiable</span>
-                    @else
-                        <span class="label label-warning">Not negotiable</span>
-                    @endif
                 </p>
                 <p id="partsalenote"><hr style="margin:2px"><span style="font-size:11px;color:grey">{{ $partsale->note }}</span></p>
                 
@@ -73,6 +74,54 @@
 
         </div>
     </div>
+</div>
+
+<div class="col-md-12" id="commentinput" style="text-align:center;padding-top:20px">
+    @if (Auth::check())
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10" style="padding-right:1px">
+                    <input type="text" class="form-control" id="comment" placeholder="Add comment">
+                </div>
+                <div class="col-sm-2" style="padding-top:6px;padding-left:1px"><button class="btn btn-primary btn-xs" onclick="postNewPartComment({{ $partsale->part->id }})">post</button></div>
+            </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-bottom:20px;color:grey;">
+            You have to be logged in to post comments.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="amountinput">
+    @if (Auth::check())
+        <div class="col-md-12">
+          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+            <div class="form-inline">
+              <div class="form-group">
+                <label>Your offer</label>
+                <div class="input-group">
+                  <div class="input-group-addon">K</div>
+                  <input type="text" class="form-control" placeholder="Amount" name="offer" id="offer">
+                </div>
+              </div>
+              <a class="btn btn-success btn-xs" onclick="submitPartSaleOffer({{ $partsale->part->id }})">Offer</a>
+            </div>
+          </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+            You have to be logged in to post an offer.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+    @if (Auth::check())
+        <button class="btn btn-primary" onclick="tailPart({{ $partsale->part->id }})" id="parttailbutton"></button>
+    @else
+        You have to be logged in to tail this part.
+    @endif
 </div>
 
 <div class="col-md-12" id="list">
@@ -128,8 +177,10 @@
         function BroadcastNotificationCreated(data) {
             if (data.type == 'App\\Notifications\\NewMessageNotification') {
                 // New Message Notification appending happens here.
+                getMessages();
             } else { 
                 // Notification appending happens here.
+                getNotifications();
             }
         }
 

@@ -18,6 +18,10 @@ class PartSaleAdded implements ShouldBroadcast
 
     public $part;
     public $partsale;
+    public $partimages;
+    public $comment_count;
+    public $tail_count;
+    public $offer_count;
     /**
      * Create a new event instance.
      *
@@ -27,6 +31,10 @@ class PartSaleAdded implements ShouldBroadcast
     {
         $this->part = $partsale->part;
         $this->partsale = $partsale;
+        $this->partimages = $partsale->part->images;
+        $this->comment_count = $partsale->part->comments->count();
+        $this->offer_count = $partsale->offers->count();
+        $this->tail_count = $partsale->part->tails->count();
     }
 
     /**

@@ -34,6 +34,6 @@ class CarRentClosed implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carrent.'.$this->carrent->id);
+        return new Channel('public-channel.car.'.$this->carrent->car->id);
     }
 }

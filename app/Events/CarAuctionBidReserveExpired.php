@@ -34,6 +34,6 @@ class CarAuctionBidReserveExpired implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carauction.'.$this->carauctionreserve->carauction->id);
+        return new Channel('public-channel.car.'.$this->carauctionreserve->carauction->car->id);
     }
 }

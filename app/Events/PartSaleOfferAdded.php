@@ -12,11 +12,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\Partsaleoffer;
 
+use DB;
+
 class PartSaleOfferAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $partsaleoffer;
+    public $partsaleoffer;
+    private $partid;
 
     /**
      * Create a new event instance.
@@ -25,7 +28,12 @@ class PartSaleOfferAdded implements ShouldBroadcast
      */
     public function __construct(Partsaleoffer $partsaleoffer)
     {
-        $this->partsaleoffer = $partsaleoffer;
+        $this->partid = $partsaleoffer->partsale->part->id;
+        $this->partsaleoffer = DB::table('partsaleoffers')
+                    ->leftJoin('users', 'users.id', '=', 'partsaleoffers.user_id')
+                    ->select('partsaleoffers.*', 'users.propic', 'users.name')
+                    ->where('partsaleoffers.id', $partsaleoffer->id)
+                    ->get();
     }
 
     /**
@@ -35,6 +43,6 @@ class PartSaleOfferAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.partsale.'.$this->partsaleoffer->partsale->id);
+        return new Channel('public-channel.part.'.$this->partid);
     }
 }

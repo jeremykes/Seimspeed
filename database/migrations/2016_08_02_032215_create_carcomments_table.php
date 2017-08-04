@@ -14,7 +14,7 @@ class CreateCarcommentsTable extends Migration
     {
         Schema::create('carcomments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('parent_comment_id')->unsigned()->nullable;
+            $table->integer('parent_comment_id')->unsigned()->default(0);
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('car_id')->unsigned();

@@ -18,6 +18,11 @@ class CarRentAdded implements ShouldBroadcast
 
     public $car;
     public $carrent;
+    public $carimages;
+    public $comment_count;
+    public $tail_count;
+    public $offer_count;
+
     /**
      * Create a new event instance.
      *
@@ -27,6 +32,10 @@ class CarRentAdded implements ShouldBroadcast
     {
         $this->car = $carrent->car;
         $this->carrent = $current;
+        $this->carimages = $carrent->car->images;
+        $this->comment_count = $carrent->car->comments->count();
+        $this->offer_count = $carrent->offers->count();
+        $this->tail_count = $carrent->car->tails->count();
     }
 
     /**

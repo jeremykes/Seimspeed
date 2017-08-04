@@ -34,6 +34,6 @@ class CarTenderTenderCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.cartender.'.$this->cartendertender->cartender->id);
+        return new Channel('public-channel.car.'.$this->cartendertender->cartender->car->id);
     }
 }

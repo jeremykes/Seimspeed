@@ -34,6 +34,6 @@ class CarTenderTenderReserveExpired implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.cartender.'.$this->cartenderreserve->cartender->id);
+        return new Channel('public-channel.car.'.$this->cartenderreserve->cartender->car->id);
     }
 }

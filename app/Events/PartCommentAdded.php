@@ -12,11 +12,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\Partcomment;
 
+use DB;
+
 class PartCommentAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-        public $partcomment;
+    public $partcomment;
+    private $partid;
 
     /**
      * Create a new event instance.
@@ -25,7 +28,12 @@ class PartCommentAdded implements ShouldBroadcast
      */
     public function __construct(Partcomment $partcomment)
     {
-        $this->partcomment = $partcomment;
+        $this->partid = $partcomment->part->id;
+        $this->partcomment = DB::table('partcomments')
+                    ->leftJoin('users', 'users.id', '=', 'partcomments.user_id')
+                    ->select('partcomments.*', 'users.propic', 'users.name')
+                    ->where('partcomments.id', $partcomment->id)
+                    ->get();
     }
 
     /**
@@ -35,6 +43,6 @@ class PartCommentAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.part.'.$this->partcomment->part->id);
+        return new Channel('public-channel.part.'.$this->partid);
     }
 }

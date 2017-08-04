@@ -34,6 +34,6 @@ class CarRentOfferReserveExpired implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carrent.'.$this->carrentreserve->carrent->id);
+        return new Channel('public-channel.car.'.$this->carrentreserve->carrent->car->id);
     }
 }

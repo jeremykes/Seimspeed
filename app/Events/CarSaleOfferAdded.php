@@ -12,12 +12,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\Carsaleoffer;
 
+use DB;
+
 class CarSaleOfferAdded implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $carsaleoffer;
-
+    private $carid;
 
     /**
      * Create a new event instance.
@@ -26,7 +28,12 @@ class CarSaleOfferAdded implements ShouldBroadcast
      */
     public function __construct(Carsaleoffer $carsaleoffer)
     {
-        $this->carsaleoffer = $carsaleoffer;
+        $this->carid = $carsaleoffer->carsale->car->id;
+        $this->carsaleoffer = DB::table('carsaleoffers')
+                    ->leftJoin('users', 'users.id', '=', 'carsaleoffers.user_id')
+                    ->select('carsaleoffers.*', 'users.propic', 'users.name')
+                    ->where('carsaleoffers.id', $carsaleoffer->id)
+                    ->get();
     }
 
     /**
@@ -36,6 +43,6 @@ class CarSaleOfferAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carsale.'.$this->carsaleoffer->carsale->id);
+        return new Channel('public-channel.car.'.$this->carid);
     }
 }

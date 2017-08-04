@@ -205,7 +205,7 @@ class CorporateController extends Controller
         $car->color = $request->color;
         $car->fueltype = $request->fueltype;
         $car->transmissiontype = $request->transmissiontype;
-        $car->2wd4wd = $request->2wd4wd;
+        // $car->2wd4wd = $request->2wd4wd;
         $car->steeringside = $request->steeringside;
         $car->make = $request->make;
         $car->model = $request->model;
@@ -235,7 +235,7 @@ class CorporateController extends Controller
         $car->color = $request->color;
         $car->fueltype = $request->fueltype;
         $car->transmissiontype = $request->transmissiontype;
-        $car->2wd4wd = $request->2wd4wd;
+        // $car->2wd4wd = $request->2wd4wd;
         $car->steeringside = $request->steeringside;
         $car->make = $request->make;
         $car->model = $request->model;

@@ -5,6 +5,65 @@
   <link href="{{ asset('css/lightbox/lightbox.min.css') }}" rel="stylesheet">
 @endsection
 
+
+@section('realtime')
+
+<script>
+
+    /*
+    |
+    | 1. Subscribe to the channels and bind
+    |
+    */
+
+    @if (Auth::check())
+        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+            BroadcastNotificationCreated(data);
+        });
+
+        function BroadcastNotificationCreated(data) {
+            if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                // New Message Notification appending happens here.
+                getMessages();
+            } else { 
+                // Notification appending happens here.
+                getNotifications();
+            }
+        }
+
+    @endif
+
+    var publicCarTradeChannel = pusher.subscribe('public-channel.car.{{ $carauction->car->id }}');
+
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionClosed', function(data) {
+        CarAuctionClosedBuildTrade(data.carauction[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReservePurchased', function(data) {
+        CarAuctionBidReservePurchasedBuildTrade(data.carauction[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserved', function(data) {
+        CarAuctionBidReservedBuildTrade(data.carauctionbid[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserveCancelled', function(data) {
+        CarAuctionBidReserveCancelledBuildTrade(data.carauctionbid[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
+        CarCommentAddedBuildTrade(data.carcomment[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidAdded', function(data) {
+        CarAuctionBidAddedBuildTrade(data.carauctionbid[0]);
+    }); 
+    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidCancelled', function(data) {
+        CarAuctionBidCancelledBuildTrade(data.carauctionbid[0]);
+    }); 
+
+</script>
+
+@ensection
+
+
 @section('content')
 
 <!-- Build initially with PHP -->
@@ -42,6 +101,14 @@
                         <span style="font-size:20px" id="carprice">K{{ number_format($carauction->price, 2) }}</span>
                     </span>
                 </p>
+                <p id="carauction_created_at{{ $carauction->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
+                <p class="pull-right" id="carauctionsignup">
+                    @if ($carauction->signuprequired == 0) 
+                        <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $carauction->signupfee }}</span>
+                    @else
+                        <span class="label label-warning">Signup not required</span>
+                    @endif
+                </p>
                 <p id="cardetails">
                     Body type: <span style="font-weight:bold">{{ $carauction->car->bodytype }}</span>. 
                     Weight: <span style="font-weight:bold">{{ $carauction->car->weight }}</span>Kg's. 
@@ -56,13 +123,6 @@
                     <span class="label label-info">Start bid price</span>: <span style="font-weight:bold;font-size:16px">{{ $carauction->startbidprice }}</span>. 
                     <br>
                     <span style="font-size:11px;color:grey">{{ $carauction->car->note }}
-                </p>
-                <p id="carauctionsignup">
-                    @if ($carauction->signuprequired == 0) 
-                        <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $carauction->signupfee }}</span>
-                    @else
-                        <span class="label label-warning">Signup not required</span>
-                    @endif
                 </p>
                 <p id="carauctionnote"><hr style="margin:2px"><span style="font-size:11px;color:grey">{{ $carauction->note }}</span></p>
                 
@@ -85,6 +145,54 @@
     </div>
 </div>
 
+<div class="col-md-12" id="commentinput" style="text-align:center;padding-top:20px">
+    @if (Auth::check())
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10" style="padding-right:1px">
+                    <input type="text" class="form-control" id="comment" placeholder="Add comment">
+                </div>
+                <div class="col-sm-2" style="padding-top:6px;padding-left:1px"><button class="btn btn-primary btn-xs" onclick="postNewCarComment({{ $carauction->car->id }})">post</button></div>
+            </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-bottom:20px;color:grey;">
+            You have to be logged in to post comments.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="amountinput">
+    @if (Auth::check())
+        <div class="col-md-12">
+          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+            <div class="form-inline">
+              <div class="form-group">
+                <label>Your bid</label>
+                <div class="input-group">
+                  <div class="input-group-addon">K</div>
+                  <input type="text" class="form-control" placeholder="Amount" name="bid" id="bid">
+                </div>
+              </div>
+              <a class="btn btn-success btn-xs" onclick="submitCarAuctionBid({{ $carauction->car->id }})">Bid</a>
+            </div>
+          </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+            You have to be logged in to post a bid.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+    @if (Auth::check())
+        <button class="btn btn-primary" onclick="tailCar({{ $carauction->car->id }})" id="cartailbutton"></button>
+    @else
+        You have to be logged in to tail this car.
+    @endif
+</div>
+
 <div class="col-md-12" id="list">
 
 </div>
@@ -99,7 +207,17 @@
 
 <script>
 
+    /*
+    |
+    | Execute initial scripts when document is ready
+    |
+    */
     $(document).ready(function(e) {
+
+        // Set carauction_created_at timestamp
+        timeArray.push(['carauction_created_at{{ $carauction->car->id }}', '{{ $carauction->created_at }}']);
+
+        // Initialize small slider of car images
         $('#lightSlider').lightSlider({
             gallery: false,
             item: 1,
@@ -113,61 +231,17 @@
             pause: 5000
         });
 
+        // Moment.js script to update all timestamps on the page
+        updateTimestamps();
+        window.setInterval(function(){
+            updateTimestamps();
+        }, 60000);
+
+        // Initially get bids
+        getCarAuctionBids({{ $carauction->id }});
+
     });
 
-    /*
-    |
-    | Some initial JS variables
-    |
-    */
-
-
-    /*
-    |
-    | 1. Subscribe to the channels and bind
-    |
-    */
-
-    @if (Auth::check())
-        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-            BroadcastNotificationCreated(data);
-        });
-
-        function BroadcastNotificationCreated(data) {
-            if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                // New Message Notification appending happens here.
-            } else { 
-                // Notification appending happens here.
-            }
-        }
-
-    @endif
-
-    var publicCarTradeChannel = pusher.subscribe('public-channel.carauction.{{ $carauction->id }}');
-
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionClosed', function(data) {
-        CarAuctionClosedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReservePurchased', function(data) {
-        CarAuctionBidReservePurchasedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserved', function(data) {
-        CarAuctionBidReservedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserveCancelled', function(data) {
-        CarAuctionBidReserveCancelledBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
-        CarCommentAddedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidAdded', function(data) {
-        CarAuctionBidAddedBuildTrade(data);
-    }); 
-    publicCarTradeChannel.bind('App\\Events\\CarAuctionBidCancelled', function(data) {
-        CarAuctionBidCancelledBuildTrade(data);
-    }); 
 
 </script>
 

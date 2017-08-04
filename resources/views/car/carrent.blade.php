@@ -5,6 +5,64 @@
   <link href="{{ asset('css/lightbox/lightbox.min.css') }}" rel="stylesheet">
 @endsection
 
+
+@section('realtime')
+
+<script>
+
+    /*
+    |
+    | 1. Subscribe to the channels and bind
+    |
+    */
+
+    @if (Auth::check())
+        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+            BroadcastNotificationCreated(data);
+        });
+
+        function BroadcastNotificationCreated(data) {
+            if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                // New Message Notification appending happens here.
+                getMessages();
+            } else { 
+                // Notification appending happens here.
+                getNotifications();
+            }
+        }
+
+    @endif
+
+    var publicCarTradeChannel = pusher.subscribe('public-channel.car.{{ $carrent->car->id }}');
+
+    publicCarTradeChannel.bind('App\\Events\\CarRentClosed', function(data) {
+        CarRentClosedBuildTrade(data.carrent[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReservePurchased', function(data) {
+        CarRentOfferReservePurchasedBuildTrade(data.carrent[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserved', function(data) {
+        CarRentOfferReservedBuildTrade(data.carrentoffer[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserveCancelled', function(data) {
+        CarRentOfferReserveCancelledBuildTrade(data.carrentoffer[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
+        CarCommentAddedBuildTrade(data.carcomment[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarRentOfferAdded', function(data) {
+        CarRentOfferAddedBuildTrade(data.carrentoffer[0]);
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarRentOfferCancelled', function(data) {
+        CarRentOfferCancelledBuildTrade(data.carrentoffer[0]);
+    });
+
+</script>
+
+@endsection
+
 @section('content')
 
 <!-- Build initially with PHP -->
@@ -44,6 +102,7 @@
                         </span>
                     </span>
                 </p>
+                <p id="carrent_created_at{{ $carrent->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                 <p id="cardetails">
                     Body type: <span style="font-weight:bold">{{ $carrent->car->bodytype }}</span>. 
                     Weight: <span style="font-weight:bold">{{ $carrent->car->weight }}</span>Kg's. 
@@ -76,6 +135,54 @@
     </div>
 </div>
 
+<div class="col-md-12" id="commentinput" style="text-align:center;padding-top:20px">
+    @if (Auth::check())
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10" style="padding-right:1px">
+                    <input type="text" class="form-control" id="comment" placeholder="Add comment">
+                </div>
+                <div class="col-sm-2" style="padding-top:6px;padding-left:1px"><button class="btn btn-primary btn-xs" onclick="postNewCarComment({{ $carrent->car->id }})">post</button></div>
+            </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-bottom:20px;color:grey;">
+            You have to be logged in to post comments.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="amountinput">
+    @if (Auth::check())
+        <div class="col-md-12">
+          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+            <div class="form-inline">
+              <div class="form-group">
+                <label>Your offer</label>
+                <div class="input-group">
+                  <div class="input-group-addon">K</div>
+                  <input type="text" class="form-control" placeholder="Amount" name="offer" id="offer">
+                </div>
+              </div>
+              <a class="btn btn-success btn-xs" onclick="submitCarRentOffer({{ $carrent->car->id }})">Offer</a>
+            </div>
+          </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+            You have to be logged in to post an offer.
+        </div>
+    @endif
+</div>
+
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+    @if (Auth::check())
+        <button class="btn btn-primary" onclick="tailCar({{ $carrent->car->id }})" id="cartailbutton"></button>
+    @else
+        You have to be logged in to tail this car.
+    @endif
+</div>
+
 <div class="col-md-12" id="list">
 
 </div>
@@ -90,7 +197,17 @@
 
 <script>
 
+    /*
+    |
+    | Execute initial scripts when document is ready
+    |
+    */
     $(document).ready(function(e) {
+
+        // Set carrent_created_at timestamp
+        timeArray.push(['carrent_created_at{{ $carrent->car->id }}', '{{ $carrent->created_at }}']);
+
+        // Initialize small slider of car images
         $('#lightSlider').lightSlider({
             gallery: false,
             item: 1,
@@ -104,60 +221,15 @@
             pause: 5000
         });
 
-    });
+        // Moment.js script to update all timestamps on the page
+        updateTimestamps();
+        window.setInterval(function(){
+            updateTimestamps();
+        }, 60000);
 
-    /*
-    |
-    | Some initial JS variables
-    |
-    */
+        // Initially get offers
+        getCarRentOffers({{ $carrent->id }});
 
-
-    /*
-    |
-    | 1. Subscribe to the channels and bind
-    |
-    */
-
-    @if (Auth::check())
-        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-            BroadcastNotificationCreated(data);
-        });
-
-        function BroadcastNotificationCreated(data) {
-            if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                // New Message Notification appending happens here.
-            } else { 
-                // Notification appending happens here.
-            }
-        }
-
-    @endif
-
-    var publicCarTradeChannel = pusher.subscribe('public-channel.carrent.{{ $carrent->id }}');
-
-    publicCarTradeChannel.bind('App\\Events\\CarRentClosed', function(data) {
-    	CarRentClosedBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReservePurchased', function(data) {
-    	CarRentOfferReservePurchasedBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserved', function(data) {
-    	CarRentOfferReservedBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserveCancelled', function(data) {
-    	CarRentOfferReserveCancelledBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
-    	CarCommentAddedBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarRentOfferAdded', function(data) {
-    	CarRentOfferAddedBuildTrade(data);
-    });
-    publicCarTradeChannel.bind('App\\Events\\CarRentOfferCancelled', function(data) {
-    	CarRentOfferCancelledBuildTrade(data);
     });
 
 </script>

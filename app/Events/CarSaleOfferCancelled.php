@@ -35,6 +35,6 @@ class CarSaleOfferCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carsale.'.$this->carsaleoffer->carsale->id);
+        return new Channel('public-channel.car.'.$this->carsaleoffer->carsale->car->id);
     }
 }

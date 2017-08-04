@@ -1,5 +1,7 @@
 <?php
 
+Route::get('/test', 'FrameworkController@test'); // home
+
 // ===================================================================================
 // 
 // 
@@ -37,21 +39,21 @@ Route::get('/', 'FrameworkController@index'); // home
 // allcars 			
 // allcarsales 		
 // allcartenders  
-Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}', 'FrameworkController@carauction'); // carauction 		
+Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}/{id?}', 'FrameworkController@carauction'); // carauction 		
 // carauctiongroup 	
 // cargroup  
-Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}', 'FrameworkController@carrent'); // carrent 			
+Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}/{id?}', 'FrameworkController@carrent'); // carrent 			
 // carrentgroup 	
-Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}', 'FrameworkController@carsale'); // carsale 			
+Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/{id?}', 'FrameworkController@carsale'); // carsale 			
 // carsalegroup  		
-Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}', 'FrameworkController@cartender'); // cartender  		
+Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{id?}', 'FrameworkController@cartender'); // cartender  		
 // cartendergroup  	
 // cartendertenderers 
 // allpartgroups 	
 // allparts 		
 // allpartsales 	
 // partgroup  		
-Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}', 'FrameworkController@partsale'); // partsale 		
+Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{id?}', 'FrameworkController@partsale'); // partsale 		
 // partsalegroup 
 Route::get('/corporate/{corporate}', 'FrameworkController@corporatehome'); // corphome 
 
@@ -74,6 +76,11 @@ Route::get('/getparttails', 'FrameworkController@getparttails');
 // SOCIAL LOGIN
 // Route::get('/social/redirect/{provider}',   ['as' => 'social.redirect',   'uses' => 'Auth\AuthController@getSocialRedirect']);
 // Route::get('/social/handle/{provider}',     ['as' => 'social.handle',     'uses' => 'Auth\AuthController@getSocialHandle']);
+Route::get('/getnewsfeed', 'FrameworkController@getnewsfeed');
+Route::get('/getcarcounts', 'FrameworkController@getcarcounts');
+Route::get('/getpartcounts', 'FrameworkController@getpartcounts');
+Route::get('/getcarimages', 'FrameworkController@getcarimages');
+Route::get('/getpartimages', 'FrameworkController@getpartimages');
 
 /*
 |--------------------------------------------------------------------------
@@ -130,13 +137,13 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/auth/tailpart', 'UserController@tailpart');
 	Route::post('/auth/partsaleoffer', 'UserController@partsaleoffer');
 	Route::post('/auth/partsaleoffercancel', 'UserController@partsaleoffercancel');
-
 	Route::post('/auth/sendmessage', 'FrameworkController@sendmessage');
 	Route::post('/auth/reportuser', 'FrameworkController@reportuser');
 	Route::post('/auth/reportcorporate', 'FrameworkController@reportcorporate');
 	Route::post('/auth/reportpart', 'FrameworkController@reportpart');
-
 	Route::post('/auth/addcorporate', 'FrameworkController@addcorporate');
+
+	Route::get('/auth/getnotifications', 'FrameworkController@getnotifications');
 
 	/*
 	|--------------------------------------------------------------------------
@@ -144,20 +151,24 @@ Route::group(['middleware' => ['auth']], function() {
 	|--------------------------------------------------------------------------
 	*/
 	// PUSHER AUTHENTICATION ROUTE
-	// See if you can move this to the FrameworkController
-	// Route::post('/pusher/auth/{id}', function($id) {
-	// 	if ( Auth::user()->id === (int) $id ) {
-	// 	  $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
-	// 	  echo $pusher->socket_auth($_POST['channel_name'], $_POST['socket_id']);
-	// 	} else {
-	// 	  header('', true, 403);
-	// 	  echo "Forbidden";
-	// 	}
-	// }); 
+	Route::post('/pusher/auth/{id}', function($id) {
+		if ( Auth::user()->id === (int) $id ) {
+		  $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+		  echo $pusher->socket_auth($_POST['channel_name'], $_POST['socket_id']);
+		} else {
+		  header('', true, 403);
+		  echo "Forbidden";
+		}
+	}); 
 
-	Route::get('/pusher/auth/{id}', 'FrameworkController@pusherauthenticate');
 	Route::get('/auth/iscorpuser', 'FrameworkController@iscorpuser');
 	Route::get('/auth/hascorpuserrole', 'FrameworkController@hascorpuserrole');
+	Route::get('/auth/istailingcar', 'FrameworkController@istailingcar');
+	Route::get('/auth/istailingpart', 'FrameworkController@istailingpart');
+
+	// Notifications
+	Route::get('/auth/marknotificationasread/{id}', 'FrameworkController@marknotificationasread');
+
 
 
 	Route::group(['middleware' => ['corpuser']], function() {

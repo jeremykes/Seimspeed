@@ -35,6 +35,6 @@ class PartSaleOfferReserved implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.partsale.'.$this->partsaleoffer->partsale->id);
+        return new Channel('public-channel.part.'.$this->partsaleoffer->partsale->part->id);
     }
 }

@@ -35,6 +35,6 @@ class CarAuctionBidCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.carauction.'.$this->carauctionbid->carauction->id);
+        return new Channel('public-channel.car.'.$this->carauctionbid->carauction->car->id);
     }
 }

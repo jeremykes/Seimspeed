@@ -11,190 +11,479 @@ function CarSaleAddedBuild(data) {
     // Add to Newsfeed
     var htmltext = '';
 
-    htmltext += '<div class="panel" id="carsale' + data['carsale']['id'] + '">';
+    var cardata = data.car;
+    var carsaledata = data.carsale;
+    var carimagedata = data.carimages;
+
+    htmltext += '<div class="panel" id="carsale' + carsaledata.id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-3" id="carimage' + data['carsale']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + carsaledata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carsale']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
-    htmltext += '        <p id="carsaledetails' + data['carsale']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
-    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p style="font-size:16px">' + carsaledata + '</p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(carsaledata.price) + '</span></p>';
+    htmltext += '        <p id="carsale_created_at' + carsaledata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
+
+    if (cardata.negotiable == 'true') {
+        htmltext += '    <p><span class="label label-warning">Negotiable</span></p>';
+    } else {
+        htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
+    }
+
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + carsaledata.note + '</span></p>';
+
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carsaledata.corporate_id + '/car/' + carsaledata.id + '/carsale/' + carsaledata.id + '" style="cursor:pointer"><i class="fa fa-comment"></i> ' + data.comment_count + ' comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carsaledata.corporate_id + '/car/' + carsaledata.id + '/carsale/' + carsaledata.id + '" style="cursor:pointer"><i class="fa fa-money"></i> ' + data.offer_count + ' offer</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carsaledata.corporate_id + '/car/' + carsaledata.id + '/carsale/' + carsaledata.id + '" style="cursor:pointer"><i class="fa fa-eye"></i> ' + data.tail_count + ' tail</a>';
     htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
     $('#newsfeed').prepend(htmltext);
+
+    // moment.js stuff
+    timeArray.push(['carsale_created_at' + carsaledata.id, carsaledata.created_at]);
+    updateTimestamps();
 }
 
 function CarRentAddedBuild(data) {
     // Add to Newsfeed
+    // Add to Newsfeed
     var htmltext = '';
 
-    htmltext += '<div class="panel" id="carrent' + data['carrent']['id'] + '">';
+    var cardata = data.car;
+    var carrentdata = data.carrent;
+    var carimagedata = data.carimages;
+
+    htmltext += '<div class="panel" id="carrent' + carrentdata.id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-3" id="carimage' + data['carrent']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + carrentdata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carrent']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
-    htmltext += '        <p id="carrentdetails' + data['carrent']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
-    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(carrentdata.rateperday) + '/day</span></p>';
+    htmltext += '        <p id="carrent_created_at' + carrentdata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + carrentdata.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carrentdata.corporate_id + '/car/' + carrentdata.id + '/carrent/' + carrentdata.id + '" style="cursor:pointer"><i class="fa fa-comment"></i> ' + data.comment_count + ' comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carrentdata.corporate_id + '/car/' + carrentdata.id + '/carrent/' + carrentdata.id + '" style="cursor:pointer"><i class="fa fa-money"></i> ' + data.offer_count + ' offer</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carrentdata.corporate_id + '/car/' + carrentdata.id + '/carrent/' + carrentdata.id + '" style="cursor:pointer"><i class="fa fa-eye"></i> ' + data.tail_count + ' tail</a>';
     htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
     $('#newsfeed').prepend(htmltext);
+
+    // moment.js stuff
+    timeArray.push(['carrent_created_at' + carrentdata.id, carrentdata.created_at]);
+    updateTimestamps();
 }
 
 function CarTenderAddedBuild(data) {
     // Add to Newsfeed
     var htmltext = '';
 
-    htmltext += '<div class="panel" id="cartender' + data['cartender']['id'] + '">';
+    var cardata = data.car;
+    var cartenderdata = data.cartender;
+    var carimagedata = data.carimages;
+
+    htmltext += '<div class="panel" id="cartender' + cartenderdata.id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-3" id="carimage' + data['cartender']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + cartenderdata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['cartender']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
-    htmltext += '        <p id="cartenderdetails' + data['cartender']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
-    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p id="cartender_created_at' + cartenderdata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + cartenderdata.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + cartenderdata.corporate_id + '/car/' + cartenderdata.id + '/cartender/' + cartenderdata.id + '" style="cursor:pointer"><i class="fa fa-comment"></i> ' + data.comment_count + ' comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Tender</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + cartenderdata.corporate_id + '/car/' + cartenderdata.id + '/cartender/' + cartenderdata.id + '" style="cursor:pointer"><i class="fa fa-money"></i> ' + data.tender_count + ' offer</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + cartenderdata.corporate_id + '/car/' + cartenderdata.id + '/cartender/' + cartenderdata.id + '" style="cursor:pointer"><i class="fa fa-eye"></i> ' + data.tail_count + ' tail</a>';
     htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
     $('#newsfeed').prepend(htmltext);
+
+    // moment.js stuff
+    timeArray.push(['cartender_created_at' + cartenderdata.id, cartenderdata.created_at]);
+    updateTimestamps();
 }
 
 function CarAuctionAddedBuild(data) {
     // Add to Newsfeed
     var htmltext = '';
 
-    htmltext += '<div class="panel" id="carauction' + data['carauction']['id'] + '">';
+    var cardata = data.car;
+    var carauctiondata = data.carauction;
+    var carimagedata = data.carimages;
+    var carauctionbid = data.carauction_bid;
+
+    htmltext += '<div class="panel" id="carauction' + carauctiondata.id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-3" id="carimage' + data['carauction']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['car']['imgurl'][0] +  '"></img>';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + carauctiondata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="carmake' + data['carauction']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
-    htmltext += '        <p id="carauctiondetails' + data['carauction']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
-    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p id="carauction_created_at' + carauctiondata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + carauctiondata.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carauctiondata.corporate_id + '/car/' + carauctiondata.id + '/carauction/' + carauctiondata.id + '" style="cursor:pointer"><i class="fa fa-comment"></i> ' + data.comment_count + ' comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Bid</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carauctiondata.corporate_id + '/car/' + carauctiondata.id + '/carauction/' + carauctiondata.id + '" style="cursor:pointer"><i class="fa fa-money"></i> ' + data.bid_count + ' offer</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + carauctiondata.corporate_id + '/car/' + carauctiondata.id + '/carauction/' + carauctiondata.id + '" style="cursor:pointer"><i class="fa fa-eye"></i> ' + data.tail_count + ' tail</a>';
     htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
     $('#newsfeed').prepend(htmltext);
+
+    // moment.js stuff
+    timeArray.push(['carauction_created_at' + carauctiondata.id, carauctiondata.created_at]);
+    updateTimestamps();
 }
 
 function PartSaleAddedBuild(data) {
     // Add to Newsfeed
     var htmltext = '';
 
-    htmltext += '<div class="panel" id="partsale' + data['partsale']['id'] + '">';
+    var partdata = data.part;
+    var partsaledata = data.partsale;
+    var partimagedata = data.partimages;
+
+    htmltext += '<div class="panel" id="partsale' + partsaledata.id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-3" id="partimage' + data['partsale']['id'] + '">';
-    htmltext += '      <img class="img-responsive" src="' + data['part']['imgurl'][0] +  '"></img>';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="partimage' + partsaledata.part_id + '" src="' + partimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span id="partmake' + data['partsale']['id'] + '">Toyota</span>, White, 4-wheel drive</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K10,000</span></p>';
-    htmltext += '        <p id="partsaledetails' + data['partsale']['id'] + '">Plates: Ivory. Location: Martinique Sequi unde doloribus voluptas consequatur. Possimus adipisci in labore.</p>';
-    htmltext += '        <p>In group <a href="#"><span class="label label-primary">go to group</span></a> </p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + partdata.name + '</span> ' + partdata.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(partsaledata.price) + '</span></p>';
+    htmltext += '        <p id="partsale_created_at' + partsaledata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>' + partdata.descript + '</p>';
+    htmltext += '        <p>Location: ' + partdata.physicallocation + '</p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + partdata.note + '</p>';
+
+    if (partdata.negotiable == 'true') {
+        htmltext += '    <p><span class="label label-warning">Negotiable</span></p>';
+    } else {
+        htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
+    }
+
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + partsaledata.note + '</span></p>';
+
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + partsaledata.corporate_id + '/part/' + partsaledata.id + '/partsale/' + partsaledata.id + '" style="cursor:pointer"><i class="fa fa-comment"></i> ' + data.comment_count + ' comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Offer</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + partsaledata.corporate_id + '/part/' + partsaledata.id + '/partsale/' + partsaledata.id + '" style="cursor:pointer"><i class="fa fa-money"></i> ' + data.offer_count + ' offer</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
-    htmltext += '        <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>';
+    htmltext += '        <a href="' + base_url + '/corporate/' + partsaledata.corporate_id + '/part/' + partsaledata.id + '/partsale/' + partsaledata.id + '" style="cursor:pointer"><i class="fa fa-eye"></i> ' + data.tail_count + ' tail</a>';
     htmltext += '    </div>';
     htmltext += '  </div>';
     htmltext += '</div>';
 
     $('#newsfeed').prepend(htmltext);
+
+    // moment.js stuff
+    timeArray.push(['partsale_created_at' + partsaledata.id, partsaledata.created_at]);
+    updateTimestamps();
 }
 
 function CarSaleClosedBuild(data) {
     // Remove item from newsfeed
-    $('#carsale' + data['carsale']['id']).remove();
+    $('#carsale' + data.id).remove();
 }
 
 function CarRentClosedBuild(data) {
     // Remove item from newsfeed
-    $('#carrent' + data['carrent']['id']).remove();
+    $('#carrent' + data.id).remove();
 }
 
 function CarTenderClosedBuild(data) {
     // Remove item from newsfeed
-    $('#cartender' + data['cartender']['id']).remove();
+    $('#cartender' + data.id).remove();
 }
 
 function CarAuctionClosedBuild(data) {
     // Remove item from newsfeed
-    $('#carauction' + data['carauction']['id']).remove();
+    $('#carauction' + data.id).remove();
 }
 
 function PartSaleClosedBuild(data) {
     // Remove item from newsfeed
-    $('#partsale' + data['partsale']['id']).remove();
+    $('#partsale' + data.id).remove();
 }
 
 function CarSaleOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
-    $('#carsale' + data['carsale']['id']).remove();
+    $('#carsale' + data.id).remove();
 }
 
 function CarRentOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
-    $('#carrent' + data['carrent']['id']).remove();
+    $('#carrent' + data.id).remove();
 }
 
 function CarTenderTenderReservePurchasedBuild(data) {
     // Remove item from newsfeed
-    $('#cartender' + data['cartender']['id']).remove();
+    $('#cartender' + data.id).remove();
 }
 
 function CarAuctionBidReservePurchasedBuild(data) {
     // Remove item from newsfeed
-    $('#carauction' + data['carauction']['id']).remove();
+    $('#carauction' + data.id).remove();
 }
 
 function PartSaleOfferReservePurchasedBuild(data) {
     // Remove item from newsfeed
-    $('#partsale' + data['partsale']['id']).remove();
+    $('#partsale' + data.id).remove();
+}
+
+
+
+function CarSaleBuild(data) {
+    // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carsale' + data.carsale_id + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.price) + '</span></p>';
+    htmltext += '        <p id="carsale_created_at' + data.carsale_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
+
+    if (data.negotiable == 'true') {
+        htmltext += '    <p><span class="label label-warning">Negotiable</span></p>';
+    } else {
+        htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
+    }
+
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-comment"> </i><span id="carsale_comment_count' + data.carsale_id + '"></span> comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carsale_offer_count' + data.carsale_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carsale_tail_count' + data.carsale_id + '"></span> tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    tradesArray.push({
+        'carsale_created_at':data.carsales_created_at, 
+        'htmltext':htmltext, 
+        'car_id':data.car_id, 
+        'trade_type':'carsale', 
+        'trade_id':data.carsale_id
+    });
+
+    // moment.js stuff
+    timeArray.push(['carsale_created_at' + data.carsale_id, data.carsales_created_at]);
+    updateTimestamps();
+}
+
+function CarRentBuild(data) {
+    // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carrent' + data.carrent_id + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.rateperday) + '/day</span></p>';
+    htmltext += '        <p id="carrent_created_at' + data.carrent_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carrent_comment_count' + data.carrent_id + '"></span> comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carrent_offer_count' + data.carrent_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carrent_tail_count' + data.carrent_id + '"></span> tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    tradesArray.push({
+        'carrent_created_at':data.carrents_created_at, 
+        'htmltext':htmltext, 
+        'car_id':data.car_id, 
+        'trade_type':'carrent', 
+        'trade_id':data.carrent_id
+    });
+
+    // moment.js stuff
+    timeArray.push(['carrent_created_at' + data.carrent_id, data.carrents_created_at]);
+    updateTimestamps();
+}
+
+function CarTenderBuild(data) {
+    // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="cartender' + data.cartender_id + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p id="cartender_created_at' + data.cartender_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="cartender_comment_count' + data.cartender_id + '"></span> comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="cartender_tender_count' + data.cartender_id + '"></span> tender</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="cartender_tail_count' + data.cartender_id + '"></span> tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    tradesArray.push({
+        'cartender_created_at':data.cartenders_created_at, 
+        'htmltext':htmltext, 
+        'car_id':data.car_id, 
+        'trade_type':'cartender', 
+        'trade_id':data.cartender_id
+    });
+
+    // moment.js stuff
+    timeArray.push(['cartender_created_at' + data.cartender_id, data.cartenders_created_at]);
+    updateTimestamps();
+}
+
+function CarAuctionBuild(data) {
+    // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="carauction' + data.carauction_id + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p id="carauction_created_at' + data.carauction_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carauction_comment_count' + data.carauction_id + '"></span> comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carauction_bid_count' + data.carauction_id + '"></span> bid</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carauction_tail_count' + data.carauction_id + '"></span> tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    tradesArray.push({
+        'carauction_created_at':data.carauctions_created_at, 
+        'htmltext':htmltext, 
+        'car_id':data.car_id, 
+        'trade_type':'carauction', 
+        'trade_id':data.carauction_id
+    });
+
+    // moment.js stuff
+    timeArray.push(['carauction_created_at' + data.carauction_id, data.carauctions_created_at]);
+    updateTimestamps();
+}
+
+function PartSaleBuild(data) {
+    // Add to Newsfeed
+    var htmltext = '';
+
+    htmltext += '<div class="panel" id="partsale' + data.partsale_id + '">';
+    htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-3">';
+    htmltext += '      <img class="img-responsive" id="partimage' + data.part_id + '"></img>';
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-9">';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.name + '</span> ' + data.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.price) + '</span></p>';
+    htmltext += '        <p id="partsale_created_at' + data.partsale_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p>' + data.descript + '</p>';
+    htmltext += '        <p>Location: ' + data.physicallocation + '</p>';
+    htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
+
+    if (data.negotiable == 'true') {
+        htmltext += '    <p><span class="label label-warning">Negotiable</span></p>';
+    } else {
+        htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
+    }
+
+    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+
+    htmltext += '    </div>';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '        <hr style="margin:10px">';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="partsale_comment_count' + data.partsale_id + '"></span> comment</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="partsale_offer_count' + data.partsale_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="partsale_tail_count' + data.partsale_id + '"></span> tail</a>';
+    htmltext += '    </div>';
+    htmltext += '  </div>';
+    htmltext += '</div>';
+
+    tradesArray.push({
+        'partsale_created_at':data.partsales_created_at, 
+        'htmltext':htmltext, 
+        'part_id':data.part_id, 
+        'trade_type':'partsale', 
+        'trade_id':data.partsale_id
+    });
+
+    // moment.js stuff
+    timeArray.push(['partsale_created_at' + data.partsale_id, data.partsales_created_at]);
+    updateTimestamps();
 }
 
 
@@ -216,7 +505,7 @@ function CarSaleOfferReservePurchasedBuildTrade(data) {
 
 function CarSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
-    $('#offer_is_reserved' + data['carsale']['id']).html('<span class="label label-primary">reserved</span>');
+    $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
 }
 
 function CarSaleOfferReserveCancelledBuildTrade(data) {
@@ -233,12 +522,27 @@ function CarSaleOfferAddedBuildTrade(data) {
     htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
+    htmltext += '    <p class="pull-left">';
+    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
     htmltext += '    </p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carsaleCancelMessage + '\', \'cancelCarSaleOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+
+    htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
     htmltext += '    </p>';
@@ -252,35 +556,9 @@ function CarSaleOfferAddedBuildTrade(data) {
     updateTimestamps();
 }  
 
-function CarSaleOfferChangedBuildTrade(data) {
-    // Update offer
-    var htmltext = '';
-
-    htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
-    htmltext += '  </div>';
-    htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
-    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
-    htmltext += '    </p>';
-    htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
-    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '    </p>';
-    htmltext += '  </div>';
-
-    $('#caroffer' + data.id).html(htmltext);
-
-    // moment.js stuff
-    timeArray.push(['offerdate' + data.id, data.created_at]);
-    updateTimestamps();
-}
-
 function CarSaleOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
-    $('#carsale' + data['carsale']['id']).remove();
+    $('#caroffer' + data.id).remove();
 }
 
 
@@ -297,7 +575,7 @@ function CarRentOfferReservePurchasedBuildTrade(data) {
 
 function CarRentOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
-    $('#offer_is_reserved' + data['carrent']['id']).html('<span class="label label-primary">reserved</span>');
+    $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
 } 
 
 function CarRentOfferReserveCancelledBuildTrade(data) {
@@ -314,12 +592,27 @@ function CarRentOfferAddedBuildTrade(data) {
     htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
+    htmltext += '    <p class="pull-left">';
     htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
     htmltext += '    </p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carrentCancelMessage + '\', \'cancelCarRentOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+
+    htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
     htmltext += '    </p>';
@@ -333,35 +626,9 @@ function CarRentOfferAddedBuildTrade(data) {
     updateTimestamps();
 } 
 
-function CarRentOfferChangedBuildTrade(data) {
-    // Update offer
-    var htmltext = '';
-
-    htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
-    htmltext += '  </div>';
-    htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
-    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
-    htmltext += '    </p>';
-    htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
-    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '    </p>';
-    htmltext += '  </div>';
-
-    $('#caroffer' + data.id).html(htmltext);
-
-    // moment.js stuff
-    timeArray.push(['offerdate' + data.id, data.created_at]);
-    updateTimestamps();
-}
-
 function CarRentOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
-    $('#carrent' + data['carrent']['id']).remove();
+    $('#caroffer' + data.id).remove();
 } 
 
 
@@ -391,11 +658,6 @@ function CarTenderTenderAddedBuildTrade(data) {
     // No action taken
 }
 
-function CarTenderTenderChangedBuildTrade(data) {
-    // Update tender
-    // No action taken
-}
-
 function CarTenderTenderCancelledBuildTrade(data) {
     // Remove specific tender from tenders
     // No action taken
@@ -415,7 +677,7 @@ function CarAuctionBidReservePurchasedBuildTrade(data) {
 
 function CarAuctionBidReservedBuildTrade(data) {
     // Tag Bid as Reserved
-    $('#offer_is_reserved' + data['carauction']['id']).html('<span class="label label-primary">reserved</span>');
+    $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
 }
 
 function CarAuctionBidReserveCancelledBuildTrade(data) {
@@ -432,12 +694,27 @@ function CarAuctionBidAddedBuildTrade(data) {
     htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
+    htmltext += '    <p class="pull-left">';
     htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
     htmltext += '      <span style="color:gray;font-size:11px" id="biddate' + data.id + '"></span>';
-    htmltext += '      </span>';
     htmltext += '    </p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carauctionCancelMessage + '\', \'cancelCarAuctionOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+
+    htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="carsalebidamount' + data.id + '">K' + formatCurrency(data.bid) + '</span>';
     htmltext += '      <span class="pull-right" id="bid_is_reserved' + data.id + '"></span>';
     htmltext += '    </p>';
@@ -451,35 +728,9 @@ function CarAuctionBidAddedBuildTrade(data) {
     updateTimestamps();
 }
 
-function CarAuctionBidChangedBuildTrade(data) {
-    // Update Bid
-    var htmltext = '';
-
-    htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
-    htmltext += '  </div>';
-    htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
-    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
-    htmltext += '    </p>';
-    htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
-    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '    </p>';
-    htmltext += '  </div>';
-
-    $('#carbid' + data.id).html(htmltext);
-
-    // moment.js stuff
-    timeArray.push(['biddate' + data.id, data.created_at]);
-    updateTimestamps();
-}
-
 function CarAuctionBidCancelledBuildTrade(data) {
     // Remove specific bid from bids
-    $('#cartender' + data['cartender']['id']).remove();
+    $('#carbid' + data.id).remove();
 }
 
 
@@ -496,7 +747,7 @@ function PartSaleOfferReservePurchasedBuildTrade(data) {
 
 function PartSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
-    $('#offer_is_reserved' + data['partsale']['id']).html('<span class="label label-primary">reserved</span>');
+    $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
 }
 
 function PartSaleOfferReserveCancelledBuildTrade(data) {
@@ -513,12 +764,27 @@ function PartSaleOfferAddedBuildTrade(data) {
     htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
+    htmltext += '    <p class="pull-left">';
     htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
     htmltext += '    </p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + partsaleCancelMessage + '\', \'cancelPartSaleOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+
+    htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="partsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
     htmltext += '    </p>';
@@ -532,35 +798,9 @@ function PartSaleOfferAddedBuildTrade(data) {
     updateTimestamps();
 }
 
-function PartSaleOfferChangedBuildTrade(data) {
-    // Update offer
-    var htmltext = '';
-
-    htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
-    htmltext += '  </div>';
-    htmltext += '  <div class="col-md-10">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
-    htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
-    htmltext += '      </span>';
-    htmltext += '    </p>';
-    htmltext += '    <p style="font-size:18px"><span id="partsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
-    htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '    </p>';
-    htmltext += '  </div>';
-
-    $('#partoffer' + data.id).html(htmltext);
-
-    // moment.js stuff
-    timeArray.push(['offerdate' + data.id, data.created_at]);
-    updateTimestamps();
-}
-
 function PartSaleOfferCancelledBuildTrade(data) {
     // Remove specific offer from offers
-    $('#partsale' + data['partsale']['id']).remove();
+    $('#partoffer' + data.id).remove();
 }
 
 
@@ -571,18 +811,33 @@ function CarCommentAddedBuildTrade(data) {
     // Append comment to comments
     var htmltext = '';
 
-    htmltext += '<div class="list-group-item col-md-12" id="carcomment' + data.id + '">';
+    htmltext += '<div class="list-group-item col-md-12" id="comment' + data.id + '">';
     htmltext += '  <div class="col-md-1">';
     htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto">';
     htmltext += '  </div>';
 
     htmltext += '  <div class="col-md-11">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
+    htmltext += '    <p class="pull-left">';
+    htmltext += '        <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '        <span style="color:gray;font-size:11px" id="carcomment_created_at' + data.id + '"></span>';
-    htmltext += '      </span>';
+    htmltext += '    </p><p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:grey" href="javascript:void(0);" onclick="deleteCarComment(' + data.car_id + ',' + data.id + ')">delete</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+    
     htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p>' + data.comment + '</p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -598,18 +853,33 @@ function PartCommentAddedBuildTrade(data) {
     // Append comment to comments
     var htmltext = '';
 
-    htmltext += '<div class="list-group-item col-md-12" id="partcomment' + data.id + '">';
+    htmltext += '<div class="list-group-item col-md-12" id="comment' + data.id + '">';
     htmltext += '  <div class="col-md-1">';
     htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto">';
     htmltext += '  </div>';
 
     htmltext += '  <div class="col-md-11">';
-    htmltext += '    <p>';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
-    htmltext += '      <span class="pull-right">';
-    htmltext += '        <span style="color:gray;font-size:11px" id="partcomment_created_at' + data.id + '"></span>';
-    htmltext += '      </span>';
+    htmltext += '    <p class="pull-left">';
+    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <span style="color:gray;font-size:11px" id="partcomment_created_at' + data.id + '"></span>';
     htmltext += '    </p>';
+    htmltext += '    <p>';
+
+    if (data.user_id == user_id) {
+        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+        htmltext += '        <li class="dropdown">';
+        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+        htmltext += '                <span class="caret"></span>';
+        htmltext += '            </a>';
+        htmltext += '            <ul class="dropdown-menu" role="menu">';
+        htmltext += '                <li><a style="font-size:9px;color:grey" href="javascript:void(0);" onclick="deletePartComment(' + data.part_id + ',' + data.id + ')">delete</a></li>';
+        htmltext += '            </ul>';
+        htmltext += '        </li>';
+        htmltext += '    </ul>';
+    }
+
+    htmltext += '    </p>';
+    htmltext += '    <br>';
     htmltext += '    <p>' + data.comment + '</p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -647,45 +917,28 @@ function submitCarSaleOffer(carsaleID) {
         success: function(data) {
             $('#offer').val('');
 
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully submitted your offer.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully submitted your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
-function cancelCarSaleOffer(carsaleID, carsaleOfferID) {
+function cancelCarSaleOffer(carsaleOfferID) {
     // cancel Offer for CarSale
     $.ajax({
         url: base_url + "/auth/carsaleoffercancel",
         type: "POST",
         data: { 
-            'carsale_id': carsaleID,
             'carsaleoffer_id': carsaleOfferID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully cancelled your offer.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully cancelled your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
@@ -703,41 +956,28 @@ function submitCarRentOffer(carrentID) {
         success: function(data) {
             $('#offer').val('');
 
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully submitted your offer.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully submitted your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
-function cancelCarRentOffer(carrentID, carrentOfferID) {
+function cancelCarRentOffer(carrentOfferID) {
     // cancel Offer for CarRent
     $.ajax({
         url: base_url + "/auth/carrentoffercancel",
         type: "POST",
         data: { 
-            'carrent_id': carrentID,
             'carrentoffer_id': carrentOfferID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // small model to display status
+            if (data.success == true) {
+                alertMe('You have successfully cancelled your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
@@ -755,45 +995,28 @@ function submitCarTenderTender(cartenderID) {
         success: function(data) {
             $('#tender').val('');
 
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully submitted your tender.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully submitted your tender.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
-function cancelCarTenderTender(cartenderID, cartenderTenderID) {
+function cancelCarTenderTender(cartenderTenderID) {
     // cancel Tender for CarTender
     $.ajax({
         url: base_url + "/auth/carrentoffercancel",
         type: "POST",
         data: { 
-            'cartender_id': cartenderID,
             'cartendertender_id': cartenderTenderID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully cancelled your tender.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully cancelled your tender.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
@@ -811,45 +1034,28 @@ function submitCarAuctionBid(carauctionID) {
         success: function(data) {
             $('#bid').val('');
 
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully submitted your bid.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully submitted your bid.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
-function cancelCarAuctionBid(carauctionID, carauctionBidID) {
+function cancelCarAuctionBid(carauctionBidID) {
     // cancel Bid for CarAuction
     $.ajax({
         url: base_url + "/auth/carauctionbidcancel",
         type: "POST",
         data: { 
-            'carauction_id': carauctionID,
             'carauctionbid_id': carauctionBidID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully cancelled your bid.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully cancelled your bid.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
@@ -867,52 +1073,250 @@ function submitPartSaleOffer(partsaleID) {
         success: function(data) {
             $('#offer').val('');
 
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully submitted your offer.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully submitted your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
-function cancelPartSaleOffer(partsaleID, partsaleOfferID) {
+function cancelPartSaleOffer(partsaleOfferID) {
     // cancel Offer for PartSale
     $.ajax({
         url: base_url + "/auth/partsaleoffercancel",
         type: "POST",
         data: { 
-            'partsale_id': partsaleID,
             'partsaleoffer_id': partsaleOfferID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // small model to display status
-                $('#statudModalBody').html('You have successfully cancelled your offer.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+            if (data.success == true) {
+                alertMe('You have successfully cancelled your offer.');
             } else {
-                // small model to display status
-                $('#statudModalBody').html('Oops something went wrong :( <br>Please refresh and try again.');
-                setTimeout(function() {
-                    $('#statusModal').modal('hide');
-                }, 2000);
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
             }
         }
     });
 }
 
 // Get Offers/Bids/Tenders ============
+function getNewsFeed(pageurl) {
+
+    // Loading spinner
+    $('#loading').html('<p><i class="fa fa-life-buoy fa-spin"></i></p>');
+    $('#loading').show();
+
+    // Check if any next page available to load.
+    if (noNextPage == false) {
+        // Grab trades for page
+        $.ajax({
+            url: pageurl,
+            type: "GET",
+            success: function(data) {
+                if (data.success == true) {
+                    // Hide loading spinner
+                    $('#loading').hide();
+
+                    if (data.carsales.data.length > 0) {
+                        for (var i = 0; i < data.carsales.data.length; i++) {
+                            CarSaleBuild(data.carsales.data[i]);
+                        }
+                        if (data.carsales.next_page_url != null) {
+                            nextPageURL = data.carsales.next_page_url;
+                        } 
+                    }
+                    if (data.carrents.data.length > 0) {
+                        for (var i = 0; i < data.carrents.length; i++) {
+                            CarRentBuild(data.carrents.data[i]);
+                        }
+                        if (data.carrents.next_page_url != null) {
+                            nextPageURL = data.carrents.next_page_url;
+                        }
+                    }
+                    if (data.cartenders.data.length > 0) {
+                        for (var i = 0; i < data.cartenders.length; i++) {
+                            CarTenderBuild(data.cartenders.data[i]);
+                        }
+                        if (data.cartenders.next_page_url != null) {
+                            nextPageURL = data.cartenders.next_page_url;
+                        }
+                    }
+                    if (data.carauctions.data.length > 0) {
+                        for (var i = 0; i < data.carauctions.length; i++) {
+                            CarAuctionBuild(data.carauctions.data[i]);
+                        }
+                        if (data.carauctions.next_page_url != null) {
+                            nextPageURL = data.carauctions.next_page_url;
+                        }
+                    }
+                    if (data.partsales.data.length > 0) {
+                        for (var i = 0; i < data.partsales.length; i++) {
+                            PartSaleBuild(data.partsales.data[i]);
+                        }
+                        if (data.partsales.next_page_url != null) {
+                            nextPageURL = data.partsales.next_page_url;
+                        }
+                    }
+
+                    if (data.carsales.next_page_url == null && data.carrents.next_page_url == null && data.cartenders.next_page_url == null && data.carauctions.next_page_url == null && data.partsales.next_page_url == null) {
+                        noNextPage = true;
+                        nextPageURL = null;
+                    }
+                }
+                
+                // Sort array by timestamp
+                tradesArray.sort(function(x, y){
+                    return x[0] - y[0];
+                })
+
+                // comments,offer and tail array
+                var carArray = [];
+                var partArray = [];
+
+                // Append sorted array to newsfeed
+                for (var i = 0; i < tradesArray.length; i++) {
+                    $('#newsfeed').append(tradesArray[i].htmltext);
+                    if (tradesArray[i].trade_type == 'carsale' || tradesArray[i].trade_type == 'carrent' || tradesArray[i].trade_type == 'cartender' || tradesArray[i].trade_type == 'carauction') {
+                        carArray.push({
+                            'car_id':tradesArray[i].car_id,
+                            'trade_type':tradesArray[i].trade_type,
+                            'trade_id':tradesArray[i].trade_id
+                        });
+                    } else if (tradesArray[i].trade_type == 'partsale') {
+                        partArray.push({
+                            'part_id':tradesArray[i].part_id,
+                            'trade_type':tradesArray[i].trade_type,
+                            'trade_id':tradesArray[i].trade_id
+                        });
+                    }
+                }
+                // Reset tradesArray for new trades to be appended next
+                tradesArray = [];
+
+                // Get all comment_count,offer_count, tail_count, images for cars
+                if (carArray.length > 0) {
+                    getCarCounts(carArray);
+                    getCarImages(carArray);
+                }
+                // Get all comment_count,offer_count, tail_count, images for parts
+                if (partArray.length > 0) {
+                    getPartCounts(partArray);
+                    getPartImages(partArray);
+                }
+
+            }
+        });
+    } else {
+        // Loading spinner
+        $('#loading').html('<p>No more items</p>');
+        $('#loading').show();
+    }
+}
+
+function getCarCounts(data) {
+    $.ajax({
+        url: base_url + "/getcarcounts",
+        type: "GET",
+        data: { 
+            'car_array': data
+        },
+        success: function(ajaxdata) {
+            if (ajaxdata.success == true) {
+                if (data.length == ajaxdata.counts.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].trade_type == 'carsale') {
+                            $('#carsale_comment_count' + data[i].trade_id).html(ajaxdata.counts[i].comment_count);
+                            $('#carsale_offer_count' + data[i].trade_id).html(ajaxdata.counts[i].trade_count);
+                            $('#carsale_tail_count' + data[i].trade_id).html(ajaxdata.counts[i].tail_count);
+                        } else if (data[i].trade_type == 'carrent') {
+                            $('#carrent_comment_count' + data[i].trade_id).html(ajaxdata.counts[i].comment_count);
+                            $('#carrent_offer_count' + data[i].trade_id).html(ajaxdata.counts[i].trade_count);
+                            $('#carrent_tail_count' + data[i].trade_id).html(ajaxdata.counts[i].tail_count);
+                        } else if (data[i].trade_type == 'cartender') {
+                            $('#cartender_comment_count' + data[i].trade_id).html(ajaxdata.counts[i].comment_count);
+                            $('#cartender_tender_count' + data[i].trade_id).html(ajaxdata.counts[i].trade_count);
+                            $('#cartender_tail_count' + data[i].trade_id).html(ajaxdata.counts[i].tail_count);
+                        } else if (data[i].trade_type == 'carauction') {
+                            $('#carauction_comment_count' + data[i].trade_id).html(ajaxdata.counts[i].comment_count);
+                            $('#carauction_bid_count' + data[i].trade_id).html(ajaxdata.counts[i].trade_count);
+                            $('#carauction_tail_count' + data[i].trade_id).html(ajaxdata.counts[i].tail_count);
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getPartCounts(data) {
+    $.ajax({
+        url: base_url + "/getpartcounts",
+        type: "GET",
+        data: { 
+            'part_array': data
+        },
+        success: function(ajaxdata) {
+            if (ajaxdata.success == true) {
+                if (data.length == ajaxdata.counts.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].trade_type == 'partsale') {
+                            $('#partsale_comment_count' + data[i].trade_id).html(ajaxdata.counts[i].comment_count);
+                            $('#partsale_offer_count' + data[i].trade_id).html(ajaxdata.counts[i].trade_count);
+                            $('#partsale_tail_count' + data[i].trade_id).html(ajaxdata.counts[i].tail_count);
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getCarImages(data) {
+    $.ajax({
+        url: base_url + "/getcarimages",
+        type: "GET",
+        data: { 
+            'car_array': data
+        },
+        success: function(ajaxdata) {
+            if (ajaxdata.success == true) {
+                if (data.length == ajaxdata.carimages.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#carimage' + data[i].car_id).attr('src', ajaxdata.carimages[i].thumb_img_url);
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getPartImages(data) {
+    $.ajax({
+        url: base_url + "/getpartimages",
+        type: "GET",
+        data: { 
+            'part_array': data
+        },
+        success: function(ajaxdata) {
+            console.log(ajaxdata);
+            if (ajaxdata.success == true) {
+                if (data.length == ajaxdata.partimages.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#partimage' + data[i].part_id).attr('src', ajaxdata.partimages[i].thumb_img_url);
+                    }
+                }
+            }
+        }
+    });
+}
+
 function getCarSaleOffers(carsaleID) {
+    // Display option for user to enter their offer
+    $('#commentinput').hide();
+    $('#tailinput').hide();
+    $('#amountinput').show();
+
     // get car offers and append
     $.ajax({
         url: base_url + "/getcarsaleoffers",
@@ -921,7 +1325,7 @@ function getCarSaleOffers(carsaleID) {
             'carsale_id': carsaleID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 var carSaleOffers = data['carsaleoffers'];
                 $('#list').html('');
                 for (var i = 0; i < carSaleOffers.length; i++) {
@@ -934,6 +1338,10 @@ function getCarSaleOffers(carsaleID) {
 
 function getCarRentOffers(carrentID) {
     // get car offers and append
+    $('#commentinput').hide();
+    $('#tailinput').hide();
+    $('#amountinput').show();
+
     $.ajax({
         url: base_url + "/getcarrentoffers",
         type: "GET",
@@ -941,9 +1349,9 @@ function getCarRentOffers(carrentID) {
             'carrent_id': carrentID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 var carRentOffers = data['carrentoffers'];
-
+                $('#list').html('');
                 for (var i = 0; i < carRentOffers; i++) {
                     CarRentOfferAddedBuildTrade(carRentOffers[i]);
                 }
@@ -954,6 +1362,10 @@ function getCarRentOffers(carrentID) {
 
 function getCarTenderTenders(cartenderID) {
     // get car tenders and append
+    $('#commentinput').hide();
+    $('#tailinput').hide();
+    $('#amountinput').show();
+
     $.ajax({
         url: base_url + "/getcartendertenders",
         type: "GET",
@@ -961,9 +1373,9 @@ function getCarTenderTenders(cartenderID) {
             'cartender_id': cartenderID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 var carTenderTenders = data['cartendertenders'];
-
+                $('#list').html('');
                 for (var i = 0; i < carTenderTenders; i++) {
                     CarTenderTenderAddedBuildTrade(carTenderTenders[i]);
                 }
@@ -974,6 +1386,10 @@ function getCarTenderTenders(cartenderID) {
 
 function getCarAuctionBids(carauctionID) {
     // get car bids and append
+    $('#commentinput').hide();
+    $('#tailinput').hide();
+    $('#amountinput').show();
+
     $.ajax({
         url: base_url + "/getcarauctionbids",
         type: "GET",
@@ -981,9 +1397,9 @@ function getCarAuctionBids(carauctionID) {
             'carauction_id': carauctionID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 var carAuctionBids = data['carauctionbids'];
-
+                $('#list').html('');
                 for (var i = 0; i < carAuctionBids; i++) {
                     CarAuctionBidAddedBuildTrade(carAuctionBids[i]);
                 }
@@ -994,6 +1410,10 @@ function getCarAuctionBids(carauctionID) {
 
 function getPartSaleOffers(partsaleID) {
     // get part comments and append
+    $('#commentinput').hide();
+    $('#tailinput').hide();
+    $('#amountinput').show();
+
     $.ajax({
         url: base_url + "/getpartsaleoffers",
         type: "GET",
@@ -1001,9 +1421,9 @@ function getPartSaleOffers(partsaleID) {
             'partsale_id': partsaleID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 var PartSaleOffers = data['Partsaleoffers'];
-
+                $('#list').html('');
                 for (var i = 0; i < PartSaleOffers; i++) {
                     partSaleOfferAddedBuildTrade(PartSaleOffers[i]);
                 }
@@ -1015,6 +1435,10 @@ function getPartSaleOffers(partsaleID) {
 // Get Comments/Tails ============
 function getCarComments(carID) {
 	// get car comments and append
+    $('#commentinput').show();
+    $('#tailinput').hide();
+    $('#amountinput').hide();
+
     $.ajax({
         url: base_url + "/getcarcomments",
         type: "GET",
@@ -1053,6 +1477,10 @@ function getPartComments(partID) {
 
 function getCarTails(carID) {
 	// get car Tails and append
+    $('#commentinput').hide();
+    $('#tailinput').show();
+    $('#amountinput').hide();
+
     $.ajax({
         url: base_url + "/getcartails",
         type: "GET",
@@ -1061,6 +1489,8 @@ function getCarTails(carID) {
         },
         success: function(data) {
             if (data.success == true) {
+                isTailingCar(carID);
+
                 $('#list').html('');
                 htmltext = '';
                 for (var i = 0; i < data.cartails.length; i++) {
@@ -1071,6 +1501,20 @@ function getCarTails(carID) {
                     htmltext += '      &nbsp;&nbsp;&nbsp;';
                     htmltext += '      <strong>' + data.cartails[i].name + '</strong>';
                     htmltext += '    </a>';
+
+                    if (data.user_id == user_id) {
+                        htmltext += '    <ul class="nav navbar-nav navbar-right" style="padding:0;margin:0">';
+                        htmltext += '        <li class="dropdown">';
+                        htmltext += '            <a style="font-size:10px;padding:0;margin:0" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">';
+                        htmltext += '                <span class="caret"></span>';
+                        htmltext += '            </a>';
+                        htmltext += '            <ul class="dropdown-menu" role="menu">';
+                        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="tailCar(' + carID + ')">cancel</a></li>';
+                        htmltext += '            </ul>';
+                        htmltext += '        </li>';
+                        htmltext += '    </ul>';
+                    }
+
                     htmltext += '  </div>';
                     htmltext += '</div>';
                 }
@@ -1083,6 +1527,10 @@ function getCarTails(carID) {
 
 function getPartTails(partID) {
 	// get part Tails and append
+    $('#commentinput').hide();
+    $('#tailinput').show();
+    $('#amountinput').hide();
+
     $.ajax({
         url: base_url + "/getparttails",
         type: "GET",
@@ -1091,6 +1539,8 @@ function getPartTails(partID) {
         },
         success: function(data) {
             if (data.success == true) {
+                isTailingPart(partID);
+
                 htmltext = '';
                 for (var i = 0; i < data.parttails.length; i++) {
                     htmltext += '<div class="list-group-item col-md-12">';
@@ -1110,6 +1560,82 @@ function getPartTails(partID) {
     });
 }
 
+function getNotifications() {
+    // get notifications for user
+    $.ajax({
+        url: base_url + "/auth/getnotifications",
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                $('#notificationCount').attr('data-count',data.notifications.length);
+
+                var htmltextNotifications = '';
+                var htmltextMessages = '';
+                var notificationCount = 0;
+                var messageCount = 0;
+                var uniqueUserIDArray = [];
+
+                for (var i = 0; i < data.notifications.length; i++) {
+                    if (data.notifications[i].type == "App\\Notifications\\NewMessageNotification") {
+                        // Dont print messages from this user
+                        if (data.notifications[i].data.user_sending_id != user_id) {
+                            // Only print messages from a user only once
+                            if (jQuery.inArray(data.notifications[i].data.user_sending_id, uniqueUserIDArray) < 0) {
+                                uniqueUserIDArray.push(data.notifications[i].data.user_sending_id);
+                                
+                                htmltextMessages += '<p id="' + data.notifications[i].id + '" style="padding-left:5px;padding-right:5px;cursor:pointer" onclick="window.location=\'' + base_url + '/user/messages/' + data.notifications[i].data.user_sending_id + '\'"><span style="font-weight:bold">' + data.notifications[i].data.user_sending_name + '</span><span class="pull-right" style="font-size:8px;color:grey" id="mess' + data.notifications[i].id + '"></span><br>';
+                                htmltextMessages += data.notifications[i].data.message;
+                                htmltextMessages += '<hr style="padding:0;margin:0"></p>';
+
+                                timeArray.push(['mess' + data.notifications[i].id, data.notifications[i].created_at]);
+                                messageCount++;
+                            }
+                        }
+                    } else {
+                        htmltextNotifications += '<p id="' + data.notifications[i].id + '" style="padding-left:5px;padding-right:5px;cursor:pointer" onclick="window.location=\'' + data.notifications[i].data.url + '/' + data.notifications[i].id + '\'"><span class="pull-right" style="font-size:8px;color:grey" id="noti' + data.notifications[i].id + '"></span>';
+                        htmltextNotifications += data.notifications[i].data.message;
+                        htmltextNotifications += '<hr style="padding:0;margin:0"></p>';
+
+                        timeArray.push(['noti' + data.notifications[i].id, data.notifications[i].created_at]);
+                        notificationCount++;
+                    }
+                }
+
+                if (notificationCount > 0) {
+                    $('#notificationCount').attr('data-count', notificationCount);
+                } else {
+                    $('#notificationCount').removeAttr('data-count');
+                }
+
+                if (messageCount > 0) {
+                    $('#messageCount').attr('data-count', messageCount);
+                } else {
+                    $('#messageCount').removeAttr('data-count');
+                }
+
+                $('#notificationList').html(htmltextNotifications);
+                $('#messageList').html(htmltextMessages);
+
+                updateTimestamps();
+            }
+        }
+    });
+}
+
+// To be UTILIZED LATER.
+function markNotificationAsRead(notiID) {
+    // mark notification as read
+    $.ajax({
+        url: base_url + "/auth/marknotificationasread/" + notiID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                $('#' + notiID).remove();
+            }
+        }
+    });
+}
+
 
 // ------------------- Post Functions ------------------ //
 
@@ -1124,7 +1650,7 @@ function rate(corporateID, rate) {
             'rate': rate
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 // color icon
             }
         }
@@ -1140,7 +1666,7 @@ function tailCorporate(corporateID) {
             'corporate_id': corporateID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 // color icon
             }
         }
@@ -1184,10 +1710,11 @@ function deleteCarComment(carID, commentID) {
         url: base_url + "/auth/deletecarcomment",
         type: "POST",
         data: { 
+            'car_id': carID,
             'comment_id': commentID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 $('#comment' + commentID).remove();
             }
         }
@@ -1225,16 +1752,17 @@ function postReplyPartComment(partID, parentCommentID) {
     });
 }
 
-function deletePartComment(partID) {
+function deletePartComment(partID, commentID) {
 	// delete users part comment
     $.ajax({
         url: base_url + "/auth/deletepartcomment",
         type: "POST",
         data: { 
+            'part_id': partID,
             'comment_id': commentID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 $('#comment' + commentID).remove();
             }
         }
@@ -1250,9 +1778,7 @@ function tailCar(carID) {
             'car_id': carID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // color icon
-            }
+            getCarTails(carID);
         }
     });
 }
@@ -1260,18 +1786,17 @@ function tailCar(carID) {
 function tailPart(partID) {
 	// tail the part/also untail part is same function (backend function toggles it)
     $.ajax({
-        url: base_url + "/auth/tailcar",
+        url: base_url + "/auth/tailpart",
         type: "POST",
         data: { 
             'part_id': partID
         },
         success: function(data) {
-            if (data['success'] == true) {
-                // color icon
-            }
+            getPartTails(partID);
         }
     });
 }
+
 
 
 // ------------------- Misc. Functions ------------------ //
@@ -1279,13 +1804,13 @@ function tailPart(partID) {
 function isCorpUser(corpID) {
     // check if the current user is a corp user for this corp.
     $.ajax({
-        url: base_url + "/iscorpuser",
+        url: base_url + "/auth/iscorpuser",
         type: "POST",
         data: { 
             'corp_id': corpID
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 // continue
                 return true;
             } else {
@@ -1296,17 +1821,53 @@ function isCorpUser(corpID) {
     });
 }
 
+function isTailingCar(carID) {
+    // check if the current user is a corp user for this corp.
+    $.ajax({
+        url: base_url + "/auth/istailingcar",
+        type: "GET",
+        data: { 
+            'car_id': carID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                $('#cartailbutton').html('Stop tailing car');
+            } else {
+                $('#cartailbutton').html('Tail car');
+            }
+        }
+    });
+}
+
+function isTailingPart(partID) {
+    // check if the current user is a corp user for this corp.
+    $.ajax({
+        url: base_url + "/auth/istailingpart",
+        type: "GET",
+        data: { 
+            'part_id': partID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                $('#parttailbutton').html('Stop tailing part');
+            } else {
+                $('#parttailbutton').html('Tail part');
+            }
+        }
+    });
+}
+
 function hasCorpUserRole(corpID, role) {
     // check if the current user has this corp user role for this corp.
     $.ajax({
-        url: base_url + "/hascorpuserrole",
+        url: base_url + "/auth/hascorpuserrole",
         type: "POST",
         data: { 
             'corp_id': corpID,
             'role': role,
         },
         success: function(data) {
-            if (data['success'] == true) {
+            if (data.success == true) {
                 // continue
                 return true;
             } else {
@@ -1338,6 +1899,36 @@ function formatCurrency(nStr) {
 }
 
 
+// ------------------- Alert Messages Functions ------------------ //
+
+function alertMe(message) {
+    $('#statusModalBody').html(message);
+    $('#statusModal').modal('show');
+    setTimeout(function() {
+        $('#statusModal').modal('hide');
+    }, 5000);
+}
+
+function confirmMe(message, callback) {
+    var htmltext = '';
+
+    htmltext += '<p>' + message + '</p>';
+    htmltext += '<p>';
+    htmltext += '<button class="btn btn-dafault" data-dismiss="modal">No</button>&nbsp;&nbsp;&nbsp;';
+    htmltext += '<button class="btn btn-danger" onclick="' + callback + '">Yes</button>';
+    htmltext += '<p>';
+
+    $('#statusModalBody').html(htmltext);
+    $('#statusModal').modal('show');
+}
+
+// ------------------- Variables ------------------ //
+
+var carsaleCancelMessage = 'Are you sure you want to cancel this offer?';
+var carrentCancelMessage = 'Are you sure you want to cancel this offer?';
+var cartenderCancelMessage = 'Are you sure you want to cancel this tender?';
+var carauctionCancelMessage = 'Are you sure you want to cancel this bid?';
+var partsaleCancelMessage = 'Are you sure you want to cancel this offer?';
 
 
 

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Auth;
 use Carbon;
 use DB;
+use Notification;
 use Illuminate\Notifications\DatabaseNotification;
 
 use App\User;
@@ -26,9 +27,18 @@ use App\Corporate;
 use App\Car;
 use App\Carcomment;
 use App\Cartail;
+use App\Carimage;
 use App\Part;
 use App\Partcomment;
 use App\Parttail;
+use App\Partimage;
+
+use App\Carsaleoffer;
+use App\Carrentoffer;
+use App\Cartendertender;
+use App\Carauctionbid;
+
+use App\Notifications\CarSaleOfferReservedNotification;
 
 class FrameworkController extends Controller
 {
@@ -58,7 +68,14 @@ class FrameworkController extends Controller
         ]]);
     }
 
+    public function test()
+    {
+        // return view('home'); 
+        $user = User::find(1);
+        $carsaleoffer = Carsaleoffer::where('user_id', $user->id)->first();
 
+        Notification::send($user, new CarSaleOfferReservedNotification($carsaleoffer));
+    }
 
     // ===================================================================================
     // 
@@ -74,16 +91,6 @@ class FrameworkController extends Controller
      */
     public function index()
     {
-        // $user = User::find(2);
-
-        // $userreport = Userreport::find(1);
-
-        // event(new UserReported($user, $userreport));
-
-        // $message = Message::find(20);
-
-        // Auth::user()->notify(new NewMessageNotification($message));
-
         return view('home'); 
     }
 
@@ -92,8 +99,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carauction(Corporate $corporate, Car $car, Carauction $carauction)
+    public function carauction(Corporate $corporate, Car $car, Carauction $carauction, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('car.carauction', [
             'carauction' => $carauction,
         ]); 
@@ -104,8 +118,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carrent(Corporate $corporate, Car $car, Carrent $carrent)
+    public function carrent(Corporate $corporate, Car $car, Carrent $carrent, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('car.carrent', [
             'carrent' => $carrent,
         ]); 
@@ -116,8 +137,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function carsale(Corporate $corporate, Car $car, Carsale $carsale)
+    public function carsale(Corporate $corporate, Car $car, Carsale $carsale, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('car.carsale', [
             'carsale' => $carsale,
         ]); 
@@ -128,8 +156,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function cartender(Corporate $corporate, Car $car, Cartender $cartender)
+    public function cartender(Corporate $corporate, Car $car, Cartender $cartender, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('car.cartender', [
             'cartender' => $cartender,
         ]); 
@@ -140,8 +175,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function partsale(Corporate $corporate, Part $part, Partsale $partsale)
+    public function partsale(Corporate $corporate, Part $part, Partsale $partsale, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('part.partsale', [
             'partsale' => $partsale,
         ]); 
@@ -152,8 +194,15 @@ class FrameworkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function corporatehome(Corporate $corporate)
+    public function corporatehome(Corporate $corporate, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+
         return view('corp.home', [
             'corporate' => $corporate,
         ]); 
@@ -204,6 +253,201 @@ class FrameworkController extends Controller
     // 
     // 
     // ===================================================================================
+
+
+    // Newsfeed builder here
+    /**
+     * Get the initial newsfeeds
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getnewsfeed(Request $request) {
+
+        // Carsales
+        $carsales = DB::table('carsales')
+                        ->join('cars', 'carsales.car_id', 'cars.id')
+                        ->select(
+                            'carsales.*', 
+                            'cars.*', 
+                            'carsales.id as carsale_id', 
+                            'cars.id as car_id', 
+                            'carsales.created_at as carsales_created_at', 
+                            'cars.created_at as cars_created_at', 
+                            'carsales.updated_at as carsales_updated_at', 
+                            'cars.updated_at as cars_updated_at')
+                        ->where('carsales.status', 'opened')
+                        ->orderBy('carsales.updated_at', 'desc')
+                        ->simplePaginate(3);
+
+        // Carrents
+        $carrents = DB::table('carrents')
+                        ->join('cars', 'carrents.car_id', 'cars.id')
+                        ->select(
+                            'carrents.*', 
+                            'cars.*', 
+                            'carrents.id as carrent_id', 
+                            'cars.id as car_id', 
+                            'carrents.created_at as carrents_created_at', 
+                            'cars.created_at as cars_created_at', 
+                            'carrents.updated_at as carrents_updated_at', 
+                            'cars.updated_at as cars_updated_at')
+                        ->where('carrents.status', 'opened')
+                        ->orderBy('carrents.updated_at', 'desc')
+                        ->simplePaginate(3);
+        // Cartenders
+        $cartenders = DB::table('cartenders')
+                        ->join('cars', 'cartenders.car_id', 'cars.id')
+                        ->select(
+                            'cartenders.*', 
+                            'cars.*', 
+                            'cartenders.id as cartender_id', 
+                            'cars.id as car_id', 
+                            'cartenders.created_at as cartenders_created_at', 
+                            'cars.created_at as cars_created_at', 
+                            'cartenders.updated_at as cartenders_updated_at', 
+                            'cars.updated_at as cars_updated_at')
+                        ->where('cartenders.status', 'opened')
+                        ->orderBy('cartenders.updated_at', 'desc')
+                        ->simplePaginate(3);
+        // Carauctions
+        $carauctions = DB::table('carauctions')
+                        ->join('cars', 'carauctions.car_id', 'cars.id')
+                        ->select(
+                            'carauctions.*', 
+                            'cars.*', 
+                            'carauctions.id as carauction_id', 
+                            'cars.id as car_id', 
+                            'carauctions.created_at as carauctions_created_at', 
+                            'cars.created_at as cars_created_at', 
+                            'carauctions.updated_at as carauctions_updated_at', 
+                            'cars.updated_at as cars_updated_at')
+                        ->where('carauctions.status', 'opened')
+                        ->orderBy('carauctions.updated_at', 'desc')
+                        ->simplePaginate(3);
+        // Partsales
+        $partsales = DB::table('partsales')
+                        ->join('parts', 'partsales.part_id', 'parts.id')
+                        ->select(
+                            'partsales.*', 
+                            'parts.*', 
+                            'partsales.id as partsale_id', 
+                            'parts.id as part_id', 
+                            'partsales.created_at as partsales_created_at', 
+                            'parts.created_at as parts_created_at', 
+                            'partsales.updated_at as partsales_updated_at', 
+                            'parts.updated_at as parts_updated_at')
+                        ->where('partsales.status', 'opened')
+                        ->orderBy('partsales.updated_at', 'desc')
+                        ->simplePaginate(3);
+
+        return response()->json(['success'=>true, 'carsales'=>$carsales, 'carrents'=>$carrents, 'cartenders'=>$cartenders, 'carauctions'=>$carauctions, 'partsales'=>$partsales]);
+    }
+
+    /**
+     * Get the Car counts
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarcounts(Request $request) {
+        $this->validate($request, [
+            'car_array' => 'required',
+        ]);
+
+        $counts_array = [];
+
+        foreach ($request->car_array as $car) {
+            $trade_count = 0;
+            if ($car['trade_type'] == 'carsale') {
+                $trade_count = Carsaleoffer::where('carsale_id', $car['trade_id'])->count();
+            } else if ($car['trade_type'] == 'carrent') {
+                $trade_count = Carrentoffer::where('carrent_id', $car['trade_id'])->count();
+            } else if ($car['trade_type'] == 'cartender') {
+                $trade_count = Cartendertender::where('cartender_id', $car['trade_id'])->count();
+            } else if ($car['trade_type'] == 'carauction') {
+                $trade_count = Carauctionbid::where('carauction_id', $car['trade_id'])->count();
+            }
+
+            $comment_count = 0;
+            $tail_count = 0;
+            $comment_count = Carcomment::where('car_id', $car['car_id'])->count();
+            $tail_count = Cartail::where('car_id', $car['car_id'])->count();
+
+            $counts_array[] = array('comment_count'=>$comment_count, 'tail_count'=>$tail_count, 'trade_count'=>$trade_count);
+        }
+
+        return response()->json(['success'=>true, 'counts'=>$counts_array]);
+    }
+
+    /**
+     * Get the Part counts
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getpartcounts(Request $request) {
+        $this->validate($request, [
+            'part_array' => 'required',
+        ]);
+
+        $counts_array = [];
+
+        foreach ($request->part_array as $part) {
+            $trade_count = 0;
+            if ($part['trade_type'] == 'partsale') {
+                $trade_count = Partsaleoffer::where('partsale_id', $part['trade_id'])->count();
+            }
+
+            $comment_count = 0;
+            $tail_count = 0;
+            $comment_count = Partcomment::where('part_id', $part['part_id'])->count();
+            $tail_count = Parttail::where('part_id', $part['part_id'])->count();
+
+            $counts_array[] = array('comment_count'=>$comment_count, 'tail_count'=>$tail_count, 'trade_count'=>$trade_count);
+        }
+
+        return response()->json(['success'=>true, 'counts'=>$counts_array]);
+    }
+
+    /**
+     * Get the Car images
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getcarimages(Request $request) {
+        $this->validate($request, [
+            'car_array' => 'required',
+        ]);
+
+        $images_array = [];
+
+        foreach ($request->car_array as $car) {
+            $carimage = Carimage::where('car_id', $car['car_id'])->first();
+
+            $images_array[] = array('thumb_img_url'=>$carimage->thumb_img_url);
+        }
+
+        return response()->json(['success'=>true, 'carimages'=>$images_array]);
+    }
+
+    /**
+     * Get the part images
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function getpartimages(Request $request) {
+        $this->validate($request, [
+            'part_array' => 'required',
+        ]);
+
+        $images_array = [];
+
+        foreach ($request->part_array as $part) {
+            $partimage = Partimage::where('part_id', $part['part_id'])->first();
+
+            $images_array[] = array('thumb_img_url'=>$partimage->thumb_img_url);
+        }
+
+        return response()->json(['success'=>true, 'partimages'=>$images_array]);
+    }
 
     /**
      * Get the Carsale offers
@@ -314,6 +558,7 @@ class FrameworkController extends Controller
         $carcomments = DB::table('carcomments')
                     ->leftJoin('users', 'users.id', '=', 'carcomments.user_id')
                     ->select('carcomments.*', 'users.propic', 'users.name')
+                    ->orderBy('carcomments.created_at', 'asc')
                     ->get();
 
         return response()->json(['success'=>true, 'carcomments'=>$carcomments]);
@@ -386,6 +631,20 @@ class FrameworkController extends Controller
     // 
     // ===================================================================================
 
+    // /**
+    //  * Get messages
+    //  *
+    //  * @param  Request $request
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function getmessages(Request $request)
+    // {
+    //     $unreadnotifications = Auth::user()->unreadNotifications;
+
+    //     return response()->json(['success'=>true,'notifications'=>$unreadnotifications]);
+    // }
+
+
     /**
      * Send message to another user.
      *
@@ -405,6 +664,48 @@ class FrameworkController extends Controller
         $receiving_user->notify(new NewMessageNotification($message));
 
         return response()->json(['success'=>true]);
+    }
+
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Notifications
+    // 
+    // 
+    // ===================================================================================
+
+    /**
+     * Get notifications. THIS ALSO GRABS ALL MESSAGES REMEMBER!!!
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getnotifications(Request $request)
+    {
+        $unreadnotifications = Auth::user()->unreadNotifications;
+
+        return response()->json(['success'=>true,'notifications'=>$unreadnotifications]);
+    }
+
+    /**
+     * Mark as read notification
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function marknotificationasread($id)
+    {
+        $success = false;
+
+        $notification = Auth::user()->notifications()->where('id',$id)->first();
+        if ($notification) {
+            $notification->delete();
+            $success = true;
+        } 
+
+        return response()->json(['success'=>$success]);
     }
 
 
@@ -560,6 +861,48 @@ class FrameworkController extends Controller
             if (Auth::user()->corporateuser->corporate->id == $request->corp_id) {
                 $success = true;
             }
+        }
+
+        return response()->json(['success'=>$success]);
+    }
+
+    /**
+     * Check if user is a tailing car
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function istailingcar(Request $request)
+    {
+        $this->validate($request, [
+            'car_id' => 'required|integer',
+        ]);
+
+        $success = false;
+
+        if (Cartail::where('car_id', $request->car_id)->where('user_id', Auth::user()->id)->count() == 1) {
+            $success = true;
+        }
+
+        return response()->json(['success'=>$success]);
+    }
+
+    /**
+     * Check if user is a tailing part
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function istailingpart(Request $request)
+    {
+        $this->validate($request, [
+            'part_id' => 'required|integer',
+        ]);
+
+        $success = false;
+
+        if (Parttail::where('part_id', $request->part_id)->where('user_id', Auth::user()->id)->count() == 1) {
+            $success = true;
         }
 
         return response()->json(['success'=>$success]);

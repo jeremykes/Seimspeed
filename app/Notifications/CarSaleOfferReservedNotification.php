@@ -24,8 +24,8 @@ class CarSaleOfferReservedNotification extends Notification
     public function __construct(Carsaleoffer $carsaleoffer)
     {
         $this->carsaleoffer = $carsaleoffer;
-        $this->url = url('/corporate/' . $this->carsaleoffer->carsale->corporate->id . '/car/' . $this->carsaleoffer->carsale->car->id . '/sale/' . $this->carsaleoffer->carsale->id);
-        $this->message = 'Congratulations! Your offer has been accepted and the car is being reserved for you.';
+        $this->url = url('/corporate/' . $this->carsaleoffer->carsale->corporate->id . '/car/' . $this->carsaleoffer->carsale->car->id . '/carsale/' . $this->carsaleoffer->carsale->id);
+        $this->message = 'Congratulations! Your offer has been accepted.';
     }
 
     /**

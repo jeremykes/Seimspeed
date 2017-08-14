@@ -11,6 +11,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
 
+
+    <style type="text/css" media="screen">
+        body {
+            font-size: 12px;
+        }
+    </style>
+
     @yield('css')
 
     <script>
@@ -49,9 +56,9 @@
         
         function BroadcastNotificationCreated(data) {
             if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                // New Message Notification appending happens here.
+                // getMessages();
             } else { 
-                // Notification appending happens here.
+                getNotifications();
             }
         }
 
@@ -137,7 +144,7 @@
 
         <div class="container">
             
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <ul class="list-group">
                     <li class="list-group-item">Item 1</li>
                     <li class="list-group-item">Item 2</li>
@@ -147,36 +154,34 @@
                 </ul> 
             </div>
 
-            <div class="col-md-9">
-                <!-- Right Side Column -->
+            <div class="col-md-10">
             
-                <div class="col-md-12">
+                @yield('tabs')
 
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#dashboard" aria-controls="dashboard" role="tab" data-toggle="tab"></a></li>
-                        <li role="presentation"><a href="#store" aria-controls="store" role="tab" data-toggle="tab"></a></li>
-                        <li role="presentation"><a href="#members" aria-controls="members" role="tab" data-toggle="tab"></a></li>
-                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"></a></li>
-                    </ul>
+                <div class="tab-content">
 
-                    <div class="tab-content">
-                        <!-- Actually all this will go in the Blade View and just fill in the apprpriate div there -->
-                        <div role="tab-panel" class="tab-pane active" id="dashboard">
-                            @yield('content')
-                        </div>
-                        <div role="tab-panel" class="tab-pane" id="store">
-                            @yield('content')
-                        </div>
-                        <div role="tab-panel" class="tab-pane" id="members">
-                            @yield('content')
-                        </div>
-                        <div role="tab-panel" class="tab-pane" id="settings">
-                            @yield('content')
+                    @yield('dashboard-tab')
+                        <div class="panel panel-default col-md-12">
+                            @yield('dashboard-content')
                         </div>
                     </div>
-
-                    
+                    @yield('store-tab')
+                        <div class="panel panel-default col-md-12">
+                            @yield('store-content')
+                        </div>
+                    </div>
+                    @yield('members-tab')
+                        <div class="panel panel-default col-md-12">
+                            @yield('members-content')
+                        </div>
+                    </div>
+                    @yield('settings-tab')
+                        <div class="panel panel-default col-md-12">
+                            @yield('settings-content')
+                        </div>
+                    </div>
                 </div>
+                    
             </div>
 
         </div>
@@ -186,7 +191,7 @@
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/moment.js') }}"></script>
-    <script src="{{ asset('js/seimspeed.js') }}"></script>
+    <script src="{{ asset('js/seimspeed-corp.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
     <script>
@@ -201,14 +206,14 @@
         var user_id = {{ Auth::user()->id }};
 
         @if (Auth::user()->hasRole('administrator'))
-                var corp_user_role = 'administrator';
-            @elseif (Auth::user()->hasRole('sales'))
-                var corp_user_role = 'sales';
-            @elseif (Auth::user()->hasRole('maintainer'))
-                var corp_user_role = 'maintainer';
-            @elseif (Auth::user()->hasRole('manager'))
-                var corp_user_role = 'manager';
-            @endif
+            var corp_user_role = 'administrator';
+        @elseif (Auth::user()->hasRole('sales'))
+            var corp_user_role = 'sales';
+        @elseif (Auth::user()->hasRole('maintainer'))
+            var corp_user_role = 'maintainer';
+        @elseif (Auth::user()->hasRole('manager'))
+            var corp_user_role = 'manager';
+        @endif
  
     </script>
 

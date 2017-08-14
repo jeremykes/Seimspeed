@@ -24,7 +24,7 @@ class CarTenderTenderReserveExpiredNotification extends Notification
     public function __construct(Cartendertender $cartendertender)
     {
         $this->cartendertender = $cartendertender;
-        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/tender/' . $this->cartendertender->cartender->id);
+        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/cartender/' . $this->cartendertender->cartender->id);
         $this->message = 'Your tender reserve period has expired. Please contact the supplier if this is a mistake.';
     }
 

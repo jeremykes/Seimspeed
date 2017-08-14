@@ -24,7 +24,7 @@ class PartSaleOfferAddedNotification extends Notification
     public function __construct(Partsaleoffer $partsaleoffer)
     {
         $this->partsaleoffer = $partsaleoffer;
-        $this->url = url('/corporate/' . $this->partsaleoffer->partsale->corporate->id . '/part/' . $this->partsaleoffer->partsale->part->id . '/sale/' . $this->partsaleoffer->partsale->id);
+        $this->url = url('/corporate/' . $this->partsaleoffer->partsale->corporate->id . '/part/' . $this->partsaleoffer->partsale->part->id . '/partsale/' . $this->partsaleoffer->partsale->id);
         $this->message = $this->partsaleoffer->user->name . ' placed an offer.';
     }
 

@@ -24,7 +24,7 @@ class CarRentReservedNotification extends Notification
     public function __construct(Carrent $carrent)
     {
         $this->carrent = $carrent;
-        $this->url = url('/corporate/' . $this->carrent->corporate->id . '/car/' . $this->carrent->car->id . '/rent/' . $this->carrent->id);
+        $this->url = url('/corporate/' . $this->carrent->corporate->id . '/car/' . $this->carrent->car->id . '/carrent/' . $this->carrent->id);
         $this->message = 'This car has been reserved pending payment. Please keep following this car as the buyers may drop out.';
     }
 

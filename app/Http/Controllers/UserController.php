@@ -8,7 +8,14 @@ use App\Http\Requests;
 use Auth;
 use DB;
 use Notification;
+use Illuminate\Support\Facades\Storage;
 
+use App\User;
+use App\Usersetting;
+use App\Socialprofile;
+use App\Message;
+
+use App\Corporateuser;
 use App\Corporaterating;
 use App\Corporatetail;
 use App\Car;
@@ -85,11 +92,116 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function user(Request $request, User $user)
+    public function user(Request $request)
     {
+        $user = Auth::user();
+
+        $messages = Message::where('user_id_receiving', $user->id)->select('user_id_sending')->groupBy('user_id_sending')->get();
+
+        $corporateusers = Corporateuser::where('user_id', $user->id)->get();
+        $corporate_user_administrator = false;
+        foreach ($corporateusers as $corporateuser) {
+            if ($corporateuser->user->hasRole('administrator')) {
+                $corporate_user_administrator = true;
+            }
+        }
+
         return view('user.home', [
             'user' => $user,
+            'messages' => $messages,
+            'corporate_user_administrator' => $corporate_user_administrator,
         ]); 
+    }
+
+    /**
+     * Go to User settings page
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function usersettings(Request $request)
+    {
+        $user = Auth::user();
+
+        $settings = Usersetting::where('user_id', $user->id)->first();
+        $corporateusers = Corporateuser::where('user_id', $user->id)->get();
+        $socialprofiles = Socialprofile::where('user_id', $user->id)->get();
+
+        $corporateusers = Corporateuser::where('user_id', Auth::user()->id)->get();
+        $corporate_user_administrator = false;
+        foreach ($corporateusers as $corporateuser) {
+            if ($corporateuser->user->hasRole('administrator')) {
+                $corporate_user_administrator = true;
+            }
+        }
+
+        return view('user.settings', [
+            'user' => $user,
+            'settings' => $settings,
+            'corporateusers' => $corporateusers,
+            'socialprofiles' => $socialprofiles,
+            'corporate_user_administrator' => $corporate_user_administrator,
+        ]); 
+    }
+
+    /**
+     * Go to User settings edit page
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function usersettingsedit(Request $request)
+    {
+        $user = Auth::user();
+
+        $settings = Usersetting::where('user_id', $user->id)->first();
+
+        $corporateusers = Corporateuser::where('user_id', $user->id)->get();
+        $corporate_user_administrator = false;
+        foreach ($corporateusers as $corporateuser) {
+            if ($corporateuser->user->hasRole('administrator')) {
+                $corporate_user_administrator = true;
+            }
+        }
+
+        return view('user.settingsedit', [
+            'user' => $user,
+            'settings' => $settings,
+            'corporate_user_administrator' => $corporate_user_administrator,
+        ]); 
+    }
+
+    /**
+     * Go to User settings edit save
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function usersettingseditsave(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required',
+            'receive_email_notifications' => 'required|boolean',
+            'propic' => 'image',
+        ]);
+
+        $user = Auth::user();
+
+        $settings = Usersetting::where('user_id', $user->id)->first();
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->propic) {
+            $path = $request->file('propic')->store('propics');
+            $user->propic = url('/storage/' . $path);
+        }
+        $user->save();
+
+        $settings->receive_email_notifications = $request->receive_email_notifications;
+        $settings->save();
+
+        return redirect('/user/settings');
     }
 
     /**
@@ -261,6 +373,10 @@ class UserController extends Controller
 
         if (Auth::user()->id == $carcomment->user_id) {
             $carcomment->delete();
+        } else if (Auth::user()->corporateuser->exists()){
+            if ($carcomment->car->corporate->id == Auth::user()->corporateuser->corporate->id) {
+                $carcomment->delete();
+            }
         }
         
         return response()->json(['success'=>true]);

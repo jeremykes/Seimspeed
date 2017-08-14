@@ -26,7 +26,7 @@ class PartLikedNotification extends Notification
         $this->partlike = $partlike;
 
         if ($this->partlike->part->sale->exists()) {
-           $this->url = url('/corporate/' . $this->partlike->part->corporate->id . '/part/' . $this->partlike->part->id . '/sale/' . $this->partlike->part->sale->id);
+           $this->url = url('/corporate/' . $this->partlike->part->corporate->id . '/part/' . $this->partlike->part->id . '/partsale/' . $this->partlike->part->sale->id);
         } 
 
         $this->message = $this->partlike->user->name . ' liked your part.';

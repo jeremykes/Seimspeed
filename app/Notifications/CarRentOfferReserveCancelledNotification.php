@@ -24,7 +24,7 @@ class CarRentOfferReserveCancelledNotification extends Notification
     public function __construct(Carrentoffer $carrentoffer)
     {
         $this->carrentoffer = $carrentoffer;
-        $this->url = url('/corporate/' . $this->carrentoffer->carrent->corporate->id . '/car/' . $this->carrentoffer->carrent->car->id . '/rent/' . $this->carrentoffer->carrent->id);
+        $this->url = url('/corporate/' . $this->carrentoffer->carrent->corporate->id . '/car/' . $this->carrentoffer->carrent->car->id . '/carrent/' . $this->carrentoffer->carrent->id);
         $this->message = $this->carrentoffer->user->name . ' cancelled your rent reservation.';
     }
 

@@ -26,7 +26,7 @@ class PartCommentAddedNotification extends Notification
         $this->partcomment = $partcomment;
 
         if ($this->partcomment->part->sale->exists()) {
-           $this->url = url('/corporate/' . $this->partcomment->corporate->id . '/part/' . $this->partcomment->part->id . '/sale/' . $this->partcomment->part->sale->id);
+           $this->url = url('/corporate/' . $this->partcomment->corporate->id . '/part/' . $this->partcomment->part->id . '/partsale/' . $this->partcomment->part->sale->id);
         } 
 
         $this->message = $this->partcomment->user->name . ' added a comment.';

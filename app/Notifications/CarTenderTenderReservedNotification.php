@@ -24,7 +24,7 @@ class CarTenderTenderReservedNotification extends Notification
     public function __construct(Cartendertender $cartendertender)
     {
         $this->cartendertender = $cartendertender;
-        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/tender/' . $this->cartendertender->cartender->id);
+        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/cartender/' . $this->cartendertender->cartender->id);
         $this->message = 'Congratulations! Your tender has been accepted and the car is being reserved for you.';
     }
 

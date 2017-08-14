@@ -27,7 +27,7 @@ class Carsalereserve extends Model
 	/**
 	* Get the car sale offer that owns this reserve.
 	*/
-	public function offer()
+	public function carsaleoffer()
 	{
 		return $this->BelongsTo('App\Carsaleoffer');
 	}

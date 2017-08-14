@@ -26,7 +26,7 @@ class PartTailedNotification extends Notification
         $this->parttail = $parttail;
 
         if ($this->parttail->part->sale->exists()) {
-           $this->url = url('/corporate/' . $this->parttail->part->corporate->id . '/part/' . $this->parttail->part->id . '/sale/' . $this->parttail->part->sale->id);
+           $this->url = url('/corporate/' . $this->parttail->part->corporate->id . '/part/' . $this->parttail->part->id . '/partsale/' . $this->parttail->part->sale->id);
         } 
         
         $this->message = $this->parttail->user->name . ' is tailing your part.';

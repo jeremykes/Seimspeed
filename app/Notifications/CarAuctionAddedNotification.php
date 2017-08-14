@@ -28,7 +28,7 @@ class CarAuctionAddedNotification extends Notification
         // 3. Construct all classes to bind to this class.
         $this->carauction = $carauction;
         // 4. Build the URL. All URL's just go straight to the corporate dashboard.
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/car/' . $this->carauction->car->id . '/auction/' . $this->carauction->id);
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/car/' . $this->carauction->car->id . '/carauction/' . $this->carauction->id);
         // 5. Build the message.
         $this->message = $this->carauction->corporate->name . ' added a new auction.';
     }

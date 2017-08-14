@@ -11,6 +11,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
 
+    <style type="text/css" media="screen">
+        body {
+            font-size: 12px;
+        }
+    </style>
+
     @yield('css')
 
     <script>
@@ -18,59 +24,6 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
-    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
-
-    @if (Auth::check())
-
-        <script>
-            // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
-
-            var pusher = new Pusher('41b9b7f7d7c0187461f6', {
-                authEndpoint: "{{ url('/pusher/auth/' . Auth::user()->id) }}",
-                auth: {
-                    headers: {
-                        'X-CSRF-Token': "{{ csrf_token() }}"
-                        }
-                    },
-                encrypted: true
-            });
-
-            /*
-            |
-            | 1. Subscribe to the Channels
-            |
-            */
-
-            // PRIVATE
-            var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-            // PUBLIC
-            var publicChannel = pusher.subscribe('public-channel');
-
-            // Bind the the Private Notification Event
-            privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-                BroadcastNotificationCreated(data);
-            });
-
-            // Function for the Notification Events
-            function BroadcastNotificationCreated(data) {
-                if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                    if (data.user_sending_id == {{ Auth::user()->id }}) {
-                        var sending_name = 'you';
-                    } else {
-                        var sending_name = data.user_sending_name;
-                    }
-                    $('#newsfeed').append('<div>'+sending_name+' - '+data.message+'<div><hr>');
-                } else {
-                    // NOTIFICATION APPENDING HAPPENS HERE
-                }
-            }
-
-        </script>
-
-    @endif
 
     @yield('realtime')
 
@@ -96,36 +49,7 @@
                         &nbsp;
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="notificationCount">
-                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
 
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="notificationList">
-
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="messageCount">
-                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
-
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="messageList">
-
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li></li>
-                        <li></li>
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
                             <li><a href="{{ route('register') }}" style="color:white">Register</a></li>
@@ -164,28 +88,6 @@
     <script src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/seimspeed.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-
-    <script>
-
-        var reserves_count = 0;
-        var user_id = 0;
-        var base_url = "{{ url('/') }}";
-
-        @if (Auth::check())
-
-            getNotifications();
-
-            // User ID
-            var user_id = {{ Auth::user()->id }};
-
-        @endif
-
-        var timeArray = [];
-        
-        var tradesArray = [];
-
- 
-    </script>
 
     @yield('script')
 

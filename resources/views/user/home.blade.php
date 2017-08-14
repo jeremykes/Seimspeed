@@ -1,103 +1,62 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
-@section('realtime')
-<script>
+@section('menu')
 
-    /*
-    |
-    | 1. Bind all events here
-    |
-    */
-
-    publicChannel.bind('App\\Events\\UserReported', function(data) {
-        UserReported(data);
-    });
-    publicChannel.bind('App\\Events\\CarAdded', function(data) {
-        CarAdded(data);
-    });
-
-    publicChannel.bind('App\\Events\\NewNewsfeed', function(data) {
-        newsfeedbuilder(data);
-    });
-
-    /*
-    |
-    | 2. All functions for the bound events
-    |
-    */
-    function UserReported(data) {
-        alert("From: " + data.userreport.reporting_user_id + ". Report: " + data.userreport.report);
-    }
-
-    function CarAdded(data) {
-        alert(data);
-    }
-
-
-    // OLD CODE ========== 
-
-    // // PRIVATE BINDINGS
-    // userReportedChannel.bind('App\\Events\\UserReported', function(data) {
-    //     // Do something here. Example:
-    //     alert("From: " + data.userreport.reporting_user_id + ". Report: " + data.userreport.report);
-    // });
-
-    // // PUBLIC BINDINGS
-    // carAddedChannel.bind('App\\Events\\CarAdded', function(data) {
-    //     // Do something here. Example:
-    //     alert(data);
-    // });
-
-</script>
+<ul class="list-group">
+    <a href="{{ url('/user') }}" class="list-group-item active">Messages</a>
+    <a href="{{ url('/user/settings') }}" class="list-group-item">Settings</a>
+</ul> 
 
 @endsection
 
 @section('content')
-<div class="container">
-    <h2>Newsfeed</h2>
-    <div id="newsfeed" class="row">
-        <div class="col-md-8 col-md-offset-2">
-            
+
+<div class="col-md-12">
+    <h2>Messages</h2>
+    <hr>
+</div>
+
+<div class="col-md-12">
+    <div class="col-md-4" style="padding-left:3px;padding-right:3px;">
+        <div class="panel panel-default" style="height:500px;min-height:500px;overflow:scroll">
+            <p style="padding-top:9px;padding-left:9px"><strong>People</strong></p>
+            <ul class="list-group">
+
+                @foreach ($messages as $message)
+
+                    <li class="list-group-item">
+                        <a href="javascript:void(0)" onclick="getUserMessages({{ $message->sendinguser->id }})">
+                            <img src="{{ $message->sendinguser->propic }}" style="width:20px;height:20px"> {{ $message->sendinguser->name }}
+                        </a>
+                    </li>
+                    
+                @endforeach
+
+            </ul> 
+
         </div>
     </div>
 
-
-    <!-- <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    You are logged in!<br><br>
-
-                    <input type="text" name="message" id="message">
-                    <input type="text" name="user_id_receiving" id="user_id_receiving">
-                    <button onclick="sendmessage()">Send</button>
-
+    <div class="col-md-8" style="padding-left:3px;padding-right:3px;">
+        <div class="panel panel-default" style="height:500px;">
+            <p style="padding-top:9px;padding-left:9px"><strong>Conversation</strong></p>
+            <hr style="padding:0;margin:0">
+            <div class="col-md-12" id="usermessages" style="height:450px;min-height:450px;overflow:scroll;padding-bottom:100px;">
+                
+            </div>
+            <div class="col-md-12" id="message_input" style="display:none">
+                <div class="bottom_wrapper">
+                    <div class="message_input_wrapper">
+                        <input class="message_input" placeholder="Type..." />
+                    </div>
+                    <div class="send_message" onclick="sendMessage()">
+                        <div class="icon"></div>
+                        <div class="text">Send</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 </div>
-@endsection
 
-@section('script')
-<script>
-    function sendmessage() {
-        $.ajax({
-            type: "POST",
-            url: "{{ url('/sendmessage') }}",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-              message: $('#message').val(),
-              user_id_receiving: $('#user_id_receiving').val()
-            }
-        }).done(function(data) {
-            // Do something
-            // alert(data.success);
-        });
-    }
-</script>
 @endsection

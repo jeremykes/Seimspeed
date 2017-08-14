@@ -26,13 +26,13 @@ class CarLikedNotification extends Notification
         $this->carlike = $carlike;
 
         if ($this->carlike->car->sale->exists()) {
-           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/sale/' . $this->carlike->car->sale->id);
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/carsale/' . $this->carlike->car->sale->id);
         } else if ($this->carlike->car->rent->exists()) {
-           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/rent/' . $this->carlike->car->rent->id);
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/carrent/' . $this->carlike->car->rent->id);
         } else if ($this->carlike->car->auction->exists()) {
-           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/auction/' . $this->carlike->car->auction->id);
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/carauction/' . $this->carlike->car->auction->id);
         } else if ($this->carlike->car->tender->exists()) {
-           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/tender/' . $this->carlike->car->tender->id);
+           $this->url = url('/corporate/' . $this->carlike->car->corporate->id . '/car/' . $this->carlike->car->id . '/cartender/' . $this->carlike->car->tender->id);
         }
 
         $this->message = $this->carlike->user->name . ' liked your car.';

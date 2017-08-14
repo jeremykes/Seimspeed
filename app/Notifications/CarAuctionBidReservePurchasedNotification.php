@@ -24,7 +24,7 @@ class CarAuctionBidReservePurchasedNotification extends Notification
     public function __construct(Carauctionbid $carauctionbid)
     {
         $this->carauctionbid = $carauctionbid;
-        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
+        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/carauction/' . $this->carauctionbid->carauction->id);
         $this->message = 'Congratualations! You have bought this car!';
     }
 

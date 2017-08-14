@@ -24,7 +24,7 @@ class PartSaleClosedNotification extends Notification
     public function __construct(Partsale $partsale)
     {
         $this->partsale = $partsale;
-        $this->url = url('/corporate/' . $this->partsale->corporate->id . '/part/' . $this->partsale->part->id . '/sale/' . $this->partsale->id);
+        $this->url = url('/corporate/' . $this->partsale->corporate->id . '/part/' . $this->partsale->part->id . '/partsale/' . $this->partsale->id);
         $this->message = $this->partsale->corporate->name . ' has closed this sale.';
     }
 

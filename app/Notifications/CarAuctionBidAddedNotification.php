@@ -25,7 +25,7 @@ class CarAuctionBidAddedNotification extends Notification
     public function __construct(Carauctionbid $carauctionbid)
     {
         $this->carauctionbid = $carauctionbid;
-        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/auction/' . $this->carauctionbid->carauction->id);
+        $this->url = url('/corporate/' . $this->carauctionbid->carauction->corporate->id . '/car/' . $this->carauctionbid->carauction->car->id . '/carauction/' . $this->carauctionbid->carauction->id);
         $this->message = $this->carauctionbid->user->name . ' placed a bid.';
     }
 

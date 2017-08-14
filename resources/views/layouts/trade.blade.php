@@ -11,6 +11,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
 
+    <style type="text/css" media="screen">
+        body {
+            font-size: 12px;
+        }
+    </style>
+
     @yield('css')
 
     <script>
@@ -40,6 +46,24 @@
             encrypted: true
         });
 
+        @if (Auth::check())
+            var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
+
+            privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
+                BroadcastNotificationCreated(data);
+            });
+
+            function BroadcastNotificationCreated(data) {
+                if (data.type == 'App\\Notifications\\NewMessageNotification') {
+                    // getMessages();
+                    getNotifications();
+                } else { 
+                    getNotifications();
+                }
+            }
+
+        @endif
+
     </script>
 
     @yield('realtime')
@@ -66,36 +90,39 @@
                         &nbsp;
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="notificationCount">
-                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
 
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="notificationList">
+                        @if (Auth::check())
+                    
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="fa-stack has-badge" id="notificationCount">
+                                      <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
+                                    </span>
+                                </a>
 
-                                </li>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+                                    <li id="notificationList">
 
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="messageCount">
-                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="messageList">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="fa-stack has-badge" id="messageCount">
+                                      <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
+                                    </span>
+                                </a>
 
-                                </li>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+                                    <li id="messageList">
 
-                        <li></li>
-                        <li></li>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        @endif
+
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
                             <li><a href="{{ route('register') }}" style="color:white">Register</a></li>

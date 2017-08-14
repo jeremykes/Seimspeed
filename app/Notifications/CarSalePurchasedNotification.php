@@ -24,7 +24,7 @@ class CarSalePurchasedNotification extends Notification
     public function __construct(Carsale $carsale)
     {
         $this->carsale = $carsale;
-        $this->url = url('/corporate/' . $this->carsale->corporate->id . '/car/' . $this->carsale->car->id . '/sale/' . $this->carsale->id);
+        $this->url = url('/corporate/' . $this->carsale->corporate->id . '/car/' . $this->carsale->car->id . '/carsale/' . $this->carsale->id);
         $this->message = 'This car has been purchased.';
     }
 

@@ -11,6 +11,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
 
+    <style type="text/css" media="screen">
+        body {
+            font-size: 12px;
+        }
+    </style>
+
     @yield('css')
 
     <script>
@@ -40,12 +46,6 @@
             encrypted: true
         });
 
-        /*
-        |
-        | 1. Subscribe to the channels and bind
-        |
-        */
-
         @if (Auth::check())
             var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
 
@@ -55,33 +55,44 @@
 
             function BroadcastNotificationCreated(data) {
                 if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                    // New Message Notification appending happens here.
+                    // getMessages();
+                    getNotifications();
                 } else { 
-                    // Notification appending happens here.
+                    getNotifications();
                 }
             }
 
         @endif
 
+        var corporateID = {{ $corporate->id }};
+
         var publicChannel = pusher.subscribe('public-channel');
 
-        publicChannel.bind('App\\Events\\CarSaleAdded', CarSaleAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentAdded', CarRentAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderAdded', CarTenderAddedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionAdded', CarAuctionAddedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleAdded', PartSaleAddedBuild(data));
-
-        publicChannel.bind('App\\Events\\CarSaleClosed', CarSaleClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentClosed', CarRentClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderClosed', CarTenderClosedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionClosed', CarAuctionClosedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleClosed', PartSaleClosedBuild(data));
-        
-        publicChannel.bind('App\\Events\\CarSaleOfferReservePurchased', CarSaleOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarRentOfferReservePurchased', CarRentOfferReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarTenderTenderReservePurchased', CarTenderTenderReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\CarAuctionBidReservePurchased', CarAuctionBidReservePurchasedBuild(data));
-        publicChannel.bind('App\\Events\\PartSaleOfferReservePurchased', PartSaleOfferReservePurchasedBuild(data));
+        publicChannel.bind('App\\Events\\CarSaleAdded', function(data) {
+            if (data.car.corporate_id == corporateID) {
+                CarSaleAddedBuild(data);
+            }
+        });
+        publicChannel.bind('App\\Events\\CarRentAdded', function(data) {
+            if (data.car.corporate_id == corporateID) {
+                CarRentAddedBuild(data);
+            }
+        });
+        publicChannel.bind('App\\Events\\CarTenderAdded', function(data) {
+            if (data.car.corporate_id == corporateID) {
+                CarTenderAddedBuild(data);
+            }
+        });
+        publicChannel.bind('App\\Events\\CarAuctionAdded', function(data) {
+            if (data.car.corporate_id == corporateID) {
+                CarAuctionAddedBuild(data);
+            }
+        });
+        publicChannel.bind('App\\Events\\PartSaleAdded', function(data) {
+            if (data.car.corporate_id == corporateID) {    
+                PartSaleAddedBuild(data);
+            }
+        });
 
     </script>
 
@@ -109,36 +120,39 @@
                         &nbsp;
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="notificationCount">
-                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
 
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="notificationList">
+                        @if (Auth::check())
+                    
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="fa-stack has-badge" id="notificationCount">
+                                      <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
+                                    </span>
+                                </a>
 
-                                </li>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+                                    <li id="notificationList">
 
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="fa-stack has-badge" id="messageCount">
-                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
-                                </span>
-                            </a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                            <ul class="dropdown-menu scrollable-menu" role="menu">
-                                <li id="messageList">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="fa-stack has-badge" id="messageCount">
+                                      <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
+                                    </span>
+                                </a>
 
-                                </li>
-                            </ul>
-                        </li>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+                                    <li id="messageList">
 
-                        <li></li>
-                        <li></li>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        @endif
+
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
                             <li><a href="{{ route('register') }}" style="color:white">Register</a></li>
@@ -170,26 +184,66 @@
 
 
         <div class="container">
-            <div class="col-md-12" style="height:200px;background-color:grey">
-                <h1>Corporate</h1>
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-body" style="height:250px;background-image: url('{{ $corporate->banner_url }}');">
+                        <div class="col-md-3" style="height:200px;background-image: url('{{ $corporate->logo_url }}');"></div>
+                    </div>  
+                </div>
             </div>
 
-            <div class="col-md-2">
-                <ul class="list-group">
-                    <li class="list-group-item">Item 1</li>
-                    <li class="list-group-item">Item 2</li>
-                    <li class="list-group-item">Item 3</li>
-                    <li class="list-group-item">Item 4</li>
-                    <li class="list-group-item">Item 5</li>
-                </ul> 
+            <div class="col-md-3">
+                <div class="col-md-12" style="padding:0;margin:0">
+                    <h1>{{ $corporate->name }}</h1>
+                    <hr>
+                    <p>{{ $corporate->descrip }}</p>
+                    <p><span style="font-weight:bold">Address</span> {{ $corporate->address }}</p>
+                    <p><span style="font-weight:bold">Phone</span> {{ $corporate->phone }}</p>
+                </div>
+
+                <div class="col-md-12" style="padding:0;margin:0">
+                    <ul class="list-group" style="padding:0;margin:0">
+                        <li class="list-group-item">Item 1</li>
+                        <li class="list-group-item">Item 2</li>
+                        <li class="list-group-item">Item 3</li>
+                        <li class="list-group-item">Item 4</li>
+                        <li class="list-group-item">Item 5</li>
+                    </ul> 
+                </div>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-7" style="padding:0;margin:0">
                 @yield('content')
             </div>
 
             <div class="col-md-2">
                 <!-- Right column -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 1
+                    </div>
+                    <div class="panel-body">
+                        Advert 1 content
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 2
+                    </div>
+                    <div class="panel-body">
+                        Advert 2 content
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Advert 3
+                    </div>
+                    <div class="panel-body">
+                        Advert 3 content
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -219,7 +273,7 @@
         var timeArray = [];
         var tradesArray = [];
 
-        var nextPageURL = base_url + '/getnewsfeed';
+        var nextPageURL = base_url + '/getcorpnewsfeed?corporate_id=' + corporateID;
         var noNextPage = false;
  
     </script>

@@ -14,6 +14,12 @@
 <div class="col-md-12">
     <div class="panel" style="padding-bottom:0;margin-bottom:0">
         <div class="panel-body">
+
+            <div class="col-md-12">
+                <a href="{{ url('/corporate/' . $partsale->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $partsale->corporate->name }}</span></a>
+                <hr style="padding:5px;margin:0">
+            </div>
+            
             <div class="col-md-3" id="part_images">
                 <ul id="lightSlider">
 
@@ -39,7 +45,7 @@
                         <span style="font-size:20px" id="partprice">K{{ number_format($partsale->price, 2) }}</span>
                     </span>
                 </p>
-                <p id="partsale_created_at{{ $partsale->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
+                <p id="partsale_created_at{{ $partsale->part->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                 <p class="pull-right" id="partsalenegotiable">
                     @if ($partsale->negotiable == 0) 
                         <span class="label label-warning">Negotiable</span>

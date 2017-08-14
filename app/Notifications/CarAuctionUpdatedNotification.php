@@ -24,7 +24,7 @@ class CarAuctionUpdatedNotification extends Notification
     public function __construct(Carauction $carauction)
     {
         $this->carauction = $carauction;
-        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/car/' . $this->carauction->car->id . '/auction/' . $this->carauction->id);
+        $this->url = url('/corporate/' . $this->carauction->corporate->id . '/car/' . $this->carauction->car->id . '/carauction/' . $this->carauction->id);
         $this->message = $this->carauction->corporate->name . ' updated their auction.';
     }
 

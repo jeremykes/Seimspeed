@@ -26,13 +26,13 @@ class CarTailedNotification extends Notification
         $this->cartail = $cartail;
 
         if ($this->cartail->car->sale->exists()) {
-           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/sale/' . $this->cartail->car->sale->id);
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/carsale/' . $this->cartail->car->sale->id);
         } else if ($this->cartail->car->rent->exists()) {
-           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/rent/' . $this->cartail->car->rent->id);
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/carrent/' . $this->cartail->car->rent->id);
         } else if ($this->cartail->car->auction->exists()) {
-           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/auction/' . $this->cartail->car->auction->id);
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/carauction/' . $this->cartail->car->auction->id);
         } else if ($this->cartail->car->tender->exists()) {
-           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/tender/' . $this->cartail->car->tender->id);
+           $this->url = url('/corporate/' . $this->cartail->car->corporate->id . '/car/' . $this->cartail->car->id . '/cartender/' . $this->cartail->car->tender->id);
         }
 
         $this->message = $this->cartail->user->name . ' is tailing your car.';

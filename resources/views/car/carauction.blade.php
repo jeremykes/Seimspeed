@@ -16,25 +16,6 @@
     |
     */
 
-    @if (Auth::check())
-        var privateUserChannel = pusher.subscribe('private-App.User.' + {{ Auth::user()->id }});
-
-        privateUserChannel.bind('Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', function(data) {
-            BroadcastNotificationCreated(data);
-        });
-
-        function BroadcastNotificationCreated(data) {
-            if (data.type == 'App\\Notifications\\NewMessageNotification') {
-                // New Message Notification appending happens here.
-                getMessages();
-            } else { 
-                // Notification appending happens here.
-                getNotifications();
-            }
-        }
-
-    @endif
-
     var publicCarTradeChannel = pusher.subscribe('public-channel.car.{{ $carauction->car->id }}');
 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionClosed', function(data) {
@@ -73,6 +54,12 @@
 <div class="col-md-12">
     <div class="panel" style="padding-bottom:0;margin-bottom:0">
         <div class="panel-body">
+
+            <div class="col-md-12">
+                <a href="{{ url('/corporate/' . $carauction->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $carauction->corporate->name }}</span></a>
+                <hr style="padding:5px;margin:0">
+            </div>
+
             <div class="col-md-3" id="car_images">
                 <ul id="lightSlider">
 

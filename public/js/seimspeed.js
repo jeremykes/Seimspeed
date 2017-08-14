@@ -22,7 +22,7 @@ function CarSaleAddedBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
     htmltext += '        <p style="font-size:16px">' + carsaledata + '</p>';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(carsaledata.price) + '</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(carsaledata.price) + '</span></span></p>';
     htmltext += '        <p id="carsale_created_at' + carsaledata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
@@ -69,7 +69,7 @@ function CarRentAddedBuild(data) {
     htmltext += '      <img class="img-responsive" id="carimage' + carrentdata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(carrentdata.rateperday) + '/day</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(carrentdata.rateperday) + '/day</span></span></p>';
     htmltext += '        <p id="carrent_created_at' + carrentdata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
@@ -107,7 +107,7 @@ function CarTenderAddedBuild(data) {
     htmltext += '      <img class="img-responsive" id="carimage' + cartenderdata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label><span class="pull-right"><span style="font-size:20px"></span></span></p>';
     htmltext += '        <p id="cartender_created_at' + cartenderdata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
@@ -146,7 +146,7 @@ function CarAuctionAddedBuild(data) {
     htmltext += '      <img class="img-responsive" id="carimage' + carauctiondata.car_id + '" src="' + carimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + cardata.make + '</span> ' + cardata.model + ', ' + cardata.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label><span class="pull-right"><span style="font-size:20px"></span></span></p>';
     htmltext += '        <p id="carauction_created_at' + carauctiondata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + cardata.bodytype + '. Weight: ' + cardata.weight + 'Kg\'s. Fuel Type: ' + cardata.fueltype + '. Transmission: ' + cardata.transmissiontype + '. Steering side: ' + cardata.steeringside + '. Location: ' + cardata.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + cardata.note + '</p>';
@@ -184,7 +184,7 @@ function PartSaleAddedBuild(data) {
     htmltext += '      <img class="img-responsive" id="partimage' + partsaledata.part_id + '" src="' + partimagedata[0].thumb_img_url +  '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + partdata.name + '</span> ' + partdata.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(partsaledata.price) + '</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + partdata.name + '</span> ' + partdata.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(partsaledata.price) + '</span></span></p>';
     htmltext += '        <p id="partsale_created_at' + partsaledata.id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>' + partdata.descript + '</p>';
     htmltext += '        <p>Location: ' + partdata.physicallocation + '</p>';
@@ -275,11 +275,15 @@ function CarSaleBuild(data) {
 
     htmltext += '<div class="panel" id="carsale' + data.carsale_id + '">';
     htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+    htmltext += '       <hr style="padding:5px;margin:0">';
+    htmltext += '    </div>';
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.price) + '</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(data.price) + '</span></span></p>';
     htmltext += '        <p id="carsale_created_at' + data.carsale_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
@@ -323,11 +327,15 @@ function CarRentBuild(data) {
 
     htmltext += '<div class="panel" id="carrent' + data.carrent_id + '">';
     htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+    htmltext += '       <hr style="padding:5px;margin:0">';
+    htmltext += '    </div>';
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.rateperday) + '/day</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">rent</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(data.rateperday) + '/day</span></span></p>';
     htmltext += '        <p id="carrent_created_at' + data.carrent_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
@@ -363,11 +371,15 @@ function CarTenderBuild(data) {
 
     htmltext += '<div class="panel" id="cartender' + data.cartender_id + '">';
     htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+    htmltext += '       <hr style="padding:5px;margin:0">';
+    htmltext += '    </div>';
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label><span class="pull-right"><span style="font-size:20px"></span></span></p>';
     htmltext += '        <p id="cartender_created_at' + data.cartender_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
@@ -403,11 +415,15 @@ function CarAuctionBuild(data) {
 
     htmltext += '<div class="panel" id="carauction' + data.carauction_id + '">';
     htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+    htmltext += '       <hr style="padding:5px;margin:0">';
+    htmltext += '    </div>';
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label>&nbsp;<span style="font-size:20px"></span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">auction</label><span class="pull-right"><span style="font-size:20px"></span></span></p>';
     htmltext += '        <p id="carauction_created_at' + data.carauction_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
@@ -443,11 +459,15 @@ function PartSaleBuild(data) {
 
     htmltext += '<div class="panel" id="partsale' + data.partsale_id + '">';
     htmltext += '  <div class="panel-body">';
+    htmltext += '    <div class="col-md-12">';
+    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+    htmltext += '       <hr style="padding:5px;margin:0">';
+    htmltext += '    </div>';
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="partimage' + data.part_id + '"></img>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
-    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.name + '</span> ' + data.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label>&nbsp;<span style="font-size:20px">K' + formatCurrency(data.price) + '</span></p>';
+    htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.name + '</span> ' + data.serialnumber + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">sale</label><span class="pull-right"><span style="font-size:20px">K' + formatCurrency(data.price) + '</span></span></p>';
     htmltext += '        <p id="partsale_created_at' + data.partsale_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>' + data.descript + '</p>';
     htmltext += '        <p>Location: ' + data.physicallocation + '</p>';
@@ -1635,6 +1655,83 @@ function markNotificationAsRead(notiID) {
         }
     });
 }
+
+
+// ------------------- Message Functions ------------------ //
+
+
+function getUserMessages(userID) {
+    friendUserID = userID;
+
+    $.ajax({
+        url: base_url + "/user/getusermessages",
+        type: "GET",
+        data: { 
+            'user_id': friendUserID
+        },
+        success: function(data) {
+            var alertClass = '';
+            var pullClass = '';
+            var htmltext = '';
+
+            if (data.success == true) {
+                for (var i = 0; i < data.messages.length; i++) {
+                    if (data.messages[i].user_id_sending == user_id) {
+                        alertClass = 'alert alert-success';
+                        pullClass = 'pull-right';
+                    } else {
+                        alertClass = 'alert alert-info';
+                        pullClass = 'pull-left';
+                    }
+
+                    htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                    htmltext += data.messages[i].message;
+                    htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
+
+                    timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
+                }
+
+                $('#usermessages').append(htmltext);
+
+                updateTimestamps();
+
+                $('#message_input').show();
+            }
+        }
+    });
+}
+
+function sendMessage() {
+    $.ajax({
+        url: base_url + "/user/sendmessage",
+        type: "POST",
+        data: { 
+            'user_id': friendUserID,
+            'message': $('.message_input').val()
+        },
+        success: function(data) {
+            console.log(data);
+            if (data.success == true) {
+                var htmltext = '';
+                alertClass = 'alert alert-success';
+                pullClass = 'pull-right';
+
+                htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                htmltext += $('.message_input').val();
+                htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.message.id + '"></span></div>';
+
+                timeArray.push(['messagetime' + data.message.id, data.message.created_at]);
+
+                $('#usermessages').append(htmltext);
+
+                updateTimestamps();
+
+                $('.message_input').val('');
+            }
+        }
+    });
+}
+
 
 
 // ------------------- Post Functions ------------------ //

@@ -24,7 +24,7 @@ class CarTenderTenderAddedNotification extends Notification
     public function __construct()
     {
         $this->cartendertender = $cartendertender;
-        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/tender/' . $this->cartendertender->cartender->id);
+        $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/cartender/' . $this->cartendertender->cartender->id);
         $this->message = $this->cartendertender->user->name . ' placed a tender.';
     }
 

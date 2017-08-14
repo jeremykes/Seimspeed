@@ -82,6 +82,8 @@ Route::get('/getpartcounts', 'FrameworkController@getpartcounts');
 Route::get('/getcarimages', 'FrameworkController@getcarimages');
 Route::get('/getpartimages', 'FrameworkController@getpartimages');
 
+Route::get('/getcorpnewsfeed', 'FrameworkController@getcorpnewsfeed');
+
 /*
 |--------------------------------------------------------------------------
 | Misc Routes
@@ -107,7 +109,11 @@ Route::group(['middleware' => ['auth']], function() {
 	| View Routes
 	|--------------------------------------------------------------------------
 	*/	
-	Route::post('/user/{user}', 'UserController@user');
+	Route::get('/user/', 'UserController@user');
+	Route::get('/user/settings', 'UserController@usersettings');
+	Route::get('/user/settings/edit', 'UserController@usersettingsedit');
+	// Route::get('/user/{user}/addcorporate', 'UserController@useraddcorporate');
+
 
 
 	/*
@@ -143,8 +149,9 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/auth/reportpart', 'FrameworkController@reportpart');
 	Route::post('/auth/addcorporate', 'FrameworkController@addcorporate');
 
-	Route::get('/auth/getnotifications', 'FrameworkController@getnotifications');
+	Route::post('/user/sendmessage', 'FrameworkController@sendmessage');
 
+	Route::post('/user/settings/edit/save', 'UserController@usersettingseditsave');
 	/*
 	|--------------------------------------------------------------------------
 	| Misc Routes
@@ -165,6 +172,8 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/auth/hascorpuserrole', 'FrameworkController@hascorpuserrole');
 	Route::get('/auth/istailingcar', 'FrameworkController@istailingcar');
 	Route::get('/auth/istailingpart', 'FrameworkController@istailingpart');
+	Route::get('/auth/getnotifications', 'FrameworkController@getnotifications');
+	Route::get('/user/getusermessages', 'FrameworkController@getusermessages');
 
 	// Notifications
 	Route::get('/auth/marknotificationasread/{id}', 'FrameworkController@marknotificationasread');
@@ -189,10 +198,16 @@ Route::group(['middleware' => ['auth']], function() {
 		| View Routes
 		|--------------------------------------------------------------------------
 		*/	
-		Route::get('/corporate/{corporate}/dashboard', 'FrameworkController@corporatedashboard'); // dashboard
-		Route::get('/corporate/{corporate}/members', 'FrameworkController@corporatemembers'); // members
-		Route::get('/corporate/{corporate}/settings', 'FrameworkController@corporatesettings'); // settings
+		Route::get('/corporate/{corporate}/dashboard', 'FrameworkController@corporatedashboard'); 
+		Route::get('/corporate/{corporate}/store', 'FrameworkController@corporatestore'); 
+		Route::get('/corporate/{corporate}/members', 'FrameworkController@corporatemembers'); 
+		Route::get('/corporate/{corporate}/settings', 'FrameworkController@corporatesettings');
 
+		Route::get('/corporate/{corporate}/corpuser/car/{car}/carauction/{carauction}/{id?}', 'FrameworkController@corporatecarauction');	
+		Route::get('/corporate/{corporate}/corpuser/car/{car}/carrent/{carrent}/{id?}', 'FrameworkController@corporatecarrent'); 			
+		Route::get('/corporate/{corporate}/corpuser/car/{car}/carsale/{carsale}/{id?}', 'FrameworkController@corporatecarsale'); 	
+		Route::get('/corporate/{corporate}/corpuser/car/{car}/cartender/{cartender}/{id?}', 'FrameworkController@corporatecartender');
+		Route::get('/corporate/{corporate}/corpuser/part/{part}/partsale/{partsale}/{id?}', 'FrameworkController@corporatepartsale');
 
 		/*
 		|--------------------------------------------------------------------------

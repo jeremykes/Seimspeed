@@ -24,7 +24,7 @@ class CarTenderReservedNotification extends Notification
     public function __construct(Cartender $cartender)
     {
         $this->cartender = $cartender;
-        $this->url = url('/corporate/' . $this->cartender->corporate->id . '/car/' . $this->cartender->car->id . '/tender/' . $this->cartender->id);
+        $this->url = url('/corporate/' . $this->cartender->corporate->id . '/car/' . $this->cartender->car->id . '/cartender/' . $this->cartender->id);
         $this->message = 'This car has been reserved pending payment. Please keep following this car as buyers may drop out.';
     }
 

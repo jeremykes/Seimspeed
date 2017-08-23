@@ -14,6 +14,8 @@ use App\Part;
 use App\Partimage;
 use App\Partgroup;
 
+use App\User;
+
 use Auth;
 
 class CorporateController extends Controller
@@ -101,8 +103,39 @@ class CorporateController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function addcorporateuser(Request $request, Corporate $corporate, User $user, $title)
+    public function addcorporateuser(Request $request, Corporate $corporate)
     {
+        $this->validate($request, [
+            'email' => 'required',
+        ]);
+
+        if ($user = User::where('email', $request->email)->count() == 0) {
+            return response()->json(['success'=>false, 'message'=>'User does not exist in the system. Please check your spelling for the email.']);
+        } 
+
+        $user = User::where('email', $request->email)->get();
+
+        $user->detachRoles($user->roles);
+
+        # administrator role ID     = 1
+        # maintainer role ID        = 2
+        # sales role ID             = 3
+        # manager role ID           = 4
+
+        if ($request->role_administrator == 'on') {
+            $user->attachRole(1);
+        }
+        if ($request->role_maintainer == 'on') {
+            $user->attachRole(2);
+        }
+        if ($request->role_sales == 'on') {
+            $user->attachRole(3);
+        }
+        if ($request->role_manager == 'on') {
+            $user->attachRole(4);
+        }
+        $user->save();
+
         $corporateuser = new Corporateuser;
         $corporateuser->corporate_id = $corporate->id;
         $corporateuser->user_id = $user->id;
@@ -125,8 +158,34 @@ class CorporateController extends Controller
      */
     public function updatecorporateuser(Request $request, Corporate $corporate, Corporateuser $corporateuser)
     {
+        $this->validate($request, [
+            'email' => 'required',
+        ]);
+
         $corporateuser->title = $title;
         $corporateuser->save();
+
+        $user = $corporateuser->user;
+        $user->detachRoles($user->roles);
+
+        # administrator role ID     = 1
+        # maintainer role ID        = 2
+        # sales role ID             = 3
+        # manager role ID           = 4
+
+        if ($request->role_administrator == 'on') {
+            $user->attachRole(1);
+        }
+        if ($request->role_maintainer == 'on') {
+            $user->attachRole(2);
+        }
+        if ($request->role_sales == 'on') {
+            $user->attachRole(3);
+        }
+        if ($request->role_manager == 'on') {
+            $user->attachRole(4);
+        }
+        $user->save();
 
         // Notification
         // Notify user being updated
@@ -142,10 +201,14 @@ class CorporateController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function deletecorporateuser(Request $request, Corporate $corporate, Corporateuser $corporateuser)
+    public function deletecorporateuser(Request $request, Corporate $corporate)
     {
-        $corporateuser->delete();
+        $this->validate($request, [
+            'corporateuser_id' => 'required|numeric',
+        ]);
 
+        $corporateuser = Corporateuser::findOrFail($request->corporateuser_id);
+        $corporateuser->delete();
 
         return response()->json(['success'=>true]);
     }

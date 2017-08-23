@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use Auth;
-use Carbon;
-use DB;
 use Notification;
+use DB;
 use Illuminate\Notifications\DatabaseNotification;
+use Carbon;
 
 use App\User;
 use App\Message;
@@ -34,6 +34,7 @@ use App\Carauctionpurchase;
 use App\Partsalepurchase;
 
 use App\Corporate;
+use App\Corporateuser;
 use App\Car;
 use App\Carcomment;
 use App\Cartail;
@@ -42,6 +43,8 @@ use App\Part;
 use App\Partcomment;
 use App\Parttail;
 use App\Partimage;
+
+use App\Carmakemodel;
 
 use App\Carsaleoffer;
 use App\Carrentoffer;
@@ -77,15 +80,6 @@ class FrameworkController extends Controller
             'corporatemembers',
             'corporatesettings',
         ]]);
-    }
-
-    public function test()
-    {
-        // return view('home'); 
-        $user = User::find(1);
-        $carsaleoffer = Carsaleoffer::where('user_id', $user->id)->first();
-
-        Notification::send($user, new CarSaleOfferReservedNotification($carsaleoffer));
     }
 
     // ===================================================================================
@@ -347,8 +341,11 @@ class FrameworkController extends Controller
      */
     public function corporatemembers(Corporate $corporate)
     {
+        $corporateusers = Corporateuser::where('corporate_id', $corporate->id)->get();
+
         return view('corp.members', [
             'corporate' => $corporate,
+            'corporateusers' => $corporateusers,
         ]); 
     }
 
@@ -510,6 +507,31 @@ class FrameworkController extends Controller
             'partsale' => $partsale,
             'corporate' => $corporate,
             'partsalereserves' => $partsalereserves,
+        ]); 
+    }
+
+    /**
+     * Show to the Members Add Form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addcorporateuserform(Corporate $corporate)
+    {
+        return view('corp.user.createcorporateuser', [
+            'corporate' => $corporate,
+        ]); 
+    }
+
+    /**
+     * Show to the Members Update Form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updatecorporateuserform(Corporate $corporate, Corporateuser $corporateuser)
+    {
+        return view('corp.user.corporateuseredit', [
+            'corporate' => $corporate,
+            'corporateuser' => $corporateuser,
         ]); 
     }
 
@@ -836,6 +858,7 @@ class FrameworkController extends Controller
         $carsaleoffers = DB::table('carsaleoffers')
                     ->leftJoin('users', 'users.id', '=', 'carsaleoffers.user_id')
                     ->select('carsaleoffers.*', 'users.propic', 'users.name')
+                    ->where('carsaleoffers.carsale_id', $request->carsale_id)
                     ->get();
 
         return response()->json(['success'=>true, 'carsaleoffers'=>$carsaleoffers]);
@@ -855,6 +878,7 @@ class FrameworkController extends Controller
         $carrentoffers = DB::table('carrentoffers')
                     ->leftJoin('users', 'users.id', '=', 'carrentoffers.user_id')
                     ->select('carrentoffers.*', 'users.propic', 'users.name')
+                    ->where('carrentoffers.carrent_id', $request->carrent_id)
                     ->get();
 
         return response()->json(['success'=>true, 'carrentoffers'=>$carrentoffers]);
@@ -874,6 +898,7 @@ class FrameworkController extends Controller
         $cartendertenders = DB::table('cartendertenders')
                     ->leftJoin('users', 'users.id', '=', 'cartendertenders.user_id')
                     ->select('cartendertenders.*', 'users.propic', 'users.name')
+                    ->where('cartendertenders.cartender_id', $request->cartender_id)
                     ->get();
 
         return response()->json(['success'=>true, 'cartendertenders'=>$cartendertenders]);
@@ -893,6 +918,7 @@ class FrameworkController extends Controller
         $carauctionbids = DB::table('carauctionbids')
                     ->leftJoin('users', 'users.id', '=', 'carauctionbids.user_id')
                     ->select('carauctionbids.*', 'users.propic', 'users.name')
+                    ->where('carauctionbids.carauction_id', $request->carauction_id)
                     ->get();
 
         return response()->json(['success'=>true, 'carauctionbids'=>$carauctionbids]);
@@ -912,6 +938,7 @@ class FrameworkController extends Controller
         $partsaleoffers = DB::table('partsaleoffers')
                     ->leftJoin('users', 'users.id', '=', 'partsaleoffers.user_id')
                     ->select('partsaleoffers.*', 'users.propic', 'users.name')
+                    ->where('partsaleoffers.partsale_id', $request->partsale_id)
                     ->get();
 
         return response()->json(['success'=>true, 'partsaleoffers'=>$partsaleoffers]);
@@ -932,6 +959,7 @@ class FrameworkController extends Controller
                     ->leftJoin('users', 'users.id', '=', 'carcomments.user_id')
                     ->select('carcomments.*', 'users.propic', 'users.name')
                     ->orderBy('carcomments.created_at', 'asc')
+                    ->where('carcomments.car_id', $request->car_id)
                     ->get();
 
         return response()->json(['success'=>true, 'carcomments'=>$carcomments]);
@@ -951,6 +979,7 @@ class FrameworkController extends Controller
         $partcomments = DB::table('partcomments')
                     ->leftJoin('users', 'users.id', '=', 'partcomments.user_id')
                     ->select('partcomments.*', 'users.propic', 'users.name')
+                    ->where('partcomments.part_id', $request->part_id)
                     ->get();
 
         return response()->json(['success'=>true, 'partcomments'=>$partcomments]);
@@ -970,6 +999,7 @@ class FrameworkController extends Controller
         $cartails = DB::table('cartails')
                     ->leftJoin('users', 'users.id', '=', 'cartails.user_id')
                     ->select('cartails.*', 'users.propic', 'users.name')
+                    ->where('cartails.car_id', $request->car_id)
                     ->get();
 
         return response()->json(['success'=>true, 'cartails'=>$cartails]);
@@ -989,6 +1019,7 @@ class FrameworkController extends Controller
         $cartails = DB::table('parttails')
                     ->leftJoin('users', 'users.id', '=', 'parttails.user_id')
                     ->select('parttails.*', 'users.propic', 'users.name')
+                    ->where('parttails.part_id', $request->part_id)
                     ->get();
 
         return response()->json(['success'=>true, 'parttails'=>$parttails]);
@@ -1057,6 +1088,49 @@ class FrameworkController extends Controller
             ])->orderBy('created_at')->get();
 
         return response()->json(['success'=>true,'messages'=>$messages]);
+    }
+
+
+    /**
+     * Get user and all their messages
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getusermessagesanduser(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|integer',
+        ]);
+
+        $user = Auth::user();
+
+        $messages = Message::where([
+                ['user_id_receiving', $user->id],
+                ['user_id_sending', $request->user_id],
+            ])->orWhere([
+                ['user_id_receiving', $request->user_id],
+                ['user_id_sending', $user->id],
+            ])->orderBy('created_at')->get();
+
+        return response()->json(['success'=>true,'messages'=>$messages, 'user'=>$user]);
+    }
+
+    /**
+     * Get new users to message
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getnewusers(Request $request)
+    {
+        $this->validate($request, [
+            'partial' => 'required',
+        ]);
+
+        $users = User::where('name', 'like', '%' . $request->partial . '%')->orWhere('email', 'like', '%' . $request->partial . '%')->get();
+
+        return response()->json(['success'=>true, 'users'=>$users]);
     }
 
 

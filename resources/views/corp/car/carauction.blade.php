@@ -28,10 +28,10 @@
         CarAuctionBidReservePurchasedBuildTrade(data.carauction[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserved', function(data) {
-        CarAuctionBidReservedBuildTrade(data.carauctionbid[0]);
+        CarAuctionBidReservedBuildTrade(data.carauctionreserve);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionBidReserveCancelled', function(data) {
-        CarAuctionBidReserveCancelledBuildTrade(data.carauctionbid[0]);
+        CarAuctionBidReserveCancelledBuildTrade(data);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
         CarCommentAddedBuildTrade(data.carcomment[0]);
@@ -40,7 +40,7 @@
         CarAuctionBidAddedBuildTrade(data.carauctionbid[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionBidCancelled', function(data) {
-        CarAuctionBidCancelledBuildTrade(data.carauctionbid[0]);
+        CarAuctionBidCancelledBuildTrade(data.carauctionbid);
     }); 
 
 </script>

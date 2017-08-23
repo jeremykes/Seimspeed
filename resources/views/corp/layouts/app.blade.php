@@ -135,12 +135,53 @@
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
+                                <li><a href="{{ url('/user/') }}">My profile</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
+        <!-- Status alert modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="statusModal">
+            <div class="modal-dialog model-sm" role="document" style="top:40%">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:0;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="statusModalBody" style="text-align:center"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="messageModal">
+            <div class="modal-dialog model-lg" role="document">
+                <div class="modal-content col-md-12">
+                    <div class="modal-header" style="padding:0;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12" id="user-info"></div>
+                        <div class="col-md-12" id="usermessages" style="height:450px;min-height:450px;overflow:scroll;padding-bottom:100px;">
+                          
+                        </div>
+                        <div class="col-md-12" id="message_input" style="display:none">
+                            <div class="bottom_wrapper">
+                                <div class="message_input_wrapper">
+                                    <input class="message_input" placeholder="Type..." />
+                                </div>
+                                <div class="send_message" onclick="sendMessage()">
+                                    <div class="icon"></div>
+                                    <div class="text">Send</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="container">
             

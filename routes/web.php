@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/test', 'FrameworkController@test'); // home
+// Route::get('/test', 'FrameworkController@test'); // home
 
 // ===================================================================================
 // 
@@ -174,6 +174,8 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::get('/auth/istailingpart', 'FrameworkController@istailingpart');
 	Route::get('/auth/getnotifications', 'FrameworkController@getnotifications');
 	Route::get('/user/getusermessages', 'FrameworkController@getusermessages');
+	Route::get('/user/getnewusers', 'FrameworkController@getnewusers');
+	Route::get('/user/getusermessagesanduser', 'FrameworkController@getusermessagesanduser');
 
 	// Notifications
 	Route::get('/auth/marknotificationasread/{id}', 'FrameworkController@marknotificationasread');
@@ -250,6 +252,16 @@ Route::group(['middleware' => ['auth']], function() {
 			// carrentedit				
 			// carsaleedit				
 			// cartenderedit	
+			Route::get('/corporate/{corporate}/corpuser/sales/car/addsaleform', 'CarController@addsaleform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/updatesaleform/{carsale}', 'CarController@updatesaleform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/addrentform', 'CarController@addrentform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/updaterentform/{carrent}', 'CarController@updaterentform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/addtenderform', 'CarController@addtenderform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/updatetenderform/{cartender}', 'CarController@updatetenderform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/addauctionform', 'CarController@addauctionform');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/updateauctionform/{carauction}', 'CarController@updateauctionform');
+			Route::get('/corporate/{corporate}/corpuser/sales/part/addsaleform', 'PartController@addsaleform');
+			Route::get('/corporate/{corporate}/corpuser/sales/part/updatesaleform/{partsale}', 'PartController@updatesaleform');
 
 			/*
 			|--------------------------------------------------------------------------
@@ -296,14 +308,18 @@ Route::group(['middleware' => ['auth']], function() {
 			Route::post('/corporate/{corporate}/corpuser/sales/part/saleofferreserve', 'PartController@saleofferreserve');
 			Route::post('/corporate/{corporate}/corpuser/sales/part/saleofferreservecancel', 'PartController@saleofferreservecancel');
 			Route::post('/corporate/{corporate}/corpuser/sales/part/purchasesale', 'PartController@purchasesale');
+			
 			/*
 			|--------------------------------------------------------------------------
 			| Misc Routes
 			|--------------------------------------------------------------------------
 			*/
+			Route::post('/corporate/{corporate}/corpuser/loadcarmodels', 'CarController@loadcarmodels');
+			Route::post('/corporate/{corporate}/corpuser/sales/car/caruploadtempimage', 'CarController@caruploadtempimage');
+			Route::post('/corporate/{corporate}/corpuser/sales/car/cardeletetempimage', 'CarController@cardeletetempimage');
 
 
-		}); // End of middleware 'role:sales:administrator'
+		}); // End of middleware 'role:sales:maintainer:administrator'
 
 
 		Route::group(['middleware' => ['role:maintainer|administrator']], function() {
@@ -327,6 +343,8 @@ Route::group(['middleware' => ['auth']], function() {
 			*/	
 			// createcar 
 			// createpart 
+			Route::get('/corporate/{corporate}/corpuser/maintainer/addcorporateuserform', 'FrameworkController@addcorporateuserform');
+			Route::get('/corporate/{corporate}/corpuser/maintainer/updatecorporateuserform/{corporateuser}', 'FrameworkController@updatecorporateuserform');
 
 
 
@@ -336,10 +354,10 @@ Route::group(['middleware' => ['auth']], function() {
 			|--------------------------------------------------------------------------
 			*/	
 			Route::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuser', 'CorporateController@addcorporateuser');
-			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuser', 'CorporateController@updatecorporateuser');
+			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuser/{corporateuser}', 'CorporateController@updatecorporateuser');
 			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecorporateuser', 'CorporateController@deletecorporateuser');
-			Route::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuserrole', 'CorporateController@addcorporateuserrole');
-			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuserrole', 'CorporateController@updatecorporateuserrole');
+			// Route::post('/corporate/{corporate}/corpuser/maintainer/addcorporateuserrole', 'CorporateController@addcorporateuserrole');
+			// Route::post('/corporate/{corporate}/corpuser/maintainer/updatecorporateuserrole', 'CorporateController@updatecorporateuserrole');
 			Route::post('/corporate/{corporate}/corpuser/maintainer/addcar', 'CorporateController@addcar');
 			Route::post('/corporate/{corporate}/corpuser/maintainer/updatecar', 'CorporateController@updatecar');
 			Route::post('/corporate/{corporate}/corpuser/maintainer/deletecar', 'CorporateController@deletecar');

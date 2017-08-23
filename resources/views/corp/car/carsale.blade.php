@@ -28,10 +28,10 @@
         CarSaleOfferReservePurchasedBuildTrade(data.carsale[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserved', function(data) {
-        CarSaleOfferReservedBuildTrade(data.carsaleoffer[0]);
+        CarSaleOfferReservedBuildTrade(data.carsalereserve);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarSaleOfferReserveCancelled', function(data) {
-        CarSaleOfferReserveCancelledBuildTrade(data.carsaleoffer[0]);
+        CarSaleOfferReserveCancelledBuildTrade(data);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
         CarCommentAddedBuildTrade(data.carcomment[0]);
@@ -186,19 +186,19 @@
             Reserved offers are deleted automatically after {{ $carsale->salereserveholddays }} days.
             <br><br>
             
-            <ul class="list-group">
+            <ul class="list-group" id="reserved-list">
 
                 @foreach($carsalereserves as $carsalereserve)
 
-                    <li class="list-group-item">
+                    <li class="list-group-item" id="carsaleofferreserve{{ $carsalereserve->id }}">
                         <p>
                             {{ $carsalereserve->carsaleoffer->user->name }}, 
                             <strong>K{{ number_format($carsalereserve->carsaleoffer->offer, 2) }}</strong>&nbsp;&nbsp;&nbsp;
                             <span style="font-size:9px;color:gray">{{ $carsalereserve->created_at->diffForHumans() }}</span>
                             <span class="pull-right">
-                                <button class="btn btn-xs btn-success" onclick="purchaseReserveCarSaleOffer({{ $carsalereserve->id }})"><i class="fa fa-money"></i></button> 
-                                <button class="btn btn-xs btn-info" onclick="#"><i class="fa fa-envelope"></i></button> 
-                                <button class="btn btn-xs btn-warning" onclick="cancelReserveCarSaleOffer({{ $carsalereserve->carsaleoffer->id }})"><i class="fa fa-trash"></i></button>
+                               <button class="btn btn-xs btn-success" onclick="confirmMe('Are you sure the customer has made payments for this reserved offer?', 'purchaseReserveCarSaleOffer({{ $carsalereserve->id }})', 'success')"><i class="fa fa-money"></i></button>
+                                <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser({{ $carsalereserve->carsaleoffer->user->id }})"><i class="fa fa-envelope"></i></button> 
+                                <button class="btn btn-xs btn-warning" onclick="confirmMe('Are you sure you want to cancel this reserved offer?', 'cancelReserveCarSaleOffer({{ $carsalereserve->carsaleoffer->id }})', 'danger')"><i class="fa fa-trash"></i></button>
                             </span>
                         </p>
                     </li>

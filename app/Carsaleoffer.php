@@ -35,7 +35,7 @@ class Carsaleoffer extends Model
 	/**
     * Get the reserved record to this offer.
     */
-    public function reserve()
+    public function carsalereserve()
     {
         return $this->hasOne('App\Carsalereserve');
     }

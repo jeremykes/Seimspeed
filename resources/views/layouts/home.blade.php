@@ -168,6 +168,7 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    <li><a href="{{ url('/user/') }}">My profile</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -203,7 +204,7 @@
 
                 <div class="col-md-12">
                     <!-- All trades newsfeed here -->
-
+                    
                     @yield('content')
                 
                 </div>

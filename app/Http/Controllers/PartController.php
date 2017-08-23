@@ -13,6 +13,8 @@ use App\Partsale;
 use App\Partsaleoffer;
 use App\Partsalereserve;
 
+use App\Partimage;
+
 // Notifications
 use App\Notifications\PartSaleOpenedNotification;
 use App\Notifications\PartSaleUpdatedNotification;
@@ -26,6 +28,7 @@ use App\Notifications\PartSalePurchasedNotification;
 use App\Events\PartSaleAdded;
 use App\Events\PartSaleClosed;
 use App\Events\PartSaleOfferReserved;
+use App\Events\PartSaleOfferReservedCancelled;
 use App\Events\PartSaleOfferReservePurchased;
 
 class PartController extends Controller
@@ -44,6 +47,131 @@ class PartController extends Controller
         $this->middleware('role:sales|administrator'); 
         
     }
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Part Images
+    // 
+    // 
+    // =================================================================================== 
+
+    /**
+     * Upload part temporary image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function partuploadtempimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'file' => 'required|image'
+        ]);
+
+        $path = $request->file('file')->store('partimages');
+
+        $imageName = $request->file->hashName();
+        $image_url = $path;
+
+        $session_key_tail = 'part_image_url';
+
+        if ($request->session()->has('part_image_upload_count')) {
+            $part_image_upload_count = (int)$request->session()->get('part_image_upload_count');
+        } else {
+            $part_image_upload_count = 0;
+        }
+
+        $part_image_upload_count++;
+        $session_key = $part_image_upload_count.$session_key_tail;
+
+        $request->session()->put($session_key, $image_url);
+        $request->session()->put('part_image_upload_count', $part_image_upload_count);
+
+        return response()->json(
+            ['img_url' => $image_url, 'filename' => $imageName, 'img_count' => $part_image_upload_count]
+        );
+    }
+
+    /**
+     * Delete part temp image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function partdeletetempimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'serverfilename' => 'required',
+            'serverfileurl' => 'required',
+            'serverfilecount' => 'required',
+        ]);
+
+        $success = true;
+        $message = 'File successfully deleted.';
+
+        if ($request->session()->has('part_image_upload_count') && $request->session()->has($request->serverfilecount.'part_image_url')) {
+            if (Storage::exists($request->serverfileurl)) {
+                Storage::delete($request->serverfileurl);
+
+                $request->session()->forget($request->serverfilecount.'part_image_url');
+                $part_image_count = (int)$request->session()->get('part_image_upload_count');
+                $part_image_count--;
+                $request->session()->put('part_image_upload_count', $part_image_count);
+            } else {
+                $success = false;
+                $message = 'File doesn\'t exist buddy.';
+            }
+        } else {
+            $success = false;
+            $message = 'Oops, looks like there were some errors. Refresh the page and try again.';
+        }
+
+
+        return response()->json(
+            ['success' => $success , 'message' => $message]
+        );
+    }
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Views
+    // 
+    // 
+    // =================================================================================== 
+
+    /**
+     * Show to the create partsale form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addsaleform(Corporate $corporate)
+    {
+        return view('corp.part.createpartsale', [
+            'corporate' => $corporate,
+        ]); 
+    }
+
+    /**
+     * Show to the update Partsale form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updatesaleform(Request $request, Corporate $corporate, Partsale $partsale)
+    {
+        // This is the check for Corp part. Move this out to Traits later.
+        if ($partsale->corporate->id != $corporate->id) {
+            return redirect()->back();
+        }
+
+        return view('corp.part.partsaleedit', [
+            'corporate' => $corporate,
+            'partsale' => $partsale,
+        ]); 
+    }
+
 
     // ===================================================================================
     // 
@@ -66,33 +194,66 @@ class PartController extends Controller
             'price' => 'required|numeric',
         ]);
 
-        $part = Part::findOrFail($request->part_id);
+        if ($request->car_id != "0" || $request->car_id != 0) {
+            $part = Part::findOrFail($request->part_id);
 
-        // This is the check for Corp part. Move this out to Traits later.
-        if ($part->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
-        }
+            // This is the check for Corp part. Move this out to Traits later.
+            if ($part->corporate->id != $corporate->id) {
+                return response()->json(['success'=>false]);
+            }
 
-        $partsale = new Partsale;
-        $partsale->corporate_id = $corporate->id;
-        $partsale->part_id = $part->id;
-        if ($request->partgroup_id) {
-            $partsale->partgroup_id = $request->partgroup_id;
-        }
-        $partsale->price = $request->price;
-        if ($request->startdate) {
-            $partsale->start_date = $request->start_date;
-        }
-        if ($request->salereserveholddays) {
-            $partsale->salereserveholddays = $request->salereserveholddays;
+            $partsale = new Partsale;
+            $partsale->corporate_id = $corporate->id;
+            $partsale->part_id = $part->id;
+            if ($request->partgroup_id) {
+                $partsale->partgroup_id = $request->partgroup_id;
+            }
+            $partsale->price = $request->price;
+            if ($request->startdate) {
+                $partsale->start_date = $request->start_date;
+            }
+            if ($request->salereserveholddays) {
+                $partsale->salereserveholddays = $request->salereserveholddays;
+            } else {
+                $partsale->salereserveholddays = 3;
+            }
+            $partsale->negotiable = $request->negotiable;
+            $partsale->status = 'opened';
+            $partsale->note = $request->note;
+
+            $partsale->save();
         } else {
-            $partsale->salereserveholddays = 3;
-        }
-        $partsale->negotiable = $request->negotiable;
-        $partsale->status = $request->status;
-        $partsale->note = $request->note;
+            $part = new Part;
+            $part->corporate_id = $corporate->id;
+            $part->published = 1;
+            $part->name = $request->name;
+            $part->serialnumber = $request->serialnumber;
+            $part->descript = $request->descript;
+            $part->status = "opened";
+            $part->physicallocation = $request->physicallocation;
+            $part->note = $request->note;
+            $part->save();
 
-        $partsale->save();
+            $partsale = new Partsale;
+            $partsale->corporate_id = $corporate->id;
+            $partsale->part_id = $part->id;
+            if ($request->partgroup_id) {
+                $partsale->partgroup_id = $request->partgroup_id;
+            }
+            $partsale->price = $request->price;
+            if ($request->startdate) {
+                $partsale->start_date = $request->start_date;
+            }
+            if ($request->salereserveholddays) {
+                $partsale->salereserveholddays = $request->salereserveholddays;
+            } else {
+                $partsale->salereserveholddays = 3;
+            }
+            $partsale->negotiable = $request->negotiable;
+            $partsale->status = 'opened';
+            $partsale->note = $request->note;
+            $partsale->save();
+        }
 
         // Notification (if partsale status == open)
         // Notify all users following corp
@@ -135,15 +296,20 @@ class PartController extends Controller
             return response()->json(['success'=>false]);
         }
 
-        $this->validate($request, [
-            'price' => 'required|numeric',
-        ]);
+        $part->corporate_id = $corporate->id;
+        $part->published = 1;
+        $part->name = $request->name;
+        $part->serialnumber = $request->serialnumber;
+        $part->descript = $request->descript;
+        $part->status = "opened";
+        $part->physicallocation = $request->physicallocation;
+        $part->note = $request->note;
+        $part->save();
 
-        $partsale->corporate_id = $corporate->id;
         $partsale->part_id = $part->id;
-        if ($request->partgroup_id) {
-            $partsale->partgroup_id = $request->partgroup_id;
-        }
+        // if ($request->partgroup_id) {
+        //     $partsale->partgroup_id = $request->partgroup_id;
+        // }
         $partsale->price = $request->price;
         if ($request->startdate) {
             $partsale->start_date = $request->start_date;
@@ -154,7 +320,7 @@ class PartController extends Controller
             $partsale->salereserveholddays = 3;
         }
         $partsale->negotiable = $request->negotiable;
-        $partsale->status = $request->status;
+        // $partsale->status = $request->status;
         $partsale->note = $request->note;
         $partsale->save();
 
@@ -262,7 +428,7 @@ class PartController extends Controller
         }
 
         // This is the check for partsale status. Move this out to Traits later.
-        if ($partsale->status != 'reserved' || $partsale->status != 'opened') {
+        if ($partsale->status != 'reserved' && $partsale->status != 'opened') {
             return response()->json(['success'=>false]);
         }
 
@@ -275,6 +441,8 @@ class PartController extends Controller
             $partsalereserve->partsaleoffer_id = $partsaleoffer->id;
             $partsalereserve->note = $request->note;
             $partsalereserve->save();
+        } else {
+            return response()->json(['success'=>false]);
         } 
         // That means we now have a total of 3 reserves, so set as reserved.
         if ($count == 2) {
@@ -297,10 +465,10 @@ class PartController extends Controller
         // Notification
         // Notify user being reserved
 
-        $partsaleoffer->$user->notify(new PartSaleOfferReservedNotification($partsaleoffer));
+        $partsaleoffer->user->notify(new PartSaleOfferReservedNotification($partsaleoffer));
 
         // Fire Part Sale Offer reserved event
-        event(new PartSaleOfferReserved($partsaleoffer));
+        event(new PartSaleOfferReserved($partsalereserve));
 
         return response()->json(['success'=>true]);
     }
@@ -327,10 +495,12 @@ class PartController extends Controller
         }
 
         // This is the check for partsale status. Move this out to Traits later.
-        if ($partsale->status != 'reserved' || $partsale->status != 'opened') {
+        if ($partsale->status != 'reserved' && $partsale->status != 'opened') {
             return response()->json(['success'=>false]);
         }
 
+        $partsalereserve = Partsalereserve::where('partsale_id', $partsale->id)->firstOrFail();
+        $partsalereserve_id = $partsalereserve->id;
         $partsalereserve->delete();
 
         $count = Partsalereserve::where('partsale_id', $partsale_id)->count();
@@ -355,10 +525,10 @@ class PartController extends Controller
         // Notification
         // Notify user whos reserved is cancelled
 
-        $partsaleoffer->$user->notify(new PartSaleOfferReserveCancelledNotification($partsaleoffer));
+        $partsaleoffer->user->notify(new PartSaleOfferReserveCancelledNotification($partsaleoffer));
 
         // Fire Part Sale Offer reserve cancelled event
-        event(new PartSaleOfferReserveCancelled($partsaleoffer));
+        event(new PartSaleOfferReserveCancelled($partsalereserve_id, $part->id));
 
         return response()->json(['success'=>true]);
     }
@@ -423,7 +593,7 @@ class PartController extends Controller
 
         Notification::send($users, new PartSalePurchasedNotification($partsaleoffer));
 
-        $partsaleoffer->$user->notify(new PartSaleOfferReservePurchasedNotification($partsaleoffer));
+        $partsaleoffer->user->notify(new PartSaleOfferReservePurchasedNotification($partsaleoffer));
 
         // Fire Part purchased event
         event(new PartSaleOfferReservePurchased($partsale));

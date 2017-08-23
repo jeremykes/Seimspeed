@@ -19,7 +19,7 @@ class Partsaleoffer extends Model
     /**
 	* Get the partsale that owns this offer.
 	*/
-	public function sale()
+	public function partsale()
 	{
 		return $this->BelongsTo('App\Partsale');
 	}
@@ -35,7 +35,7 @@ class Partsaleoffer extends Model
 	/**
     * Get the reserved record to this offer.
     */
-    public function reserve()
+    public function partsalereserve()
     {
         return $this->hasOne('App\Partsalereserve');
     }

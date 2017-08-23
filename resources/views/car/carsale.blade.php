@@ -61,7 +61,9 @@
                 @foreach ($carsale->car->images as $carimage)
 
                     <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->thumb_img_url }}">
-                      <a href="{{ $carimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $carimage->thumb_img_url }}"/></a>
+                        <a href="{{ $carimage->img_url }}" data-lightbox="image">
+                            <img class="img-responsive" src="{{ $carimage->thumb_img_url }}"/>
+                        </a>
                     </li>
 
                 @endforeach

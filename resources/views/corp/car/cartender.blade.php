@@ -28,10 +28,10 @@
         CarTenderTenderReservePurchasedBuildTrade(data.cartender[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderReserved', function(data) {
-        CarTenderTenderReservedBuildTrade(data.cartendertender[0]);
+        CarTenderTenderReservedBuildTrade(data.cartenderreserve);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderReserveCancelled', function(data) {
-        CarTenderTenderReserveCancelledBuildTrade(data.cartendertender[0]);
+        CarTenderTenderReserveCancelledBuildTrade(data);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
         CarCommentAddedBuildTrade(data.carcomment[0]);
@@ -40,7 +40,7 @@
         CarTenderTenderAddedBuildTrade(data.cartendertender[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderCancelled', function(data) {
-        CarTenderTenderCancelledBuildTrade(data.cartendertender[0])) 
+        CarTenderTenderCancelledBuildTrade(data.cartendertender)) 
     }); 
 </script>
 

@@ -10,22 +10,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\Carrentoffer;
-
 class CarRentOfferReserveCancelled implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $carrentoffer;
+    public $carrentreserve_id;
+    public $car_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Carrentoffer $carrentoffer)
+    public function __construct($carrentreserve_id, $car_id)
     {
-        $this->currentoffer = $carrentoffer;
+        $this->carrentreserve_id = $carrentreserve_id;
+        $this->car_id = $car_id;
     }
 
     /**
@@ -35,6 +35,6 @@ class CarRentOfferReserveCancelled implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.car.'.$this->carrentoffer->carrent->car->id);
+        return new Channel('public-channel.car.'.$this->car_id);
     }
 }

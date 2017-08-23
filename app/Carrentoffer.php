@@ -20,7 +20,7 @@ class Carrentoffer extends Model
     /**
 	* Get the carrent that owns this offer.
 	*/
-	public function rent()
+	public function carrent()
 	{
 		return $this->BelongsTo('App\Carrent');
 	}
@@ -36,7 +36,7 @@ class Carrentoffer extends Model
 	/**
     * Get the reserved record to this offer.
     */
-    public function reserve()
+    public function carrentreserve()
     {
         return $this->hasOne('App\Carrentreserve');
     }

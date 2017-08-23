@@ -555,7 +555,7 @@ function CarSaleOfferAddedBuildTrade(data) {
         htmltext += '                <span class="caret"></span>';
         htmltext += '            </a>';
         htmltext += '            <ul class="dropdown-menu" role="menu">';
-        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carsaleCancelMessage + '\', \'cancelCarSaleOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carsaleCancelMessage + '\', \'cancelCarSaleOffer(' + data.id + ')\', \'danger\')">cancel</a></li>';
         htmltext += '            </ul>';
         htmltext += '        </li>';
         htmltext += '    </ul>';
@@ -625,7 +625,7 @@ function CarRentOfferAddedBuildTrade(data) {
         htmltext += '                <span class="caret"></span>';
         htmltext += '            </a>';
         htmltext += '            <ul class="dropdown-menu" role="menu">';
-        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carrentCancelMessage + '\', \'cancelCarRentOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carrentCancelMessage + '\', \'cancelCarRentOffer(' + data.id + ')\', \'danger\')">cancel</a></li>';
         htmltext += '            </ul>';
         htmltext += '        </li>';
         htmltext += '    </ul>';
@@ -727,7 +727,7 @@ function CarAuctionBidAddedBuildTrade(data) {
         htmltext += '                <span class="caret"></span>';
         htmltext += '            </a>';
         htmltext += '            <ul class="dropdown-menu" role="menu">';
-        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carauctionCancelMessage + '\', \'cancelCarAuctionOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + carauctionCancelMessage + '\', \'cancelCarAuctionOffer(' + data.id + ')\', \'danger\')">cancel</a></li>';
         htmltext += '            </ul>';
         htmltext += '        </li>';
         htmltext += '    </ul>';
@@ -797,7 +797,7 @@ function PartSaleOfferAddedBuildTrade(data) {
         htmltext += '                <span class="caret"></span>';
         htmltext += '            </a>';
         htmltext += '            <ul class="dropdown-menu" role="menu">';
-        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + partsaleCancelMessage + '\', \'cancelPartSaleOffer(' + data.id + ')\')">cancel</a></li>';
+        htmltext += '                <li><a style="font-size:9px;color:red" href="javascript:void(0);" onclick="confirmMe(\'' + partsaleCancelMessage + '\', \'cancelPartSaleOffer(' + data.id + ')\', \'danger\')">cancel</a></li>';
         htmltext += '            </ul>';
         htmltext += '        </li>';
         htmltext += '    </ul>';
@@ -1701,6 +1701,52 @@ function getUserMessages(userID) {
     });
 }
 
+function getUserMessagesAndUser(userID) {
+    friendUserID = userID;
+
+    $('#messageModal').modal('show');
+
+    $.ajax({
+        url: base_url + "/user/getusermessagesanduser",
+        type: "GET",
+        data: { 
+            'user_id': friendUserID
+        },
+        success: function(data) {
+            var alertClass = '';
+            var pullClass = '';
+            var htmltext = '';
+
+            if (data.success == true) {
+
+                $('#user-info').html('<img src="' + data.user.propic + '" style="width:20px;height:20px"/> ' + data.user.name);
+
+                for (var i = 0; i < data.messages.length; i++) {
+                    if (data.messages[i].user_id_sending == user_id) {
+                        alertClass = 'alert alert-success';
+                        pullClass = 'pull-right';
+                    } else {
+                        alertClass = 'alert alert-info';
+                        pullClass = 'pull-left';
+                    }
+
+                    htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                    htmltext += data.messages[i].message;
+                    htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
+
+                    timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
+                }
+
+                $('#usermessages').append(htmltext);
+
+                updateTimestamps();
+
+                $('#message_input').show();
+            }
+        }
+    });
+}
+
 function sendMessage() {
     $.ajax({
         url: base_url + "/user/sendmessage",
@@ -1730,6 +1776,46 @@ function sendMessage() {
             }
         }
     });
+}
+
+
+function getNewUsers(partial) {
+    $.ajax({
+        url: base_url + "/user/getnewusers",
+        type: "GET",
+        data: { 
+            'partial': partial
+        },
+        success: function(data) {
+            var htmltext = '';
+
+            if (data.success == true) {
+                for (var i = 0; i < data.users.length; i++) {
+                    htmltext += '<a href="javascript:void(0);" onclick="addnewmessageuser(\'' + data.users[i].name + '\', ' + data.users[i].id + ', \'' + data.users[i].propic + '\')" class="list-group-item" data-dismiss="modal">';
+                    htmltext += '   <img src="' + data.users[i].propic + '" style="width:20px;height:20px"/> ';
+                    htmltext +=     data.users[i].name;
+                    htmltext += '   <span style="font-size:9px;color:gray">' + data.users[i].email + '</span>';
+                    htmltext += '</a>';
+                }
+
+                $('#newUserList').html(htmltext);
+            }
+        }
+    });
+}
+
+function addnewmessageuser(userName,userID,propic) {
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item">';
+    htmltext += '    <a href="javascript:void(0)" onclick="getUserMessages(' + userID + ')">';
+    htmltext += '        <img src="' + propic + '" style="width:20px;height:20px"> ' + userName;
+    htmltext += '    </a>';
+    htmltext += '</li>';
+
+    $('#userList').append(htmltext);
+
+    getUserMessages(userID);
 }
 
 
@@ -1995,6 +2081,28 @@ function formatCurrency(nStr) {
     return x1 + x2;
 }
 
+function loadCarModels(make,url) {
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            make: make,
+        },
+        dataType: 'json',
+        success: function(data) {
+            carmodels = data;
+            initCarModelAutocomplete();
+        }
+    });
+}
+
+function initCarModelAutocomplete() {
+    $(".carmodelautocomplete").autocomplete({
+        source: carmodels,
+        minLength: 2
+    });
+}
+
 
 // ------------------- Alert Messages Functions ------------------ //
 
@@ -2006,13 +2114,13 @@ function alertMe(message) {
     }, 5000);
 }
 
-function confirmMe(message, callback) {
+function confirmMe(message, callback, alert) {
     var htmltext = '';
 
     htmltext += '<p>' + message + '</p>';
     htmltext += '<p>';
     htmltext += '<button class="btn btn-dafault" data-dismiss="modal">No</button>&nbsp;&nbsp;&nbsp;';
-    htmltext += '<button class="btn btn-danger" onclick="' + callback + '">Yes</button>';
+    htmltext += '<button class="btn btn-' + alert + '" onclick="' + callback + '" data-dismiss="modal">Yes</button>';
     htmltext += '<p>';
 
     $('#statusModalBody').html(htmltext);

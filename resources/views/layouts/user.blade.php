@@ -135,6 +135,7 @@
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
+                                <li><a href="{{ url('/user/') }}">My profile</a></li>
                             </ul>
                         </li>
 
@@ -153,6 +154,29 @@
               <div class="modal-body" id="statusModalBody" style="text-align:center"></div>
             </div>
           </div>
+        </div>
+
+
+        <!-- New User Message modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="newusermessageModal">
+            <div class="modal-dialog model-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding:0;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="newusermessageModalBody">
+                        <p>Type a name...</p>
+                        <p>
+                            <input class="form-control" type="text" name="newuserpartial" id="newuserpartial">
+                        </p>
+                        <p>
+                            <ul class="list-group" id="newUserList">
+                                
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -237,6 +261,12 @@
         @endif
 
         var timeArray = [];
+
+        $('#newuserpartial').on('keyup', function() {
+            if (this.value.length > 3) {
+                getNewUsers(this.value);
+            }
+        });
     
     </script>
 

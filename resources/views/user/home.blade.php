@@ -17,10 +17,17 @@
 </div>
 
 <div class="col-md-12">
+    <button class="btn btn-default btn-xs" onclick="$('#newusermessageModal').modal('show')">New Message +</button>
+    <hr style="padding:5px;margin:5px">
+</div>
+
+
+
+<div class="col-md-12">
     <div class="col-md-4" style="padding-left:3px;padding-right:3px;">
         <div class="panel panel-default" style="height:500px;min-height:500px;overflow:scroll">
             <p style="padding-top:9px;padding-left:9px"><strong>People</strong></p>
-            <ul class="list-group">
+            <ul class="list-group" id="userList">
 
                 @foreach ($messages as $message)
 

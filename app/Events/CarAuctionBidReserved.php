@@ -10,22 +10,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\Carauctionbid;
+use App\Carauctionreserve;
 
 class CarAuctionBidReserved implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $carauctionbid;
+    public $carauctionreserve;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Carauctionbid $carauctionbid)
+    public function __construct(Carauctionreserve $carauctionreserve)
     {
-        $this->carauctionbid = $carauctionbid;
+        $this->carauctionreserve = $carauctionreserve;
     }
 
     /**
@@ -35,6 +35,6 @@ class CarAuctionBidReserved implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public-channel.car.'.$this->carauctionbid->carauction->car->id);
+        return new Channel('public-channel.car.'.$this->carauctionreserve->carauctionbid->carauction->car->id);
     }
 }

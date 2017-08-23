@@ -43,6 +43,16 @@
 
 	<div class="col-md-12"><br></div>
 
+	<div class="col-md-12">
+		<a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addsaleform') }}" class="btn btn-xs btn-primary">sell car</a>
+		<a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addrentform') }}" class="btn btn-xs btn-primary">rent car</a>
+		<a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addtenderform') }}" class="btn btn-xs btn-primary">tender car</a>
+		<a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addauctionform') }}" class="btn btn-xs btn-primary">auction car</a>
+		<a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/part/addsaleform') }}" class="btn btn-xs btn-primary">sell part</a>
+	</div>
+
+	<div class="col-md-12"><br></div>
+
 	<div class="col-md-12" style="padding-left:1px;padding-right:1px">
 		<div class="panel panel-danger">
 			<div class="panel-heading">
@@ -162,6 +172,7 @@
 									<td>K{{ number_format($carsale->price, 2) }}</td>
 									<td>{{ count($carsale->offers) }}</td>
 									<td>{{ $carsale->created_at->diffForHumans() }}</td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updatesaleform/' . $carsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $carsale->car->id . '/carsale/' . $carsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -175,6 +186,7 @@
 									<td>K{{ number_format($carrent->rateperday, 2) }}</td>
 									<td>{{ count($carrent->offers) }}</td>
 									<td>{{ $carrent->created_at->diffForHumans() }}</td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/rents/car/updaterentform/' . $carrent->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $carrent->car->id . '/carrent/' . $carrent->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -190,6 +202,7 @@
 									<td> - </td>
 									<td>{{ count($cartender->tenders) }}</td>
 									<td>{{ $cartender->created_at->diffForHumans() }}</td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/tenders/car/updatetenderform/' . $cartender->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $cartender->car->id . '/cartender/' . $cartender->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -203,6 +216,7 @@
 									<td> - </td>
 									<td>{{ count($carauction->bids) }}</td>
 									<td>{{ $carauction->created_at->diffForHumans() }}</td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/auctions/car/updateauctionform/' . $carauction->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $carauction->car->id . '/carauction/' . $carauction->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -216,6 +230,7 @@
 									<td>K{{ number_format($partsale->price, 2) }}</td>
 									<td>{{ count($partsale->offers) }}</td>
 									<td>{{ $partsale->created_at->diffForHumans() }}</td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/part/updatesaleform/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $partsale->part->id . '/partsale/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 

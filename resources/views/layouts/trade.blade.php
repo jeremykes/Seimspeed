@@ -144,6 +144,7 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    <li><a href="{{ url('/user/') }}">My profile</a></li>
                                 </ul>
                             </li>
                         @endif

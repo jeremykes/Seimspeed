@@ -43,6 +43,8 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\CarTenderClosed' => [],
         'App\Events\CarTenderTenderAdded' => [],
         'App\Events\CarTenderTenderCancelled' => [],
+        'App\Events\CarTenderTenderReserveCancelled' => [],
+        'App\Events\CarTenderTenderReserved' => [],
         'App\Events\CarTenderTenderReserveExpired' => [],
         'App\Events\CarTenderTenderReservePurchased ' => [],
         'App\Events\PartCommentAdded' => [],

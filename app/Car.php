@@ -19,7 +19,7 @@ class Car extends Model
         'color', 
         'fueltype', 
         'transmissiontype', 
-        '2wd4wd', 
+        'drivetype', 
         'steeringside', 
         'make' , 
         'model', 

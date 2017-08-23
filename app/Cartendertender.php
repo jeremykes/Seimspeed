@@ -19,7 +19,7 @@ class Cartendertender extends Model
     /**
 	* Get the cartender that owns this tender.
 	*/
-	public function tender()
+	public function cartender()
 	{
 		return $this->BelongsTo('App\Cartender');
 	}
@@ -35,7 +35,7 @@ class Cartendertender extends Model
 	/**
     * Get the reserved record to this tender.
     */
-    public function reserve()
+    public function cartenderreserve()
     {
         return $this->hasOne('App\Cartenderreserve');
     }

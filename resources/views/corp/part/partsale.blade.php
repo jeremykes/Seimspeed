@@ -22,25 +22,25 @@
     var publicPartTradeChannel = pusher.subscribe('public-channel.partsale.{{ $partsale->id }}');
 
     publicPartTradeChannel.bind('App\\Events\\PartSaleClosed', function(data) {
-        PartSaleClosedBuildTrade(data); 
+        PartSaleClosedBuildTrade(data.partsale[0]); 
     });
     publicPartTradeChannel.bind('App\\Events\\PartSaleOfferReservePurchased', function(data) {
-        PartSaleOfferReservePurchasedBuildTrade(data);
+        PartSaleOfferReservePurchasedBuildTrade(data.partsale[0]);
     }); 
     publicPartTradeChannel.bind('App\\Events\\PartSaleOfferReserved', function(data) {
-        PartSaleOfferReservedBuildTrade(data);
+        PartSaleOfferReservedBuildTrade(data.partsalereserve);
     }); 
     publicPartTradeChannel.bind('App\\Events\\PartSaleOfferReserveCancelled', function(data) {
         PartSaleOfferReserveCancelledBuildTrade(data);
     }); 
     publicPartTradeChannel.bind('App\\Events\\PartCommentAdded', function(data) {
-        PartCommentAddedBuildTrade(data);
+        PartCommentAddedBuildTrade(data.partsale[0]);
     }); 
     publicPartTradeChannel.bind('App\\Events\\PartSaleOfferAdded', function(data) {
-        PartSaleOfferAddedBuildTrade(data);
+        PartSaleOfferAddedBuildTrade(data.partsale[0]);
     }); 
     publicPartTradeChannel.bind('App\\Events\\PartSaleOfferCancelled', function(data) {
-        PartSaleOfferCancelledBuildTrade(data);
+        PartSaleOfferCancelledBuildTrade(data.partsaleoffer);
     }); 
 
 </script>

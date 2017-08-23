@@ -28,10 +28,10 @@
         CarRentOfferReservePurchasedBuildTrade(data.carrent[0]);
     });
     publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserved', function(data) {
-        CarRentOfferReservedBuildTrade(data.carrentoffer[0]);
+        CarRentOfferReservedBuildTrade(data.carrentreserve);
     });
     publicCarTradeChannel.bind('App\\Events\\CarRentOfferReserveCancelled', function(data) {
-        CarRentOfferReserveCancelledBuildTrade(data.carrentoffer[0]);
+        CarRentOfferReserveCancelledBuildTrade(data);
     });
     publicCarTradeChannel.bind('App\\Events\\CarCommentAdded', function(data) {
         CarCommentAddedBuildTrade(data.carcomment[0]);
@@ -40,7 +40,7 @@
         CarRentOfferAddedBuildTrade(data.carrentoffer[0]);
     });
     publicCarTradeChannel.bind('App\\Events\\CarRentOfferCancelled', function(data) {
-        CarRentOfferCancelledBuildTrade(data.carrentoffer[0]);
+        CarRentOfferCancelledBuildTrade(data.carrentoffer);
     });
 
 </script>

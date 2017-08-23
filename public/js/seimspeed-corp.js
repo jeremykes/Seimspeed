@@ -526,11 +526,32 @@ function CarSaleOfferReservePurchasedBuildTrade(data) {
 function CarSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
     $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+
+    // Now update the resrved list
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item" id="carsaleofferreserve' + data.id + '">';
+    htmltext += '  <p>';
+    htmltext += '       ' + $('#carsaleofferusername' + data.carsaleoffer.id ).text() + ', ';
+    htmltext += '       <strong>K' + formatCurrency(data.carsaleoffer.offer) + '</strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '       <span style="font-size:9px;color:gray" id="carsalereserve_created_at' + data.id + '"></span>';
+    htmltext += '       <span class="pull-right">';
+    htmltext += '           <button class="btn btn-xs btn-success" onclick="confirmMe(\'' + carsalePurchaseReserveMessage + '\', \'purchaseReserveCarSaleOffer(' + data.id + ')\', \'success\')"><i class="fa fa-money"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser(' + data.carsaleoffer.user_id + ')"><i class="fa fa-envelope"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-warning" onclick="confirmMe(\'' + carsaleCancelReserveMessage + '\', \'cancelReserveCarSaleOffer(' + data.carsaleoffer.id + ')\', \'danger\')"><i class="fa fa-trash"></i></button>';
+    htmltext += '       </span>';
+    htmltext += '   </p>';
+    htmltext += '</li>';
+
+    $('#reserved-list').append(htmltext);
+
+    timeArray.push(['carsalereserve_created_at' + data.id, data.created_at]);
+    updateTimestamps();
 }
 
 function CarSaleOfferReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
-    CarSaleOfferCancelledBuildTrade(data);
+    $('#carsaleofferreserve' + data.carsalereserve_id).remove();
 }
 
 function CarSaleOfferAddedBuildTrade(data) {
@@ -543,13 +564,13 @@ function CarSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <strong><a id="carsaleofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br><br>';
     htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><button class="btn btn-xs btn-default" onclick="reserveCarSaleOffer(' + data.id + ')">reserve</button></span>';
+    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + carsaleAddReserveMessage + '\', \'reserveCarSaleOffer(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -581,11 +602,32 @@ function CarRentOfferReservePurchasedBuildTrade(data) {
 function CarRentOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
     $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+
+    // Now update the resrved list
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item" id="carrentofferreserve' + data.id + '">';
+    htmltext += '  <p>';
+    htmltext += '       ' + $('#carrentofferusername' + data.carrentoffer.id ).text() + ', ';
+    htmltext += '       <strong>K' + formatCurrency(data.carrentoffer.offer) + '</strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '       <span style="font-size:9px;color:gray" id="carrentoffer_created_at' + data.id + '"></span>';
+    htmltext += '       <span class="pull-right">';
+    htmltext += '           <button class="btn btn-xs btn-success" onclick="confirmMe(\'' + carrentPurchaseReserveMessage + '\', \'purchaseReserveCarRentOffer(' + data.id + ')\', \'success\')"><i class="fa fa-money"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser(' + data.carrentoffer.user_id + ')"><i class="fa fa-envelope"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-warning" onclick="confirmMe(\'' + carrentCancelReserveMessage + '\', \'cancelReserveCarRentOffer(' + data.carrentoffer.id + ')\', \'danger\')"><i class="fa fa-trash"></i></button>';
+    htmltext += '       </span>';
+    htmltext += '   </p>';
+    htmltext += '</li>';
+
+    $('#reserved-list').append(htmltext);
+
+    timeArray.push(['carrentreserve_created_at' + data.id, data.created_at]);
+    updateTimestamps();
 } 
 
 function CarRentOfferReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
-    CarRentOfferCancelledBuildTrade(data);
+    $('#carrentofferreserve' + data.carrentreserve_id).remove();
 } 
 
 function CarRentOfferAddedBuildTrade(data) {
@@ -598,14 +640,14 @@ function CarRentOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="carrentofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
     htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="carsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><button class="btn btn-xs btn-default" onclick="reserveCarRentOffer(' + data.id + ')">reserve</button></span>';
+    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + carrentAddReserveMessage + '\', \'reserveCarRentOffer(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -637,11 +679,32 @@ function CarTenderTenderReservePurchasedBuildTrade(data) {
 function CarTenderTenderReservedBuildTrade(data) {
     // Tag Tender as Reserved
     $('#tender_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+
+    // Now update the resrved list
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item" id="cartendertenderreserve' + data.id + '">';
+    htmltext += '  <p>';
+    htmltext += '       ' + $('#cartendertenderusername' + data.cartendertender.id ).text() + ', ';
+    htmltext += '       <strong>K' + formatCurrency(data.cartendertender.tender) + '</strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '       <span style="font-size:9px;color:gray" id="cartendertender_created_at' + data.id + '"></span>';
+    htmltext += '       <span class="pull-right">';
+    htmltext += '           <button class="btn btn-xs btn-success" onclick="confirmMe(\'' + cartenderPurchaseReserveMessage + '\', \'purchaseReserveCarTenderTender(' + data.id + ')\', \'success\')"><i class="fa fa-money"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser(' + data.cartendertender.user_id + ')"><i class="fa fa-envelope"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-warning" onclick="confirmMe(\'' + cartenderCancelReserveMessage + '\', \'cancelReserveCarTenderTender(' + data.cartendertender.id + ')\', \'danger\')"><i class="fa fa-trash"></i></button>';
+    htmltext += '       </span>';
+    htmltext += '   </p>';
+    htmltext += '</li>';
+
+    $('#reserved-list').append(htmltext);
+
+    timeArray.push(['cartenderreserve_created_at' + data.id, data.created_at]);
+    updateTimestamps();
 }
 
 function CarTenderTenderReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
-    CarTenderTenderCancelledBuildTrade(data);
+    $('#cartendertenderreserve' + data.cartenderreserve_id).remove();
 }
 
 function CarTenderTenderAddedBuildTrade(data) {
@@ -654,14 +717,14 @@ function CarTenderTenderAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="cartendertenderusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="tenderdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
     htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="cartendertenderamount' + data.id + '">K' + formatCurrency(data.tender) + '</span>';
     htmltext += '      <span class="pull-right" id="tender_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><button class="btn btn-xs btn-default" onclick="reserveCarTenderTender(' + data.id + ')">reserve</button></span>';
+    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + cartenderAddReserveMessage + '\', \'reserveCarTenderTender(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -692,12 +755,33 @@ function CarAuctionBidReservePurchasedBuildTrade(data) {
 
 function CarAuctionBidReservedBuildTrade(data) {
     // Tag Bid as Reserved
-    $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+    $('#bid_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+
+    // Now update the resrved list
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item" id="carauctionbidreserve' + data.id + '">';
+    htmltext += '  <p>';
+    htmltext += '       ' + $('#carauctionbidusername' + data.carauctionbid.id ).text() + ', ';
+    htmltext += '       <strong>K' + formatCurrency(data.carauctionbid.bid) + '</strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '       <span style="font-size:9px;color:gray" id="carauctionbid_created_at' + data.id + '"></span>';
+    htmltext += '       <span class="pull-right">';
+    htmltext += '           <button class="btn btn-xs btn-success" onclick="confirmMe(\'' + carauctionPurchaseReserveMessage + '\', \'purchaseReserveCarAuctionBid(' + data.id + ')\', \'success\')"><i class="fa fa-money"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser(' + data.carauctionbid.user_id + ')"><i class="fa fa-envelope"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-warning" onclick="confirmMe(\'' + carauctionCancelReserveMessage + '\', \'cancelReserveCarAuctionBid(' + data.carauctionbid.id + ')\', \'danger\')"><i class="fa fa-trash"></i></button>';
+    htmltext += '       </span>';
+    htmltext += '   </p>';
+    htmltext += '</li>';
+
+    $('#reserved-list').append(htmltext);
+
+    timeArray.push(['carauctionreserve_created_at' + data.id, data.created_at]);
+    updateTimestamps();
 }
 
 function CarAuctionBidReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag 
-    CarAuctionBidCancelledBuildTrade(data);
+    $('#carauctionbidreserve' + data.carauctionreserve_id).remove();
 }
 
 function CarAuctionBidAddedBuildTrade(data) {
@@ -710,14 +794,14 @@ function CarAuctionBidAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="carauctionbidusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="biddate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
     htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="carsalebidamount' + data.id + '">K' + formatCurrency(data.bid) + '</span>';
     htmltext += '      <span class="pull-right" id="bid_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><button class="btn btn-xs btn-default" onclick="reserveCarAuctionBid(' + data.id + ')">reserve</button></span>';
+    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + carauctionAddReserveMessage + '\', \'reserveCarAuctionBid(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -749,11 +833,32 @@ function PartSaleOfferReservePurchasedBuildTrade(data) {
 function PartSaleOfferReservedBuildTrade(data) {
     // Tag Offer as Reserved
     $('#offer_is_reserved' + data.id).html('<span class="label label-primary">reserved</span>');
+
+    // Now update the resrved list
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item" id="partsaleofferreserve' + data.id + '">';
+    htmltext += '  <p>';
+    htmltext += '       ' + $('#partsaleofferusername' + data.partsaleoffer.id ).text() + ', ';
+    htmltext += '       <strong>K' + formatCurrency(data.partsaleoffer.offer) + '</strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '       <span style="font-size:9px;color:gray" id="partsaleoffer_created_at' + data.id + '"></span>';
+    htmltext += '       <span class="pull-right">';
+    htmltext += '           <button class="btn btn-xs btn-success" onclick="purchaseReservePartSaleOffer(' + data.id + ')"><i class="fa fa-money"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-info" onclick="getUserMessagesAndUser(' + data.partsaleoffer.user_id + ')"><i class="fa fa-envelope"></i></button> ';
+    htmltext += '           <button class="btn btn-xs btn-warning" onclick="cancelReservePartSaleOffer(' + data.partsaleoffer.id + ')"><i class="fa fa-trash"></i></button>';
+    htmltext += '       </span>';
+    htmltext += '   </p>';
+    htmltext += '</li>';
+
+    $('#reserved-list').append(htmltext);
+
+    timeArray.push(['partsalereserve_created_at' + data.id, data.created_at]);
+    updateTimestamps();
 }
 
 function PartSaleOfferReserveCancelledBuildTrade(data) {
     // Remove Reserved Tag
-    PartSaleOfferCancelledBuildTrade(data);
+    $('#partsaleofferreserve' + data.partsalereserve_id).remove();
 }
 
 function PartSaleOfferAddedBuildTrade(data) {
@@ -766,14 +871,14 @@ function PartSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="partsaleofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
     htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="partsaleofferamount' + data.id + '">K' + formatCurrency(data.offer) + '</span>';
     htmltext += '      <span class="pull-right" id="offer_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><button class="btn btn-xs btn-default" onclick="reservePartSaleOffer(' + data.id + ')">reserve</button></span>';
+    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + partsaleAddReserveMessage + '\', \'reservePartSaleOffer(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -998,8 +1103,113 @@ function purchaseReservePartSaleOffer(reserveID) {
     });
 }
 
+// ------------------- Car/Part Trades Close Functions ------------------ //
 
 
+function closeCarSale(carsaleID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/closesale",
+        type: "POST",
+        data: { 
+            'carsale_id': carsaleID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/store";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
+
+function closeCarRent(carrentID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/rents/car/closerent",
+        type: "POST",
+        data: { 
+            'carrent_id': carrentID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/store";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
+
+function closeCarTender(cartenderID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/tenders/car/closetender",
+        type: "POST",
+        data: { 
+            'cartender_id': cartenderID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/store";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
+
+function closeCarAuction(carauctionID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/auctions/car/closeauction",
+        type: "POST",
+        data: { 
+            'carauction_id': carauctionID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/store";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
+
+function closePartSale(partsaleID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/part/closesale",
+        type: "POST",
+        data: { 
+            'partsale_id': partsaleID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/store";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
+
+
+// ------------------- Corporate User Functions ------------------ //
+
+function deleteCorporateuser(corporateuserID) {
+    $.ajax({
+        url: base_url + "corporate/" + corporateID + "/corpuser/maintainer/deletecorporateuser",
+        type: "POST",
+        data: { 
+            'corporateuser_id': corporateuserID
+        },
+        success: function(data) {
+            if (data.success == true) {
+                window.location.href = base_url + "/corporate/" + corporateID + "/members";
+            } else {
+                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+            }
+        }
+    });
+}
 
 
 // ------------------- Car/Part Comment Added Functions ------------------ //
@@ -1856,6 +2066,52 @@ function getUserMessages(userID) {
     });
 }
 
+function getUserMessagesAndUser(userID) {
+    friendUserID = userID;
+
+    $('#messageModal').modal('show');
+
+    $.ajax({
+        url: base_url + "/user/getusermessagesanduser",
+        type: "GET",
+        data: { 
+            'user_id': friendUserID
+        },
+        success: function(data) {
+            var alertClass = '';
+            var pullClass = '';
+            var htmltext = '';
+
+            if (data.success == true) {
+
+                $('#user-info').html('<img src="' + data.user.propic + '" style="width:20px;height:20px"/> ' + data.user.name);
+
+                for (var i = 0; i < data.messages.length; i++) {
+                    if (data.messages[i].user_id_sending == user_id) {
+                        alertClass = 'alert alert-success';
+                        pullClass = 'pull-right';
+                    } else {
+                        alertClass = 'alert alert-info';
+                        pullClass = 'pull-left';
+                    }
+
+                    htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                    htmltext += data.messages[i].message;
+                    htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
+
+                    timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
+                }
+
+                $('#usermessages').append(htmltext);
+
+                updateTimestamps();
+
+                $('#message_input').show();
+            }
+        }
+    });
+}
+
 function sendMessage() {
     $.ajax({
         url: base_url + "/user/sendmessage",
@@ -1888,17 +2144,57 @@ function sendMessage() {
 }
 
 
+function getNewUsers(partial) {
+    $.ajax({
+        url: base_url + "/user/getnewusers",
+        type: "GET",
+        data: { 
+            'partial': partial
+        },
+        success: function(data) {
+            var htmltext = '';
+
+            if (data.success == true) {
+                for (var i = 0; i < data.users.length; i++) {
+                    htmltext += '<a href="javascript:void(0);" onclick="addnewmessageuser(' + data.users[i].name + ', ' + data.users[i].id + ', ' + data.users[i].propic + ')" class="list-group-item" data-dismiss="modal">';
+                    htmltext += '   <img src="' + data.users[i].propic + '" style="width:20px;height:20px"/> ';
+                    htmltext +=     data.users[i].name;
+                    htmltext += '   <span style="font-size:9px;color:gray">' + data.users[i].email + '</span>';
+                    htmltext += '</a>';
+                }
+
+                $('#newUserList').html(htmltext);
+            }
+        }
+    });
+}
+
+function addnewmessageuser(userName,userID,propic) {
+    var htmltext = '';
+
+    htmltext += '<li class="list-group-item">';
+    htmltext += '    <a href="javascript:void(0)" onclick="getUserMessages(' + userID + ')">';
+    htmltext += '        <img src="' + propic + '" style="width:20px;height:20px"> ' + userName;
+    htmltext += '    </a>';
+    htmltext += '</li>';
+
+    $('#userList').append(htmltext);
+
+    getUserMessages(userID);
+}
+
+
 
 // ------------------- Post Functions ------------------ //
 
 
-function rate(corporateID, rate) {
+function rate(corporate_ID, rate) {
     // tail the corporate/also untail corporate is same function (backend function toggles it)
     $.ajax({
         url: base_url + "/auth/rate",
         type: "POST",
         data: { 
-            'corporate_id': corporateID,
+            'corporate_id': corporate_ID,
             'rate': rate
         },
         success: function(data) {
@@ -1909,13 +2205,13 @@ function rate(corporateID, rate) {
     });
 }
 
-function tailCorporate(corporateID) {
+function tailCorporate(corporate_ID) {
     // tail the corporate/also untail corporate is same function (backend function toggles it)
     $.ajax({
         url: base_url + "/auth/tailcorporate",
         type: "POST",
         data: { 
-            'corporate_id': corporateID
+            'corporate_id': corporate_ID
         },
         success: function(data) {
             if (data.success == true) {
@@ -2150,6 +2446,28 @@ function formatCurrency(nStr) {
     return x1 + x2;
 }
 
+function loadCarModels(make,url) {
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            make: make,
+        },
+        dataType: 'json',
+        success: function(data) {
+            carmodels = data;
+            initCarModelAutocomplete();
+        }
+    });
+}
+
+function initCarModelAutocomplete() {
+    $(".carmodelautocomplete").autocomplete({
+        source: carmodels,
+        minLength: 2
+    });
+}
+
 
 // ------------------- Alert Messages Functions ------------------ //
 
@@ -2161,13 +2479,13 @@ function alertMe(message) {
     }, 5000);
 }
 
-function confirmMe(message, callback) {
+function confirmMe(message, callback, alert) {
     var htmltext = '';
 
     htmltext += '<p>' + message + '</p>';
     htmltext += '<p>';
     htmltext += '<button class="btn btn-dafault" data-dismiss="modal">No</button>&nbsp;&nbsp;&nbsp;';
-    htmltext += '<button class="btn btn-danger" onclick="' + callback + '">Yes</button>';
+    htmltext += '<button class="btn btn-' + alert + '" onclick="' + callback + '" data-dismiss="modal">Yes</button>';
     htmltext += '<p>';
 
     $('#statusModalBody').html(htmltext);
@@ -2181,6 +2499,21 @@ var carrentCancelMessage = 'Are you sure you want to cancel this offer?';
 var cartenderCancelMessage = 'Are you sure you want to cancel this tender?';
 var carauctionCancelMessage = 'Are you sure you want to cancel this bid?';
 var partsaleCancelMessage = 'Are you sure you want to cancel this offer?';
+var carsaleAddReserveMessage = 'Are you sure you want to reserve this offer?';
+var carsaleCancelReserveMessage = 'Are you sure you want to cancel this reserved offer?';
+var carsalePurchaseReserveMessage = 'Are you sure the customer has made payments for this reserved offer?';
+var carrentAddReserveMessage = 'Are you sure you want to reserve this offer?';
+var carrentCancelReserveMessage = 'Are you sure you want to cancel this reserved offer?';
+var carrentCancelReserveMessage = 'Are you sure the customer has made payments for this reserved offer?';
+var cartenderAddReserveMessage = 'Are you sure you want to reserve this tender?';
+var cartenderCancelReserveMessage = 'Are you sure you want to cancel this reserved tender?';
+var cartenderCancelReserveMessage = 'Are you sure the customer has made payments for this reserved tender?';
+var carauctionAddReserveMessage = 'Are you sure you want to reserve this bid?';
+var carauctionCancelReserveMessage = 'Are you sure you want to cancel this reserved bid?';
+var carauctionCancelReserveMessage = 'Are you sure the customer has made payments for this reserved bid?';
+var partsaleAddReserveMessage = 'Are you sure you want to reserve this offer?';
+var partsaleCancelReserveMessage = 'Are you sure you want to cancel this reserved offer?';
+var partsaleCancelReserveMessage = 'Are you sure the customer has made payments for this reserved offer?';
 
 
 

@@ -19,7 +19,7 @@ class Partsalereserve extends Model
     /**
 	* Get the partsale that owns this reserve.
 	*/
-	public function sale()
+	public function partsale()
 	{
 		return $this->BelongsTo('App\Partsale');
 	}
@@ -27,7 +27,7 @@ class Partsalereserve extends Model
 	/**
 	* Get the part sale offer that owns this reserve.
 	*/
-	public function offer()
+	public function partsaleoffer()
 	{
 		return $this->BelongsTo('App\Partsaleoffer');
 	}
@@ -35,7 +35,7 @@ class Partsalereserve extends Model
 	/**
     * Get the purchase made to this reserve.
     */
-    public function purchase()
+    public function partsalepurchase()
     {
         return $this->hasOne('App\Partsalepurchase');
     }

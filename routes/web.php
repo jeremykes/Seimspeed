@@ -1,7 +1,5 @@
 <?php
 
-// Route::get('/test', 'FrameworkController@test'); // home
-
 // ===================================================================================
 // 
 // 
@@ -39,23 +37,23 @@ Route::get('/', 'FrameworkController@index'); // home
 // allcars 			
 // allcarsales 		
 // allcartenders  
-Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}/{id?}', 'FrameworkController@carauction'); // carauction 		
+Route::get('/corporate/{corporate}/car/{car}/carauction/{carauction}/{id?}', 'FrameworkController@carauction')->middleware('corpactive'); // carauction 		
 // carauctiongroup 	
 // cargroup  
-Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}/{id?}', 'FrameworkController@carrent'); // carrent 			
+Route::get('/corporate/{corporate}/car/{car}/carrent/{carrent}/{id?}', 'FrameworkController@carrent')->middleware('corpactive'); // carrent 			
 // carrentgroup 	
-Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/{id?}', 'FrameworkController@carsale'); // carsale 			
+Route::get('/corporate/{corporate}/car/{car}/carsale/{carsale}/{id?}', 'FrameworkController@carsale')->middleware('corpactive'); // carsale 			
 // carsalegroup  		
-Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{id?}', 'FrameworkController@cartender'); // cartender  		
+Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{id?}', 'FrameworkController@cartender')->middleware('corpactive'); // cartender  		
 // cartendergroup  	
 // cartendertenderers 
 // allpartgroups 	
 // allparts 		
 // allpartsales 	
 // partgroup  		
-Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{id?}', 'FrameworkController@partsale'); // partsale 		
+Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{id?}', 'FrameworkController@partsale')->middleware('corpactive'); // partsale 		
 // partsalegroup 
-Route::get('/corporate/{corporate}', 'FrameworkController@corporatehome'); // corphome 
+Route::get('/corporate/{corporate}', 'FrameworkController@corporatehome')->middleware('corpactive'); // corphome 
 
 Route::get('/getcarsaleoffers', 'FrameworkController@getcarsaleoffers');
 Route::get('/getcarrentoffers', 'FrameworkController@getcarrentoffers');
@@ -74,8 +72,9 @@ Route::get('/getparttails', 'FrameworkController@getparttails');
 |--------------------------------------------------------------------------
 */	
 // SOCIAL LOGIN
-// Route::get('/social/redirect/{provider}',   ['as' => 'social.redirect',   'uses' => 'Auth\AuthController@getSocialRedirect']);
-// Route::get('/social/handle/{provider}',     ['as' => 'social.handle',     'uses' => 'Auth\AuthController@getSocialHandle']);
+Route::get('/social/redirect/{provider}',   ['as' => 'social.redirect',   'uses' => 'Auth\AuthController@getSocialRedirect']);
+Route::get('/social/handle/{provider}',     ['as' => 'social.handle',     'uses' => 'Auth\AuthController@getSocialHandle']);
+
 Route::get('/getnewsfeed', 'FrameworkController@getnewsfeed');
 Route::get('/getcarcounts', 'FrameworkController@getcarcounts');
 Route::get('/getpartcounts', 'FrameworkController@getpartcounts');
@@ -109,10 +108,11 @@ Route::group(['middleware' => ['auth']], function() {
 	| View Routes
 	|--------------------------------------------------------------------------
 	*/	
-	Route::get('/user/', 'UserController@user');
-	Route::get('/user/settings', 'UserController@usersettings');
+	Route::get('/user', 'UserController@user');
 	Route::get('/user/settings/edit', 'UserController@usersettingsedit');
-	// Route::get('/user/{user}/addcorporate', 'UserController@useraddcorporate');
+	Route::get('/user/settings/{id?}', 'UserController@usersettings');
+	Route::get('/user/corporate/add', 'UserController@addcorporateform');
+	Route::get('/user/corporate/add/pending', 'UserController@addcorporatepending');
 
 
 
@@ -182,7 +182,7 @@ Route::group(['middleware' => ['auth']], function() {
 
 
 
-	Route::group(['middleware' => ['corpuser']], function() {
+	Route::group(['middleware' => ['corpuser', 'corpactive']], function() {
 
 
 		// ===================================================================================
@@ -317,6 +317,8 @@ Route::group(['middleware' => ['auth']], function() {
 			Route::post('/corporate/{corporate}/corpuser/loadcarmodels', 'CarController@loadcarmodels');
 			Route::post('/corporate/{corporate}/corpuser/sales/car/caruploadtempimage', 'CarController@caruploadtempimage');
 			Route::post('/corporate/{corporate}/corpuser/sales/car/cardeletetempimage', 'CarController@cardeletetempimage');
+			Route::post('/corporate/{corporate}/corpuser/sales/part/partuploadtempimage', 'PartController@partuploadtempimage');
+			Route::post('/corporate/{corporate}/corpuser/sales/part/partdeletetempimage', 'PartController@partdeletetempimage');
 
 
 		}); // End of middleware 'role:sales:maintainer:administrator'
@@ -446,7 +448,8 @@ Route::group(['middleware' => ['auth']], function() {
 			| View Routes
 			|--------------------------------------------------------------------------
 			*/	
-
+			Route::get('/corporate/{corporate}/settings/edit', 'FrameworkController@corporatesettingsedit');
+			
 
 			/*
 			|--------------------------------------------------------------------------

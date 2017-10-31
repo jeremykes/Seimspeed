@@ -18,6 +18,9 @@ use App\User;
 
 use Auth;
 
+use App\Notifications\CorporateUserAddedNotification;
+use App\Notifications\CorporateUserUpdatedNotification;
+
 class CorporateController extends Controller
 {
     /**
@@ -69,7 +72,7 @@ class CorporateController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'subscription_id' => 'required',
+            'subscription' => 'required',
         ]);
 
         $corporate->name = $request->name;
@@ -110,12 +113,19 @@ class CorporateController extends Controller
         ]);
 
         if ($user = User::where('email', $request->email)->count() == 0) {
-            return response()->json(['success'=>false, 'message'=>'User does not exist in the system. Please check your spelling for the email.']);
+            // return response()->json(['success'=>false, 'message'=>'User does not exist in the system. Please check your spelling for the email.']);
+            return redirect('/corporate/' . $corporate->id . '/members');
         } 
 
-        $user = User::where('email', $request->email)->get();
+        $user = User::where('email', $request->email)->first();
 
-        $user->detachRoles($user->roles);
+        $corporateuser_count = Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count();
+        if ($corporateuser_count == 1) {
+            // return response()->json(['success'=>false, 'message'=>'User is already a member.']);
+            return redirect('/corporate/' . $corporate->id . '/members');
+        }
+
+        $user->detachAllRoles();
 
         # administrator role ID     = 1
         # maintainer role ID        = 2
@@ -139,7 +149,7 @@ class CorporateController extends Controller
         $corporateuser = new Corporateuser;
         $corporateuser->corporate_id = $corporate->id;
         $corporateuser->user_id = $user->id;
-        $corporateuser->title = $title;
+        $corporateuser->title = $request->title;
         $corporateuser->save();
 
         // Notification
@@ -147,7 +157,8 @@ class CorporateController extends Controller
 
         $user->notify(new CorporateUserAddedNotification($corporateuser));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/members');
     }
 
     /**
@@ -162,11 +173,11 @@ class CorporateController extends Controller
             'email' => 'required',
         ]);
 
-        $corporateuser->title = $title;
+        $corporateuser->title = $request->title;
         $corporateuser->save();
 
         $user = $corporateuser->user;
-        $user->detachRoles($user->roles);
+        $user->detachAllRoles();
 
         # administrator role ID     = 1
         # maintainer role ID        = 2
@@ -192,7 +203,8 @@ class CorporateController extends Controller
 
         $corporateuser->user->notify(new CorporateUserUpdatedNotification($corporateuser));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/members');
     }
 
     /**

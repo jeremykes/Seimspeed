@@ -36,9 +36,9 @@ return [
     ],
 
     'facebook' => [
-        'client_id' => '1700385776953765',
-        'client_secret' => '427e56ff443457c1dd1a2c0f39c0a765',
-        'redirect' => 'http://localhost:8000/social/handle/facebook',
+        'client_id' => env('FB_CLIENT_ID'),
+        'client_secret' => env('FB_CLIENT_SECRET'),
+        'redirect' => env('FB_REDIRECT'),
     ],
 
 ];

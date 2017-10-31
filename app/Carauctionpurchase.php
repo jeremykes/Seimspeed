@@ -25,7 +25,7 @@ class Carauctionpurchase extends Model
     /**
 	* Get the carauction that owns this purchase.
 	*/
-	public function auction()
+	public function carauction()
 	{
 		return $this->BelongsTo('App\Carauction');
 	}
@@ -33,7 +33,7 @@ class Carauctionpurchase extends Model
 	/**
 	* Get the car auction reserve that owns this purchase.
 	*/
-	public function reserve()
+	public function carauctionreserve()
 	{
 		return $this->BelongsTo('App\Carauctionreserve');
 	}

@@ -11,6 +11,11 @@ use DB;
 use Illuminate\Notifications\DatabaseNotification;
 use Carbon;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionApplication;
+
+use App\Subscription;
+
 use App\User;
 use App\Message;
 use App\Userreport;
@@ -73,6 +78,8 @@ class FrameworkController extends Controller
             'pusherauthenticate',
             'iscorpuser',
             'hascorpuserrole',
+            'addcorporateform',
+            'addcorporate',
         ]]);
 
         $this->middleware('corpuser', ['only' => [
@@ -356,7 +363,25 @@ class FrameworkController extends Controller
      */
     public function corporatesettings(Corporate $corporate)
     {
+        $subscription = Subscription::findOrFail($corporate->subscription_id);
+
         return view('corp.settings', [
+            'subscription' => $subscription,
+            'corporate' => $corporate,
+        ]); 
+    }
+
+    /**
+     * Show the Corporate settings edit page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function corporatesettingsedit(Corporate $corporate)
+    {
+        $subscription = Subscription::findOrFail($corporate->subscription_id);
+
+        return view('corp.settingsedit', [
+            'subscription' => $subscription,
             'corporate' => $corporate,
         ]); 
     }
@@ -568,6 +593,7 @@ class FrameworkController extends Controller
                             'carsales.updated_at as carsales_updated_at', 
                             'cars.updated_at as cars_updated_at')
                         ->where('carsales.status', 'opened')
+                        ->where('corporates.active', true)
                         ->orderBy('carsales.updated_at', 'desc')
                         ->simplePaginate(3);
 
@@ -586,6 +612,7 @@ class FrameworkController extends Controller
                             'carrents.updated_at as carrents_updated_at', 
                             'cars.updated_at as cars_updated_at')
                         ->where('carrents.status', 'opened')
+                        ->where('corporates.active', true)
                         ->orderBy('carrents.updated_at', 'desc')
                         ->simplePaginate(3);
         // Cartenders
@@ -603,6 +630,7 @@ class FrameworkController extends Controller
                             'cartenders.updated_at as cartenders_updated_at', 
                             'cars.updated_at as cars_updated_at')
                         ->where('cartenders.status', 'opened')
+                        ->where('corporates.active', true)
                         ->orderBy('cartenders.updated_at', 'desc')
                         ->simplePaginate(3);
         // Carauctions
@@ -620,6 +648,7 @@ class FrameworkController extends Controller
                             'carauctions.updated_at as carauctions_updated_at', 
                             'cars.updated_at as cars_updated_at')
                         ->where('carauctions.status', 'opened')
+                        ->where('corporates.active', true)
                         ->orderBy('carauctions.updated_at', 'desc')
                         ->simplePaginate(3);
         // Partsales
@@ -637,6 +666,7 @@ class FrameworkController extends Controller
                             'partsales.updated_at as partsales_updated_at', 
                             'parts.updated_at as parts_updated_at')
                         ->where('partsales.status', 'opened')
+                        ->where('corporates.active', true)
                         ->orderBy('partsales.updated_at', 'desc')
                         ->simplePaginate(3);
 
@@ -815,9 +845,12 @@ class FrameworkController extends Controller
         $images_array = [];
 
         foreach ($request->car_array as $car) {
-            $carimage = Carimage::where('car_id', $car['car_id'])->first();
-
-            $images_array[] = array('thumb_img_url'=>$carimage->thumb_img_url);
+            if (Carimage::where('car_id', $car['car_id'])->count() > 0) {
+                $carimage = Carimage::where('car_id', $car['car_id'])->first(); 
+                $images_array[] = array('thumb_img_url'=>$carimage->thumb_img_url);
+            } else {
+                $images_array[] = array('thumb_img_url'=>asset('/imgs/no-images.png'));
+            }
         }
 
         return response()->json(['success'=>true, 'carimages'=>$images_array]);
@@ -1049,6 +1082,15 @@ class FrameworkController extends Controller
 
         $receiving_user = User::find($request->user_id);
 
+        // Fill this so that user message shows up in Messages. Dirty Hack. Please fix later.
+        if(Message::where('user_id_sending', Auth::user()->id)->where('user_id_receiving', $request->user_id)->count() == 0) {
+            $message_blank = new Message();
+            $message_blank->user_id_sending = $receiving_user->id;
+            $message_blank->user_id_receiving = Auth::user()->id;
+            $message_blank->message = '';
+            $message_blank->save();
+        }
+
         $message = new Message();
         $message->user_id_sending = Auth::user()->id;
         $message->user_id_receiving = $receiving_user->id;
@@ -1258,6 +1300,7 @@ class FrameworkController extends Controller
     // 
     // 
     // ===================================================================================
+
     /**
      * Add Corporate
      *
@@ -1268,21 +1311,52 @@ class FrameworkController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'subscription_id' => 'required',
+            'descrip' => 'required',
+            'subscription' => 'required',
         ]);
+
+        $user = Auth::user();
 
         $corporate = new Corporate;
         $corporate->name = $request->name;
         $corporate->address = $request->address;
         $corporate->phone = $request->phone;
-        $corporate->descrip = $descrip;
+        $corporate->descrip = $request->descrip;
         $corporate->logo_url = $request->logo_url;
         $corporate->banner_url = $request->banner_url;
-        $corporate->subscription_id = $request->subscription_id;
-        $corporate->subscriptionexpires = $request->subscriptionexpires;
+
+        $subscription = Subscription::where('name', ($request->subscription))->first();
+        $corporate->subscription_id = $subscription->id;
         $corporate->save();
 
-        return response()->json(['success'=>true]);
+        $corporateuser = new Corporateuser;
+        $corporateuser->corporate_id = $corporate->id;
+        $corporateuser->user_id = $user->id;
+        $corporateuser->title = 'title';
+        $corporateuser->save();
+
+        $user->attachRole(1);
+
+        if ($subscription->name == 'basic') {
+            $corporate->active = true;
+            $corporate->save();
+
+            return redirect('/corporate/' . $corporate->id);
+        } else {
+            $corporate->active = false;
+            $corporate->save();
+
+            # Email Skoonters team advising them of this application. For now check everytime
+            // Mail::to('jeremypalme@gmail.com')
+            //     ->to('kitraimo@gmail.com')
+            //     // ->to('wikaimembi@live.com')
+            //     ->send(new SubscriptionApplication($corporate, $subscription, Auth::user()));
+
+            # Redirect to page to inform user that we will contact them shortly to get their details and organize payment.
+            return redirect('/user/corporate/add/pending');
+        }
+        
+        // return response()->json(['success'=>true]);
     }
 
 

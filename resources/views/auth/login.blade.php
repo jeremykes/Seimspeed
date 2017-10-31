@@ -60,6 +60,22 @@
                             </div>
                         </div>
                     </form>
+
+                    <hr>
+                    
+                    <div style="text-align:center">
+                        <div class="col-md-6 col-md-offset-4" style="margin-bottom:30px;">
+                            Or Use Social Login
+                        </div>
+                        <div class="col-md-6 col-md-offset-4" style="margin-bottom:5px">
+                            <a href="{{ url('/social/redirect/facebook') }}" class="btn btn-primary center-block" style="width:100%;font-size:14px">Facebook</a>
+                        </div>
+
+                        <!-- <div class="col-md-6 col-md-offset-4">
+                            <a href="{{ url('/social/redirect/google') }}" class="btn btn-danger center-block" style="width:100%;font-size:14px">Google</a>
+                        </div> -->
+                    </div>
+                    
                 </div>
             </div>
         </div>

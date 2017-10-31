@@ -124,6 +124,9 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/user') }}">Messages</a></li>
+                                <li><a href="{{ url('/user/settings') }}">Settings</a></li>
+                                <li role="separator" class="divider"></li>
                                 <li>
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
@@ -135,7 +138,6 @@
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
-                                <li><a href="{{ url('/user/') }}">My profile</a></li>
                             </ul>
                         </li>
 
@@ -190,7 +192,7 @@
                 @yield('menu')
 
                 @if ($corporate_user_administrator == false)
-                    <a href="#" class="btn btn-primary" style="width:100%">Create corporate account</a>
+                    <a href="{{ url('/user/corporate/add') }}" class="btn btn-primary" style="width:100%">Create corporate account</a>
                 @endif
 
             </div>
@@ -201,7 +203,7 @@
 
             <div class="col-md-2">
 
-                <div class="panel panel-default">
+                <!-- <div class="panel panel-default">
                     <div class="panel-heading">
                         Advert 1
                     </div>
@@ -226,7 +228,7 @@
                     <div class="panel-body">
                         Advert 3 content
                     </div>
-                </div>
+                </div> -->
 
             </div>
 

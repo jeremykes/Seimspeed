@@ -163,6 +163,9 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ url('/user') }}">Messages</a></li>
+                                    <li><a href="{{ url('/user/settings') }}">Settings</a></li>
+                                    <li role="separator" class="divider"></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
@@ -174,7 +177,6 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
-                                    <li><a href="{{ url('/user/') }}">My profile</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -203,13 +205,13 @@
                 </div>
 
                 <div class="col-md-12" style="padding:0;margin:0">
-                    <ul class="list-group" style="padding:0;margin:0">
+                    <!-- <ul class="list-group" style="padding:0;margin:0">
                         <li class="list-group-item">Item 1</li>
                         <li class="list-group-item">Item 2</li>
                         <li class="list-group-item">Item 3</li>
                         <li class="list-group-item">Item 4</li>
                         <li class="list-group-item">Item 5</li>
-                    </ul> 
+                    </ul>  -->
                 </div>
             </div>
 
@@ -219,7 +221,7 @@
 
             <div class="col-md-2">
                 <!-- Right column -->
-                <div class="panel panel-default">
+                <!-- <div class="panel panel-default">
                     <div class="panel-heading">
                         Advert 1
                     </div>
@@ -244,7 +246,7 @@
                     <div class="panel-body">
                         Advert 3 content
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -262,6 +264,8 @@
         var user_id = 0;
         var base_url = "{{ url('/') }}";
 
+        var corpHome = true;
+
         @if (Auth::check())
 
             getNotifications();
@@ -274,7 +278,8 @@
         var timeArray = [];
         var tradesArray = [];
 
-        var nextPageURL = base_url + '/getcorpnewsfeed?corporate_id=' + corporateID;
+        var nextPageURL = base_url + '/getcorpnewsfeed?corporate_id=' + {{ $corporate->id }};
+
         var noNextPage = false;
  
     </script>

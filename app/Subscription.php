@@ -22,8 +22,9 @@ class Subscription extends Model
     /**
     * Get the corporations with this subscription.
     */
-    public function corporates()
+    public function corporate()
     {
-        return $this->hasMany('App\Corporate');
+        // return $this->hasMany('App\Corporate');
+        return $this->hasOne('App\Corporate');
     }    
 }

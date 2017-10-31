@@ -33,7 +33,7 @@ class CarAuctionAdded implements ShouldBroadcast
         $this->carauction = $carauction;
         $this->carimages = $carauction->car->images;
         $this->comment_count = $carauction->car->comments->count();
-        $this->offer_count = $carauction->offers->count();
+        $this->offer_count = $carauction->bids->count();
         $this->tail_count = $carauction->car->tails->count();
     }
 

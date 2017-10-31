@@ -22,19 +22,7 @@
         
         {!! csrf_field() !!}
 
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <strong>Whoops! Something went wrong!</strong>
-
-                <br><br>
-
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        @include('common.errors')
 
         <p><strong>Display name</strong>: <input name="name" type="text" class="form-control" value="{{ $user->name }}"/></p>
         <p><strong>Email</strong>: <input name="email" type="text" class="form-control" value="{{ $user->email }}"/></p>

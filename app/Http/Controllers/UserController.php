@@ -96,10 +96,14 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $messages = Message::where('user_id_receiving', $user->id)->select('user_id_sending')->groupBy('user_id_sending')->get();
+        $messages = Message::where('user_id_receiving', $user->id)
+                            ->select('user_id_sending')
+                            ->groupBy('user_id_sending')
+                            ->get();
 
         $corporateusers = Corporateuser::where('user_id', $user->id)->get();
         $corporate_user_administrator = false;
+
         foreach ($corporateusers as $corporateuser) {
             if ($corporateuser->user->hasRole('administrator')) {
                 $corporate_user_administrator = true;
@@ -119,8 +123,15 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response 
      */
-    public function usersettings(Request $request)
+    public function usersettings(Request $request, $id = null)
     {
+        if ($id != null) {
+            $notification = Auth::user()->notifications()->where('id',$id)->first();
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+        
         $user = Auth::user();
 
         $settings = Usersetting::where('user_id', $user->id)->first();
@@ -202,6 +213,42 @@ class UserController extends Controller
         $settings->save();
 
         return redirect('/user/settings');
+    }
+
+    /**
+     * Add Corporate Form
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function addcorporateform(Request $request)
+    {
+        $user = Auth::user();
+
+        $corporate_user_administrator = false;
+
+        return view('user.createcorporate', [
+            'user' => $user,
+            'corporate_user_administrator' => $corporate_user_administrator,
+        ]); 
+    }
+
+    /**
+     * Add Corporate Form
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function addcorporatepending(Request $request)
+    {
+        $user = Auth::user();
+
+        $corporate_user_administrator = false;
+
+        return view('user.createcorporate-pending', [
+            'user' => $user,
+            'corporate_user_administrator' => $corporate_user_administrator,
+        ]); 
     }
 
     /**

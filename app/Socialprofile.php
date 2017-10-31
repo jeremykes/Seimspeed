@@ -14,7 +14,6 @@ class Socialprofile extends Model
     	'user_id', 
     	'provider', 
     	'social_id', 
-    	'propic', 
     	'profilepicurl',
     ];
 

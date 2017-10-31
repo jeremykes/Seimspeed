@@ -31,13 +31,14 @@
 
                 @foreach ($messages as $message)
 
-                    <li class="list-group-item">
-                        <a href="javascript:void(0)" onclick="getUserMessages({{ $message->sendinguser->id }})">
-                            <img src="{{ $message->sendinguser->propic }}" style="width:20px;height:20px"> {{ $message->sendinguser->name }}
-                        </a>
-                    </li>
+                        <li class="list-group-item">
+                            <a href="javascript:void(0)" onclick="getUserMessages({{ $message->sendinguser->id }})">
+                                <img src="{{ $message->sendinguser->propic }}" style="width:20px;height:20px"> {{ $message->sendinguser->name }}
+                            </a>
+                        </li>
                     
                 @endforeach
+
 
             </ul> 
 
@@ -67,3 +68,4 @@
 </div>
 
 @endsection
+

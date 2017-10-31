@@ -57,6 +57,13 @@
 
             <div class="col-md-12">
                 <a href="{{ url('/corporate/' . $carauction->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $carauction->corporate->name }}</span></a>
+                
+                @if (Auth::check())
+                    @if (Auth::user()->corporateuser->corporate->id == $carauction->corporate->id && ( Auth::user()->hasRole('sales') || Auth::user()->hasRole('administrator') ) )
+                        <a class="btn btn-default btn-xs pull-right" href="{{ url('/corporate/' . $carauction->corporate->id . '/corpuser/car/' . $carauction->car->id . '/carauction/' . $carauction->id ) }}">See in Store</a>
+                    @endif
+                @endif
+
                 <hr style="padding:5px;margin:0">
             </div>
 
@@ -65,8 +72,8 @@
 
                 @foreach ($carauction->car->images as $carimage)
 
-                    <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->thumb_img_url }}">
-                      <a href="{{ $carimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $carimage->thumb_img_url }}"/></a>
+                    <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->img_url }}">
+                      <a href="{{ $carimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $carimage->img_url }}"/></a>
                     </li>
 
                 @endforeach

@@ -49,7 +49,7 @@
 
 <div class="col-md-12">
 
-    <form action="{{ url('/corporate/' . $corporate->id .'/corpuser/sales/car/addsale') }}" method="post">
+    <form action="{{ url('/corporate/' . $corporate->id .'/corpuser/sales/car/updatesale') }}" method="post">
 
         @include('common.errors')
 

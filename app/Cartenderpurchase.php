@@ -25,7 +25,7 @@ class Cartenderpurchase extends Model
     /**
 	* Get the cartender that owns this reserve.
 	*/
-	public function tender()
+	public function cartender()
 	{
 		return $this->BelongsTo('App\Cartender');
 	}
@@ -33,7 +33,7 @@ class Cartenderpurchase extends Model
 	/**
 	* Get the car tender reserve that owns this purchase.
 	*/
-	public function reserve()
+	public function cartenderreserve()
 	{
 		return $this->BelongsTo('App\Cartenderreserve');
 	}

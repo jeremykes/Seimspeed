@@ -40,7 +40,7 @@
   <div class="col-md-12"><hr style="padding:5px;margin:0"></div>
 
   <div class="col-md-12">
-      <form action="{{ url('/corporate/' . $corporate->id . '/corpuser/maintainer/addcorporateuser') }}" method="post">
+      <form action="{{ url('/corporate/' . $corporate->id . '/corpuser/maintainer/updatecorporateuser/' . $corporateuser->id) }}" method="post">
 
           @include('common.errors')
 

@@ -132,7 +132,7 @@
 									<td>K{{ number_format($partsale->price, 2) }}</td>
 									<td>{{ count($partsale->offers) }}</td>
 									<td>{{ $partsale->created_at->diffForHumans() }}</td>
-									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $partsale->part->id . '/partsale/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/part/' . $partsale->part->id . '/partsale/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
 						@endforeach
@@ -231,7 +231,7 @@
 									<td>{{ count($partsale->offers) }}</td>
 									<td>{{ $partsale->created_at->diffForHumans() }}</td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/part/updatesaleform/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
-									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $partsale->part->id . '/partsale/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/part/' . $partsale->part->id . '/partsale/' . $partsale->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
 						@endforeach
@@ -249,7 +249,7 @@
 
 @section('script')
 
-<script src="{{ asset('DataTables/datatables.js') }}"></script>
+<script src="{{ asset('datatables/datatables.js') }}"></script>
 
 <script>
 	$(document).ready(function(){

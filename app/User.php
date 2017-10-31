@@ -10,6 +10,8 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 use App\Traits\CorporateUserTrait;
 
+use DB;
+
 class User extends Authenticatable 
 {
     use Notifiable;
@@ -18,6 +20,31 @@ class User extends Authenticatable
 
     // This is used to check whether a user is part of the Corporation
     use CorporateUserTrait;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function($user)
+        {
+            $usersetting = new Usersetting;
+            $usersetting->user_id = $user->id;
+            $usersetting->receive_email_notifications = 1;
+            $usersetting->save();
+        });
+    }
+
+    /**
+     * Detach all roles from a user
+     * 
+     * @return object
+     */
+    public function detachAllRoles()
+    {
+        DB::table('role_user')->where('user_id', $this->id)->delete();
+
+        return $this;
+    }
 
     /**
      * The attributes that are mass assignable.

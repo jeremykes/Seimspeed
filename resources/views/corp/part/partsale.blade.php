@@ -75,6 +75,71 @@
 
 
 @section('store-content')
+
+<!-- Purchased Form -->
+<div class="modal fade" tabindex="-1" role="dialog" id="salePurchaseModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">                        
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Purchase Details</h4>
+            </div>
+            <div class="modal-body">
+
+                @include('common.errors')
+
+                <form action="{{ url('/corporate/' . $corporate->id .'/corpuser/sales/part/purchasesale') }}" method="post">
+
+                    {{ csrf_field() }}
+
+                    <input type="hidden" id="partsalereserve_id" name="partsalereserve_id">    
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="additionalfees" class="col-sm-2 control-label">Additional fees</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="additionalfees" name="additionalfees">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="additionalfeesdescript" class="col-sm-2 control-label">Additional fees description</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="additionalfeesdescript" name="additionalfeesdescript" placeholder="Additional fees description">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="method" class="col-sm-2 control-label">Payment method</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="method" name="method">
+                                    <option value="cash">Cash</option>
+                                    <option value="card">Card</option>
+                                    <option value="cheque">Cheque</option>
+                                    <option value="onlinetransfer">Online transfer</option>
+                                    <option value="bankdeposit">Bank deposit</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-sm-2 control-label">Note</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="note" placeholder="Note">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Purchase</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12"><br></div>
 
 <div class="col-md-12">
@@ -85,6 +150,9 @@
 
 <div class="col-md-7" style="padding-left:0;padding-right:0">
     <div class="col-md-12">
+
+        @include('common.errors')
+    
         <div class="panel" style="padding-bottom:0;margin-bottom:0">
             <div class="panel-body">
                 <div class="col-md-3" id="part_images">
@@ -92,8 +160,8 @@
 
                     @foreach ($partsale->part->images as $partimage)
 
-                        <li id="partimage{{ $partimage->id }}" data-thumb="{{ $partimage->thumb_img_url }}">
-                          <a href="{{ $partimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $partimage->thumb_img_url }}"/></a>
+                        <li id="partimage{{ $partimage->id }}" data-thumb="{{ $partimage->img_url }}">
+                          <a href="{{ $partimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $partimage->img_url }}"/></a>
                         </li>
 
                     @endforeach
@@ -196,7 +264,7 @@
                             <strong>K{{ number_format($partsalereserve->partsaleoffer->offer, 2) }}</strong>&nbsp;&nbsp;&nbsp;
                             <span style="font-size:9px;color:gray">{{ $partsalereserve->created_at->diffForHumans() }}</span>
                             <span class="pull-right">
-                                <button class="btn btn-xs btn-success" onclick="purchaseReservePartSaleOffer({{ $partsalereserve->id }})"><i class="fa fa-money"></i></button> 
+                                <button class="btn btn-xs btn-success" onclick="purchaseReservePartSaleOfferForm({{ $partsalereserve->id }})"><i class="fa fa-money"></i></button> 
                                 <button class="btn btn-xs btn-info" onclick="#"><i class="fa fa-envelope"></i></button> 
                                 <button class="btn btn-xs btn-warning" onclick="cancelReservePartSaleOffer({{ $partsalereserve->partsaleoffer->id }})"><i class="fa fa-trash"></i></button>
                             </span>

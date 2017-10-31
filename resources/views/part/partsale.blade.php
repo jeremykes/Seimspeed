@@ -25,8 +25,8 @@
 
                 @foreach ($partsale->part->images as $partimage)
 
-                    <li id="partimage{{ $partimage->id }}" data-thumb="{{ $partimage->thumb_img_url }}">
-                      <a href="{{ $partimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $partimage->thumb_img_url }}"/></a>
+                    <li id="partimage{{ $partimage->id }}" data-thumb="{{ $partimage->img_url }}">
+                      <a href="{{ $partimage->img_url }}" data-lightbox="image"><img class="img-responsive" src="{{ $partimage->img_url }}"/></a>
                     </li>
 
                 @endforeach

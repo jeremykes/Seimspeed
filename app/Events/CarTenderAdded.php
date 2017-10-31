@@ -33,7 +33,7 @@ class CarTenderAdded implements ShouldBroadcast
         $this->cartender = $cartender;
         $this->carimages = $cartender->car->images;
         $this->comment_count = $cartender->car->comments->count();
-        $this->offer_count = $cartender->offers->count();
+        $this->offer_count = $cartender->tenders->count();
         $this->tail_count = $cartender->car->tails->count();
     }
 

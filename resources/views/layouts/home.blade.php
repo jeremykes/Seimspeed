@@ -157,6 +157,9 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ url('/user') }}">Messages</a></li>
+                                    <li><a href="{{ url('/user/settings') }}">Settings</a></li>
+                                    <li role="separator" class="divider"></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
@@ -168,7 +171,6 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
-                                    <li><a href="{{ url('/user/') }}">My profile</a></li>
                                 </ul>
                             </li>
                         @endif
@@ -181,13 +183,13 @@
         <div class="container">
             
             <div class="col-md-2">
-                <ul class="list-group">
+                <!-- <ul class="list-group">
                     <li class="list-group-item">Item 1</li>
                     <li class="list-group-item">Item 2</li>
                     <li class="list-group-item">Item 3</li>
                     <li class="list-group-item">Item 4</li>
                     <li class="list-group-item">Item 5</li>
-                </ul>   
+                </ul>  -->  
             </div>
 
             <div class="col-md-8">
@@ -212,7 +214,7 @@
             </div>
 
             <div class="col-md-2">
-                <div class="col-md-12">
+                <!-- <div class="col-md-12">
                     <div class="panel">
                         <div class="panel-heading">
                             Advert 1
@@ -243,7 +245,7 @@
                             Advert 3 content
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
@@ -261,6 +263,8 @@
         var reserves_count = 0;
         var user_id = 0;
         var base_url = "{{ url('/') }}";
+
+        var corpHome = false;
 
         @if (Auth::check())
 

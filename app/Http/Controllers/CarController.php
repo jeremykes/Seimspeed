@@ -9,6 +9,7 @@ use Auth;
 use Notification;
 use DB;
 use Illuminate\Support\Facades\Storage;
+use Session;
 
 use App\User;
 use App\Corporate;
@@ -16,15 +17,19 @@ use App\Car;
 use App\Carsale;
 use App\Carsaleoffer;
 use App\Carsalereserve;
+use App\Carsalepurchase;
 use App\Carrent;
 use App\Carrentoffer;
 use App\Carrentreserve;
+use App\Carrentpurchase;
 use App\Cartender;
 use App\Cartendertender;
 use App\Cartenderreserve;
+use App\Cartenderpurchase;
 use App\Carauction;
 use App\Carauctionbid;
 use App\Carauctionreserve;
+use App\Carauctionpurchase;
 
 use App\Carmakemodel;
 use App\Carimage;
@@ -137,6 +142,7 @@ class CarController extends Controller
 
         $imageName = $request->file->hashName();
         $image_url = $path;
+        $image_url_full = 'storage/' . $path;
 
         $session_key_tail = 'car_image_url';
 
@@ -149,7 +155,7 @@ class CarController extends Controller
         $car_image_upload_count++;
         $session_key = $car_image_upload_count.$session_key_tail;
 
-        $request->session()->put($session_key, $image_url);
+        $request->session()->put($session_key, $image_url_full);
         $request->session()->put('car_image_upload_count', $car_image_upload_count);
 
         return response()->json(
@@ -213,6 +219,14 @@ class CarController extends Controller
      */
     public function addsaleform(Corporate $corporate)
     {
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.createcarsale', [
@@ -233,6 +247,25 @@ class CarController extends Controller
             return redirect()->back();
         }
 
+        // Remove all other image sessions
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        } 
+
+        // Initalize session with images
+        $car_image_upload_count = 0;
+        $session_key_tail = 'car_image_url';
+        foreach ($carsale->car->images as $carimage) {
+            $car_image_upload_count++;
+            $session_key = $car_image_upload_count.$session_key_tail;
+            $request->session()->put($session_key, $carimage->img_url);
+            $request->session()->put('car_image_upload_count', $car_image_upload_count);
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.carsaleedit', [
@@ -249,6 +282,14 @@ class CarController extends Controller
      */
     public function addrentform(Corporate $corporate)
     {
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.createcarrent', [
@@ -269,6 +310,25 @@ class CarController extends Controller
             return redirect()->back();
         }
 
+        // Remove all other image sessions
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        } 
+
+        // Initalize session with images
+        $car_image_upload_count = 0;
+        $session_key_tail = 'car_image_url';
+        foreach ($carsale->car->images as $carimage) {
+            $car_image_upload_count++;
+            $session_key = $car_image_upload_count.$session_key_tail;
+            $request->session()->put($session_key, $carimage->img_url);
+            $request->session()->put('car_image_upload_count', $car_image_upload_count);
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.carrentedit', [
@@ -285,6 +345,14 @@ class CarController extends Controller
      */
     public function addtenderform(Corporate $corporate)
     {
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.createcartender', [
@@ -305,6 +373,25 @@ class CarController extends Controller
             return redirect()->back();
         }
 
+        // Remove all other image sessions
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        } 
+
+        // Initalize session with images
+        $car_image_upload_count = 0;
+        $session_key_tail = 'car_image_url';
+        foreach ($carsale->car->images as $carimage) {
+            $car_image_upload_count++;
+            $session_key = $car_image_upload_count.$session_key_tail;
+            $request->session()->put($session_key, $carimage->img_url);
+            $request->session()->put('car_image_upload_count', $car_image_upload_count);
+        }
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.cartenderedit', [
@@ -321,6 +408,14 @@ class CarController extends Controller
      */
     public function addauctionform(Corporate $corporate)
     {
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        } 
+
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
 
         return view('corp.car.createcarauction', [
@@ -339,6 +434,25 @@ class CarController extends Controller
         // This is the check for Corp Car. Move this out to Traits later.
         if ($carauction->corporate->id != $corporate->id) {
             return redirect()->back();
+        }
+
+        // Remove all other image sessions
+        if (Session::has('car_image_upload_count')) {
+            $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'car_image_url');
+            }
+            Session::forget('car_image_upload_count');
+        } 
+
+        // Initalize session with images
+        $car_image_upload_count = 0;
+        $session_key_tail = 'car_image_url';
+        foreach ($carsale->car->images as $carimage) {
+            $car_image_upload_count++;
+            $session_key = $car_image_upload_count.$session_key_tail;
+            $request->session()->put($session_key, $carimage->img_url);
+            $request->session()->put('car_image_upload_count', $car_image_upload_count);
         }
 
         $carmakes = Carmakemodel::select('make')->groupBy('make')->pluck('make')->toArray();
@@ -373,6 +487,7 @@ class CarController extends Controller
             'make' => 'required',
             'model' => 'required',
             'price' => 'required|numeric',
+            'weight' => 'numeric',
         ]);
 
         if ($request->car_id != "0" || $request->car_id != 0) {
@@ -391,7 +506,7 @@ class CarController extends Controller
             }
             $carsale->price = $request->price;
             if ($request->startdate) {
-                $carsale->start_date = $request->start_date;
+                $carsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
             }
             if ($request->salereserveholddays) {
                 $carsale->salereserveholddays = $request->salereserveholddays;
@@ -406,7 +521,7 @@ class CarController extends Controller
         } else {
             $car = new Car;
             $car->corporate_id = $corporate->id;
-            $car->datebought = strtotime($request->datebought);
+            $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
             // $car->dateregistered = $request->dateregistered;
             $car->weight = $request->weight;
             $car->plates = $request->plates;
@@ -432,7 +547,7 @@ class CarController extends Controller
             }
             $carsale->price = $request->price;
             if ($request->startdate) {
-                $carsale->start_date = $request->start_date;
+                $carsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
             }
             if ($request->salereserveholddays) {
                 $carsale->salereserveholddays = $request->salereserveholddays;
@@ -446,7 +561,7 @@ class CarController extends Controller
             $carsale->save();
         }
 
-        // Move images to permanent directory
+        // Save the images in session
         $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
         $session_key_tail = 'car_image_url';
 
@@ -458,7 +573,7 @@ class CarController extends Controller
             $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
             $carimage->save();
 
-            $request->session()->forget($i.$session_key_tail);
+            // $request->session()->forget($i.$session_key_tail);
         }
 
         // Notification (if carsale status == open)
@@ -476,7 +591,7 @@ class CarController extends Controller
         // Fire Car Sale added event
         event(new CarSaleAdded($carsale));
 
-        return redirect('/corporate/' . $corporate->id . '/dashboard');
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -489,7 +604,11 @@ class CarController extends Controller
     {
         $this->validate($request, [
             'carsale_id' => 'required|numeric',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
             'price' => 'required|numeric',
+            'weight' => 'numeric',
         ]);
 
         $carsale = Carsale::findOrFail($request->carsale_id);
@@ -501,7 +620,7 @@ class CarController extends Controller
         }
 
         $car->corporate_id = $corporate->id;
-        $car->datebought = strtotime($request->datebought);
+        $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
         // $car->dateregistered = $request->dateregistered;
         $car->weight = $request->weight;
         $car->plates = $request->plates;
@@ -526,7 +645,7 @@ class CarController extends Controller
         // }
         $carsale->price = $request->price;
         if ($request->startdate) {
-            $carsale->start_date = $request->start_date;
+            $carsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
         }
         if ($request->salereserveholddays) {
             $carsale->salereserveholddays = $request->salereserveholddays;
@@ -535,8 +654,24 @@ class CarController extends Controller
         }
         $carsale->negotiable = $request->negotiable;
         // $carsale->status = $request->status;
-        $carsale->note = $request->note;
+        $carsale->note = $request->salenote;
         $carsale->save();
+
+        // Delete all old images
+        DB::table('carimages')->where('car_id', $car->id)->delete();
+
+        // Save updated images
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+            // $request->session()->forget($i.$session_key_tail);
+        }
 
         // Notification (if carsale status == open)
         // Notify all users commented, offered, tailed.
@@ -552,7 +687,8 @@ class CarController extends Controller
             Notification::send($users, new CarSaleUpdatedNotification($carsale));
         }
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -766,28 +902,29 @@ class CarController extends Controller
 
         // This is the check for Corp Car. Move this out to Traits later.
         if ($carsale->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['You do not own this car.']);
+            // return response()->json(['success'=>false]);
         }
 
         // This is the check for Carsale status. Move this out to Traits later.
         if ($carsale->status != 'reserved') {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['Car is not reserved. You need to have at least 3 reserves.']);
+            // return response()->json(['success'=>false]);
         }
 
         $this->validate($request, [
-            'amount' => 'required|numeric',
-            'tax' => 'numeric',
             'additionalfees' => 'numeric',
         ]);
 
         $carsalepurchase = new Carsalepurchase;
         $carsalepurchase->carsale_id = $carsale->id;
         $carsalepurchase->carsalereserve_id = $carsalereserve->id;
-        $carsalepurchase->amount = $request->amount;
-        $carsalepurchase->tax = $request->tax;
+        $carsalepurchase->amount = $carsaleoffer->offer;
+        $carsalepurchase->tax = $carsaleoffer->offer * 0.3;
         $carsalepurchase->additionalfees = $request->additionalfees;
-        $carsalepurchase->additionalfeesdescript  = $request->additionalfeesdescript ;
-        $carsalepurchase->uniquepaymentid = $request->uniquepaymentid;
+        $carsalepurchase->additionalfeesdescript  = $request->additionalfeesdescript;
+        // Format: corporateID . carsaleID . carsalereserveID . userID
+        $carsalepurchase->uniquepaymentid = '00' . $carsale->corporate->id . $carsale->id . $carsalereserve->id . $carsaleoffer->user->id;
         $carsalepurchase->method = $request->method;
         $carsalepurchase->note = $request->note;
         $carsalepurchase->save();
@@ -805,14 +942,15 @@ class CarController extends Controller
             ->where('notificables.model_name', 'car')
             ->get();
 
-        Notification::send($users, new CarSalePurchasedNotification($carsaleoffer));
+        Notification::send($users, new CarSalePurchasedNotification($carsale));
 
         $carsaleoffer->user->notify(new CarSaleOfferReservePurchasedNotification($carsaleoffer));
 
         // Fire Car purchased event
         event(new CarSaleOfferReservePurchased($carsale));
 
-        return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
+        // return response()->json(['success'=>true]);
     }
 
     // ===================================================================================
@@ -834,8 +972,11 @@ class CarController extends Controller
         $this->validate($request, [
             'car_id' => 'numeric',
             'rateperday' => 'numeric',
-            'rateperhour' => 'numeric',
-            'bondfee' => 'numeric',
+            // 'rateperhour' => 'numeric',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
 
@@ -854,7 +995,7 @@ class CarController extends Controller
                 $carrent->cargroup_id = $request->cargroup_id;
             }
             $carrent->rateperday = $request->rateperday;
-            $carrent->rateperhour = $request->rateperhour;
+            $carrent->rateperhour = 0;
             $carrent->bondfee = $request->bondfee;
             if ($request->rentreserveholddays) {
                 $carrent->rentreserveholddays = $request->rentreserveholddays;
@@ -868,7 +1009,7 @@ class CarController extends Controller
         } else {
             $car = new Car;
             $car->corporate_id = $corporate->id;
-            $car->datebought = strtotime($request->datebought);
+            $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
             // $car->dateregistered = $request->dateregistered;
             $car->weight = $request->weight;
             $car->plates = $request->plates;
@@ -893,7 +1034,7 @@ class CarController extends Controller
                 $carrent->cargroup_id = $request->cargroup_id;
             }
             $carrent->rateperday = $request->rateperday;
-            $carrent->rateperhour = $request->rateperhour;
+            $carrent->rateperhour = 0;
             $carrent->bondfee = $request->bondfee;
             if ($request->rentreserveholddays) {
                 $carrent->rentreserveholddays = $request->rentreserveholddays;
@@ -904,6 +1045,21 @@ class CarController extends Controller
             $carrent->note = $request->rentnote;
 
             $carrent->save();
+        }
+
+        // Save the images in session
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+
+            // $request->session()->forget($i.$session_key_tail);
         }
 
 
@@ -922,7 +1078,9 @@ class CarController extends Controller
         // Fire Car Rent added event
         event(new CarRentAdded($carrent));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -936,8 +1094,11 @@ class CarController extends Controller
         $this->validate($request, [
             'carrent_id' => 'required|numeric',
             'rateperday' => 'numeric',
-            'rateperhour' => 'numeric',
-            'bondfee' => 'numeric',
+            // 'rateperhour' => 'numeric',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
         $carrent = Carrent::findOrFail($request->carrent_id);
@@ -949,7 +1110,7 @@ class CarController extends Controller
         }
 
         $car->corporate_id = $corporate->id;
-        $car->datebought = strtotime($request->datebought);
+        $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
         // $car->dateregistered = $request->dateregistered;
         $car->weight = $request->weight;
         $car->plates = $request->plates;
@@ -981,8 +1142,24 @@ class CarController extends Controller
             $carrent->rentreserveholddays = 3;
         }
         // $carrent->status = $request->status;
-        $carrent->note = $request->note;
+        $carrent->note = $request->rentnote;
         $carrent->save();
+
+        // Delete all old images
+        DB::table('carimages')->where('car_id', $car->id)->delete();
+
+        // Save updated images
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+            // $request->session()->forget($i.$session_key_tail);
+        }
 
         if ($carrent->status == 'open') {
             // get all users
@@ -995,7 +1172,8 @@ class CarController extends Controller
             Notification::send($users, new CarRentUpdatedNotification($carrent));
         }
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -1192,28 +1370,28 @@ class CarController extends Controller
 
         // This is the check for Corp Car. Move this out to Traits later.
         if ($carrent->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['You do not own this car.']);
+            // return response()->json(['success'=>false]);
         }
 
         // This is the check for Carrent status. Move this out to Traits later.
         if ($carrent->status != 'reserved') {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['Car is not reserved. You need to have at least 1 reserve.']);
+            // return response()->json(['success'=>false]);
         }
 
         $this->validate($request, [
-            'amount' => 'required|numeric',
-            'tax' => 'numeric',
             'additionalfees' => 'numeric',
         ]);
 
         $carrentpurchase = new Carrentpurchase;
         $carrentpurchase->carrent_id = $carrent->id;
         $carrentpurchase->carrentreserve_id = $carrentreserve->id;
-        $carrentpurchase->amount = $request->amount;
-        $carrentpurchase->tax = $request->tax;
+        $carrentpurchase->amount = $carrentoffer->offer;
+        $carrentpurchase->tax = $carrentoffer->offer * 0.3;
         $carrentpurchase->additionalfees = $request->additionalfees;
         $carrentpurchase->additionalfeesdescript = $request->additionalfeesdescript;
-        $carrentpurchase->uniquepaymentid = $request->uniquepaymentid;
+        $carrentpurchase->uniquepaymentid = '00' . $carrent->corporate->id . $carrent->id . $carrentreserve->id . $carrentoffer->user->id;
         $carrentpurchase->method = $request->method;
         $carrentpurchase->note = $request->note;
         $carrentpurchase->save();
@@ -1231,14 +1409,15 @@ class CarController extends Controller
             ->where('notificables.model_name', 'car')
             ->get();
 
-        Notification::send($users, new CarRentPurchasedNotification($carrentoffer));
+        Notification::send($users, new CarRentPurchasedNotification($carrent));
 
         $carrentoffer->user->notify(new CarRentOfferReservePurchasedNotification($carrentoffer));
 
         // Fire Car purchased event
         event(new CarRentOfferReservePurchased($carrent));
 
-        return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
+        // return response()->json(['success'=>true]);
     }
 
     /**
@@ -1306,6 +1485,10 @@ class CarController extends Controller
             'car_id' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
         if ($request->car_id != "0" || $request->car_id != 0) {
@@ -1322,8 +1505,8 @@ class CarController extends Controller
             if ($request->cargroup_id) {
                 $cartender->cargroup_id = $request->cargroup_id;
             }
-            $cartender->start_date = $request->start_date;
-            $cartender->end_date = $request->end_date;
+            $cartender->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+            $cartender->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
             $cartender->signuprequired = $request->signuprequired;
             $cartender->signupfee = $request->signupfee;
             if ($request->tenderreserveholddays) {
@@ -1338,7 +1521,7 @@ class CarController extends Controller
         } else {
             $car = new Car;
             $car->corporate_id = $corporate->id;
-            $car->datebought = strtotime($request->datebought);
+            $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
             // $car->dateregistered = $request->dateregistered;
             $car->weight = $request->weight;
             $car->plates = $request->plates;
@@ -1362,8 +1545,8 @@ class CarController extends Controller
             if ($request->cargroup_id) {
                 $cartender->cargroup_id = $request->cargroup_id;
             }
-            $cartender->start_date = $request->start_date;
-            $cartender->end_date = $request->end_date;
+            $cartender->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+            $cartender->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
             $cartender->signuprequired = $request->signuprequired;
             $cartender->signupfee = $request->signupfee;
             if ($request->tenderreserveholddays) {
@@ -1374,6 +1557,21 @@ class CarController extends Controller
             $cartender->status = "opened";
             $cartender->note = $request->tendernote;
             $cartender->save();
+        }
+
+        // Save the images in session
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+
+            // $request->session()->forget($i.$session_key_tail);
         }
 
         // Notification if status == open
@@ -1393,7 +1591,9 @@ class CarController extends Controller
         // Fire Car Tender added event
         event(new CarTenderAdded($cartender));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -1408,6 +1608,10 @@ class CarController extends Controller
             'cartender_id' => 'required|numeric',
             'startdate' => 'required',
             'enddate' => 'required',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
         $cartender = Cartender::findOrFail($request->cartender_id);
@@ -1419,7 +1623,7 @@ class CarController extends Controller
         }
 
         $car->corporate_id = $corporate->id;
-        $car->datebought = strtotime($request->datebought);
+        $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
         // $car->dateregistered = $request->dateregistered;
         $car->weight = $request->weight;
         $car->plates = $request->plates;
@@ -1442,8 +1646,8 @@ class CarController extends Controller
         // if ($request->cargroup_id) {
         //     $cartender->cargroup_id = $request->cargroup_id;
         // }
-        $cartender->start_date = $request->start_date;
-        $cartender->end_date = $request->end_date;
+        $cartender->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+        $cartender->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
         $cartender->signuprequired = $request->signuprequired;
         $cartender->signupfee = $request->signupfee;
         if ($request->tenderreserveholddays) {
@@ -1452,9 +1656,24 @@ class CarController extends Controller
             $cartender->tenderreserveholddays = 3;
         }
         // $cartender->status = $request->status;
-        $cartender->note = $request->note;
-
+        $cartender->note = $request->tendernote;
         $cartender->save();
+
+        // Delete all old images
+        DB::table('carimages')->where('car_id', $car->id)->delete();
+
+        // Save updated images
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+            // $request->session()->forget($i.$session_key_tail);
+        }
 
         if ($cartender->status == 'open') {
             // get all users
@@ -1467,7 +1686,8 @@ class CarController extends Controller
             Notification::send($users, new CarTenderUpdatedNotification($cartender));
         }
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -1682,28 +1902,28 @@ class CarController extends Controller
 
         // This is the check for Corp Car. Move this out to Traits later.
         if ($cartender->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['You do not own this car.']);
+            // return response()->json(['success'=>false]);
         }
 
         // This is the check for Car status. Move this out to Traits later.
         if ($cartender->status != 'reserved') {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['Car is not reserved. You need to have at least 3 reserves.']);
+            // return response()->json(['success'=>false]);
         }
 
         $this->validate($request, [
-            'amount' => 'required|numeric',
-            'tax' => 'numeric',
             'additionalfees' => 'numeric',
         ]);
 
         $cartenderpurchase = new Cartenderpurchase;
         $cartenderpurchase->cartender_id = $cartender->id;
         $cartenderpurchase->cartenderreserve_id = $cartenderreserve->id;
-        $cartenderpurchase->amount = $request->amount;
-        $cartenderpurchase->tax = $request->tax;
+        $cartenderpurchase->amount = $cartendertender->tender;
+        $cartenderpurchase->tax = $cartendertender->tender * 0.3;
         $cartenderpurchase->additionalfees = $request->additionalfees;
         $cartenderpurchase->additionalfeesdescript = $request->additionalfeesdescript;
-        $cartenderpurchase->uniquepaymentid = $request->uniquepaymentid;
+        $cartenderpurchase->uniquepaymentid = '00' . $cartender->corporate->id . $cartender->id . $cartenderreserve->id . $cartendertender->user->id;
         $cartenderpurchase->method = $request->method;
         $cartenderpurchase->note = $request->note;
         $cartenderpurchase->save();
@@ -1721,14 +1941,15 @@ class CarController extends Controller
             ->where('notificables.model_name', 'car')
             ->get();
 
-        Notification::send($users, new CarTenderPurchasedNotification($cartendertender));
+        Notification::send($users, new CarTenderPurchasedNotification($cartender));
 
         $cartendertender->user->notify(new CarTenderTenderReservePurchasedNotification($cartendertender));
 
         // Fire Car purchased event
         event(new CarTenderTenderReservePurchased($cartender));
 
-        return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
+        // return response()->json(['success'=>true]);
     }
 
     // ===================================================================================
@@ -1753,6 +1974,10 @@ class CarController extends Controller
             'enddate' => 'required',
             'startbidprice' => 'numeric',
             'signupfee' => 'numeric',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
         if ($request->car_id != "0" || $request->car_id != 0) {
@@ -1769,8 +1994,8 @@ class CarController extends Controller
             if ($request->cargroup_id) {
                 $carauction->cargroup_id = $request->cargroup_id;
             }
-            $carauction->start_date = $request->start_date;
-            $carauction->end_date = $request->end_date;
+            $carauction->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+            $carauction->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
             $carauction->startbidprice = $request->startbidprice;
             $carauction->signuprequired = $request->signuprequired;
             if ($request->auctionreserveholddays) {
@@ -1785,8 +2010,8 @@ class CarController extends Controller
         } else {
             $car = new Car;
             $car->corporate_id = $corporate->id;
-            $car->datebought = strtotime($request->datebought);
-            $car->dateregistered = $request->dateregistered;
+            $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
+            $car->dateregistered = date("Y-m-d H:i:s", strtotime($request->dateregistered));
             $car->weight = $request->weight;
             $car->plates = $request->plates;
             $car->color = $request->color;
@@ -1809,8 +2034,8 @@ class CarController extends Controller
             if ($request->cargroup_id) {
                 $carauction->cargroup_id = $request->cargroup_id;
             }
-            $carauction->start_date = $request->start_date;
-            $carauction->end_date = $request->end_date;
+            $carauction->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+            $carauction->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
             $carauction->startbidprice = $request->startbidprice;
             $carauction->signuprequired = $request->signuprequired;
             if ($request->auctionreserveholddays) {
@@ -1822,6 +2047,21 @@ class CarController extends Controller
             $carauction->note = $request->auctionnote;
 
             $carauction->save();
+        }
+
+        // Save the images in session
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+
+            // $request->session()->forget($i.$session_key_tail);
         }
 
         // Notification if status == open
@@ -1841,7 +2081,9 @@ class CarController extends Controller
         // Fire Car Auction added event
         event(new CarAuctionAdded($carauction));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -1858,6 +2100,10 @@ class CarController extends Controller
             'enddate' => 'required',
             'startbidprice' => 'numeric',
             'signupfee' => 'numeric',
+            'webmenu' => 'required',
+            'make' => 'required',
+            'model' => 'required',
+            'weight' => 'numeric',
         ]);
 
         $carauction = Carauction::findOrFail($request->carauction_id);
@@ -1869,7 +2115,7 @@ class CarController extends Controller
         }
 
         $car->corporate_id = $corporate->id;
-        $car->datebought = strtotime($request->datebought);
+        $car->datebought = date("Y-m-d H:i:s", strtotime($request->datebought));
         // $car->dateregistered = $request->dateregistered;
         $car->weight = $request->weight;
         $car->plates = $request->plates;
@@ -1892,8 +2138,8 @@ class CarController extends Controller
         // if ($request->cargroup_id) {
         //     $carauction->cargroup_id = $request->cargroup_id;
         // }
-        $carauction->start_date = $request->start_date;
-        $carauction->end_date = $request->end_date;
+        $carauction->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
+        $carauction->enddate = date("Y-m-d H:i:s", strtotime($request->enddate));
         $carauction->startbidprice = $request->startbidprice;
         $carauction->signuprequired = $request->signuprequired;
         if ($request->auctionreserveholddays) {
@@ -1902,8 +2148,24 @@ class CarController extends Controller
             $carauction->auctionreserveholddays = 3;
         }
         // $carauction->status = $request->status;
-        $carauction->note = $request->note;
+        $carauction->note = $request->auctionnote;
         $carauction->save();
+
+        // Delete all old images
+        DB::table('carimages')->where('car_id', $car->id)->delete();
+
+        // Save updated images
+        $car_image_upload_count = (int)$request->session()->pull('car_image_upload_count');
+        $session_key_tail = 'car_image_url';
+        for ($i = 1; $i <= $car_image_upload_count; $i++) { 
+            $carimage = new Carimage;
+            $carimage->car_id = $car->id;
+            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->save();
+            // $request->session()->forget($i.$session_key_tail);
+        }
 
         if ($carauction->status == 'open') {
             // get all users
@@ -1916,7 +2178,8 @@ class CarController extends Controller
             Notification::send($users, new CarAuctionUpdatedNotification($carauction));
         }
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -2131,28 +2394,28 @@ class CarController extends Controller
 
         // This is the check for Corp Car. Move this out to Traits later.
         if ($carauction->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['You do not own this car.']);
+            // return response()->json(['success'=>false]);
         }
 
         // This is the check for Car status. Move this out to Traits later.
         if ($carauction->status != 'reserved') {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['Car is not reserved. You need to have at least 3 reserves.']);
+            // return response()->json(['success'=>false]);
         }
 
         $this->validate($request, [
-            'amount' => 'required|numeric',
-            'tax' => 'numeric',
             'additionalfees' => 'numeric',
         ]);
 
         $carauctionpurchase = new Carauctionpurchase;
         $carauctionpurchase->carauction_id = $carauction->id;
         $carauctionpurchase->carauctionreserve_id = $carauctionreserve->id;
-        $carauctionpurchase->amount = $request->amount;
-        $carauctionpurchase->tax = $request->tax;
+        $carauctionpurchase->amount = $carauctionbid->bid;
+        $carauctionpurchase->tax = $carauctionbid->bid * 0.3;
         $carauctionpurchase->additionalfees = $request->additionalfees;
         $carauctionpurchase->additionalfeesdescript = $request->additionalfeesdescript;
-        $carauctionpurchase->uniquepaymentid = $request->uniquepaymentid;
+        $carauctionpurchase->uniquepaymentid = '00' . $carauction->corporate->id . $carauction->id . $carauctionreserve->id . $carauctionbid->user->id;
         $carauctionpurchase->method = $request->method;
         $carauctionpurchase->note = $request->note;
         $carauctionpurchase->save();
@@ -2170,14 +2433,15 @@ class CarController extends Controller
             ->where('notificables.model_name', 'car')
             ->get();
 
-        Notification::send($users, new CarAuctionPurchasedNotification($carauctionbid));
+        Notification::send($users, new CarAuctionPurchasedNotification($carauction));
 
         $carauctionbid->user->notify(new CarAuctionBidReservePurchasedNotification($carauctionbid));
 
         // Fire Car purchased event
         event(new CarAuctionBidReservePurchased($carauction));
 
-        return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
+        // return response()->json(['success'=>true]);
     }
 }
 

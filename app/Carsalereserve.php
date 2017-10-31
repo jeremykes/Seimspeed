@@ -19,7 +19,7 @@ class Carsalereserve extends Model
     /**
 	* Get the carsale that owns this reserve.
 	*/
-	public function sale()
+	public function carsale()
 	{
 		return $this->BelongsTo('App\Carsale');
 	}
@@ -35,7 +35,7 @@ class Carsalereserve extends Model
 	/**
     * Get the purchase made to this reserve.
     */
-    public function purchase()
+    public function carsalepurchase()
     {
         return $this->hasOne('App\Carsalepurchase');
     }

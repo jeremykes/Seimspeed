@@ -124,6 +124,9 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/user') }}">Messages</a></li>
+                                <li><a href="{{ url('/user/settings') }}">Settings</a></li>
+                                <li role="separator" class="divider"></li>
                                 <li>
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
@@ -135,7 +138,6 @@
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
-                                <li><a href="{{ url('/user/') }}">My profile</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -186,13 +188,13 @@
         <div class="container">
             
             <div class="col-md-2">
-                <ul class="list-group">
+                <!-- <ul class="list-group">
                     <li class="list-group-item">Item 1</li>
                     <li class="list-group-item">Item 2</li>
                     <li class="list-group-item">Item 3</li>
                     <li class="list-group-item">Item 4</li>
                     <li class="list-group-item">Item 5</li>
-                </ul> 
+                </ul> --> 
             </div>
 
             <div class="col-md-10">

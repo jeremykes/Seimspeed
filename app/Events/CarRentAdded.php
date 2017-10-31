@@ -31,7 +31,7 @@ class CarRentAdded implements ShouldBroadcast
     public function __construct(Carrent $carrent)
     {
         $this->car = $carrent->car;
-        $this->carrent = $current;
+        $this->carrent = $carrent;
         $this->carimages = $carrent->car->images;
         $this->comment_count = $carrent->car->comments->count();
         $this->offer_count = $carrent->offers->count();

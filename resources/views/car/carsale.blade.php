@@ -47,11 +47,22 @@
 @section('content')
 
 <div class="col-md-12">
+    
+</div>
+
+<div class="col-md-12">
     <div class="panel" style="padding-bottom:0;margin-bottom:0">
         <div class="panel-body">
 
             <div class="col-md-12">
                 <a href="{{ url('/corporate/' . $carsale->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $carsale->corporate->name }}</span></a>
+
+                @if (Auth::check())
+                    @if (Auth::user()->corporateuser->corporate->id == $carsale->corporate->id && ( Auth::user()->hasRole('sales') || Auth::user()->hasRole('administrator') ) )
+                        <a class="btn btn-default btn-xs pull-right" href="{{ url('/corporate/' . $carsale->corporate->id . '/corpuser/car/' . $carsale->car->id . '/carsale/' . $carsale->id ) }}">See in Store</a>
+                    @endif
+                @endif
+
                 <hr style="padding:5px;margin:0">
             </div>
             
@@ -60,9 +71,9 @@
 
                 @foreach ($carsale->car->images as $carimage)
 
-                    <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->thumb_img_url }}">
+                    <li id="carimage{{ $carimage->id }}" data-thumb="{{ $carimage->img_url }}">
                         <a href="{{ $carimage->img_url }}" data-lightbox="image">
-                            <img class="img-responsive" src="{{ $carimage->thumb_img_url }}"/>
+                            <img class="img-responsive" src="{{ $carimage->img_url }}"/>
                         </a>
                     </li>
 
@@ -109,7 +120,7 @@
 
             <div class="col-md-12">
                 <hr style="margin:10px">
-                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarSaleOffers({{ $carsale->car->id }});"><i class="fa fa-money"></i> Offer</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarSaleOffers({{ $carsale->id }});"><i class="fa fa-money"></i> Offer</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarComments({{ $carsale->car->id }});"><i class="fa fa-comment"></i> Comment</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -149,7 +160,7 @@
                   <input type="text" class="form-control" placeholder="Amount" name="offer" id="offer">
                 </div>
               </div>
-              <a class="btn btn-success btn-xs" onclick="submitCarSaleOffer({{ $carsale->car->id }})">Offer</a>
+              <a class="btn btn-success btn-xs" onclick="submitCarSaleOffer({{ $carsale->id }})">Offer</a>
             </div>
           </div>
         </div>

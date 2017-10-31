@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Storage;
+use Session;
 
 use Auth;
 
@@ -73,6 +75,7 @@ class PartController extends Controller
 
         $imageName = $request->file->hashName();
         $image_url = $path;
+        $image_url_full = 'storage/' . $path;
 
         $session_key_tail = 'part_image_url';
 
@@ -85,7 +88,7 @@ class PartController extends Controller
         $part_image_upload_count++;
         $session_key = $part_image_upload_count.$session_key_tail;
 
-        $request->session()->put($session_key, $image_url);
+        $request->session()->put($session_key, $image_url_full);
         $request->session()->put('part_image_upload_count', $part_image_upload_count);
 
         return response()->json(
@@ -149,6 +152,14 @@ class PartController extends Controller
      */
     public function addsaleform(Corporate $corporate)
     {
+        if (Session::has('part_image_upload_count')) {
+            $part_image_upload_count = (int)Session::pull('part_image_upload_count');
+            for ($i = $part_image_upload_count; $i > 0; $i--) { 
+                Session::forget($i.'part_image_url');
+            }
+            Session::forget('part_image_upload_count');
+        }
+
         return view('corp.part.createpartsale', [
             'corporate' => $corporate,
         ]); 
@@ -164,6 +175,16 @@ class PartController extends Controller
         // This is the check for Corp part. Move this out to Traits later.
         if ($partsale->corporate->id != $corporate->id) {
             return redirect()->back();
+        }
+
+        // Initalize session with images
+        $part_image_upload_count = 0;
+        $session_key_tail = 'part_image_url';
+        foreach ($partsale->part->images as $partimage) {
+            $part_image_upload_count++;
+            $session_key = $part_image_upload_count.$session_key_tail;
+            $request->session()->put($session_key, $partimage->img_url);
+            $request->session()->put('part_image_upload_count', $part_image_upload_count);
         }
 
         return view('corp.part.partsaleedit', [
@@ -194,7 +215,7 @@ class PartController extends Controller
             'price' => 'required|numeric',
         ]);
 
-        if ($request->car_id != "0" || $request->car_id != 0) {
+        if ($request->part_id != "0" || $request->part_id != 0) {
             $part = Part::findOrFail($request->part_id);
 
             // This is the check for Corp part. Move this out to Traits later.
@@ -210,7 +231,7 @@ class PartController extends Controller
             }
             $partsale->price = $request->price;
             if ($request->startdate) {
-                $partsale->start_date = $request->start_date;
+                $partsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
             }
             if ($request->salereserveholddays) {
                 $partsale->salereserveholddays = $request->salereserveholddays;
@@ -242,7 +263,7 @@ class PartController extends Controller
             }
             $partsale->price = $request->price;
             if ($request->startdate) {
-                $partsale->start_date = $request->start_date;
+                $partsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
             }
             if ($request->salereserveholddays) {
                 $partsale->salereserveholddays = $request->salereserveholddays;
@@ -253,6 +274,21 @@ class PartController extends Controller
             $partsale->status = 'opened';
             $partsale->note = $request->note;
             $partsale->save();
+        }
+
+        // Save the images in session
+        $part_image_upload_count = (int)$request->session()->pull('part_image_upload_count');
+        $session_key_tail = 'part_image_url';
+
+        for ($i = 1; $i <= $part_image_upload_count; $i++) { 
+            $partimage = new Partimage;
+            $partimage->part_id = $part->id;
+            $partimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $partimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->save();
+
+            // $request->session()->forget($i.$session_key_tail);
         }
 
         // Notification (if partsale status == open)
@@ -272,7 +308,8 @@ class PartController extends Controller
         // Fire Part Sale added event
         event(new PartSaleAdded($partsale));
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
     }
 
     /**
@@ -312,7 +349,7 @@ class PartController extends Controller
         // }
         $partsale->price = $request->price;
         if ($request->startdate) {
-            $partsale->start_date = $request->start_date;
+            $partsale->startdate = date("Y-m-d H:i:s", strtotime($request->startdate));
         }
         if ($request->salereserveholddays) {
             $partsale->salereserveholddays = $request->salereserveholddays;
@@ -321,8 +358,24 @@ class PartController extends Controller
         }
         $partsale->negotiable = $request->negotiable;
         // $partsale->status = $request->status;
-        $partsale->note = $request->note;
+        $partsale->note = $request->salenote;
         $partsale->save();
+
+        // Delete all old images
+        DB::table('partimages')->where('part_id', $part->id)->delete();
+
+        // Save updated images
+        $part_image_upload_count = (int)$request->session()->pull('part_image_upload_count');
+        $session_key_tail = 'part_image_url';
+        for ($i = 1; $i <= $part_image_upload_count; $i++) { 
+            $partimage = new Partimage;
+            $partimage->part_id = $part->id;
+            $partimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            # Later compress this to make actual thumbs
+            $partimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->save();
+            // $request->session()->forget($i.$session_key_tail);
+        }
 
         // Notification (if partsale status == open)
         // Notify all users commented, offered, tailed.
@@ -338,7 +391,8 @@ class PartController extends Controller
             Notification::send($users, new PartSaleUpdatedNotification($partsale));
         }
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/dashboard');
     }
 
     /**
@@ -552,28 +606,28 @@ class PartController extends Controller
 
         // This is the check for Corp part. Move this out to Traits later.
         if ($partsale->corporate->id != $corporate->id) {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['You do not own this part.']);
+            // return response()->json(['success'=>false]);
         }
 
         // This is the check for partsale status. Move this out to Traits later.
         if ($partsale->status != 'reserved') {
-            return response()->json(['success'=>false]);
+            return redirect()->back()->withErrors(['Part is not reserved. You need to have at least 3 reserves.']);
+            // return response()->json(['success'=>false]);
         }
 
         $this->validate($request, [
-            'amount' => 'required|numeric',
-            'tax' => 'numeric',
             'additionalfees' => 'numeric',
         ]);
 
         $partsalepurchase = new Partsalepurchase;
         $partsalepurchase->partsale_id = $partsale->id;
         $partsalepurchase->partsalereserve_id = $partsalereserve->id;
-        $partsalepurchase->amount = $request->amount;
-        $partsalepurchase->tax = $request->tax;
+        $partsalepurchase->amount = $partsaleoffer->offer;
+        $partsalepurchase->tax = $partsaleoffer->offer * 0.3;
         $partsalepurchase->additionalfees = $request->additionalfees;
         $partsalepurchase->additionalfeesdescript = $request->additionalfeesdescript;
-        $partsalepurchase->uniquepaymentid = $request->uniquepaymentid;
+        $partsalepurchase->uniquepaymentid = '00' . $partsale->corporate->id . $partsale->id . $partsalereserve->id . $partsaleoffer->user->id;
         $partsalepurchase->method = $request->method;
         $partsalepurchase->note = $request->note;
         $partsalepurchase->save();
@@ -591,14 +645,15 @@ class PartController extends Controller
             ->where('notificables.model_name', 'part')
             ->get();
 
-        Notification::send($users, new PartSalePurchasedNotification($partsaleoffer));
+        Notification::send($users, new PartSalePurchasedNotification($partsale));
 
-        $partsaleoffer->user->notify(new PartSaleOfferReservePurchasedNotification($partsaleoffer));
+        $partsaleoffer->user->notify(new PartSaleOfferReservePurchasedNotification($partsale));
 
         // Fire Part purchased event
         event(new PartSaleOfferReservePurchased($partsale));
 
-        return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/store');
+        // return response()->json(['success'=>true]);
     }
 }
 

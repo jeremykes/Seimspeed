@@ -25,7 +25,7 @@ class Carrentpurchase extends Model
     /**
 	* Get the carrent that owns this reserve.
 	*/
-	public function rent()
+	public function carrent()
 	{
 		return $this->BelongsTo('App\Carrent');
 	}
@@ -33,7 +33,7 @@ class Carrentpurchase extends Model
 	/**
 	* Get the car rent reserve that owns this purchase.
 	*/
-	public function reserve()
+	public function carrentreserve()
 	{
 		return $this->BelongsTo('App\Carrentreserve');
 	}

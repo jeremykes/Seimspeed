@@ -275,10 +275,14 @@ function CarSaleBuild(data) {
 
     htmltext += '<div class="panel" id="carsale' + data.carsale_id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-12">';
-    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
-    htmltext += '       <hr style="padding:5px;margin:0">';
-    htmltext += '    </div>';
+
+    if (corpHome == false) {
+        htmltext += '    <div class="col-md-12">';
+        htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+        htmltext += '       <hr style="padding:5px;margin:0">';
+        htmltext += '    </div>';
+    }
+
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
@@ -299,9 +303,9 @@ function CarSaleBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-comment"> </i><span id="carsale_comment_count' + data.carsale_id + '"></span> comment</a>';
-    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carsale_offer_count' + data.carsale_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-comment"> </i><span id="carsale_comment_count' + data.carsale_id + '"></span> comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carsale_id + '/carsale/' + data.carsale_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carsale_tail_count' + data.carsale_id + '"></span> tail</a>';
     htmltext += '    </div>';
@@ -327,10 +331,14 @@ function CarRentBuild(data) {
 
     htmltext += '<div class="panel" id="carrent' + data.carrent_id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-12">';
-    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
-    htmltext += '       <hr style="padding:5px;margin:0">';
-    htmltext += '    </div>';
+
+    if (corpHome == false) {
+        htmltext += '    <div class="col-md-12">';
+        htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+        htmltext += '       <hr style="padding:5px;margin:0">';
+        htmltext += '    </div>';
+    }
+
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
@@ -343,9 +351,9 @@ function CarRentBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carrent_comment_count' + data.carrent_id + '"></span> comment</a>';
-    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carrent_offer_count' + data.carrent_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carrent_comment_count' + data.carrent_id + '"></span> comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carrent_id + '/carrent/' + data.carrent_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carrent_tail_count' + data.carrent_id + '"></span> tail</a>';
     htmltext += '    </div>';
@@ -371,10 +379,14 @@ function CarTenderBuild(data) {
 
     htmltext += '<div class="panel" id="cartender' + data.cartender_id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-12">';
-    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
-    htmltext += '       <hr style="padding:5px;margin:0">';
-    htmltext += '    </div>';
+
+    if (corpHome == false) {
+        htmltext += '    <div class="col-md-12">';
+        htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+        htmltext += '       <hr style="padding:5px;margin:0">';
+        htmltext += '    </div>';
+    }
+
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
@@ -387,9 +399,9 @@ function CarTenderBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="cartender_comment_count' + data.cartender_id + '"></span> comment</a>';
-    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="cartender_tender_count' + data.cartender_id + '"></span> tender</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="cartender_comment_count' + data.cartender_id + '"></span> comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.cartender_id + '/cartender/' + data.cartender_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="cartender_tail_count' + data.cartender_id + '"></span> tail</a>';
     htmltext += '    </div>';
@@ -415,10 +427,14 @@ function CarAuctionBuild(data) {
 
     htmltext += '<div class="panel" id="carauction' + data.carauction_id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-12">';
-    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
-    htmltext += '       <hr style="padding:5px;margin:0">';
-    htmltext += '    </div>';
+
+    if (corpHome == false) {
+        htmltext += '    <div class="col-md-12">';
+        htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+        htmltext += '       <hr style="padding:5px;margin:0">';
+        htmltext += '    </div>';
+    }
+
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="carimage' + data.car_id + '"></img>';
     htmltext += '    </div>';
@@ -431,9 +447,9 @@ function CarAuctionBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carauction_comment_count' + data.carauction_id + '"></span> comment</a>';
-    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="carauction_bid_count' + data.carauction_id + '"></span> bid</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="carauction_comment_count' + data.carauction_id + '"></span> comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/car/' + data.carauction_id + '/carauction/' + data.carauction_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="carauction_tail_count' + data.carauction_id + '"></span> tail</a>';
     htmltext += '    </div>';
@@ -459,10 +475,14 @@ function PartSaleBuild(data) {
 
     htmltext += '<div class="panel" id="partsale' + data.partsale_id + '">';
     htmltext += '  <div class="panel-body">';
-    htmltext += '    <div class="col-md-12">';
-    htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
-    htmltext += '       <hr style="padding:5px;margin:0">';
-    htmltext += '    </div>';
+
+    if (corpHome == false) {
+        htmltext += '    <div class="col-md-12">';
+        htmltext += '       <a href="' + base_url + '/corporate/' + data.corporate_id + '"><span style="font-size:20px;font-weight:bold">' + data.corporate_name + '</span></a>';
+        htmltext += '       <hr style="padding:5px;margin:0">';
+        htmltext += '    </div>';
+    }
+
     htmltext += '    <div class="col-md-3">';
     htmltext += '      <img class="img-responsive" id="partimage' + data.part_id + '"></img>';
     htmltext += '    </div>';
@@ -484,9 +504,9 @@ function PartSaleBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
-    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="partsale_comment_count' + data.partsale_id + '"></span> comment</a>';
-    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-money"></i> <span id="partsale_offer_count' + data.partsale_id + '"></span> offer</a>';
+    htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-comment"></i> <span id="partsale_comment_count' + data.partsale_id + '"></span> comment</a>';
     htmltext += '        &nbsp;&nbsp;&nbsp;&nbsp;';
     htmltext += '        <a href="' + base_url + '/corporate/' + data.corporate_id + '/part/' + data.partsale_id + '/partsale/' + data.partsale_id + '" style="cursor:pointer"><i class="fa fa-eye"></i> <span id="partsale_tail_count' + data.partsale_id + '"></span> tail</a>';
     htmltext += '    </div>';
@@ -560,7 +580,13 @@ function CarSaleOfferAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="caroffer' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png"> ';
+    }
+
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
@@ -636,7 +662,13 @@ function CarRentOfferAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="caroffer' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png"> ';
+    }
+
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
@@ -713,7 +745,13 @@ function CarTenderTenderAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="cartender' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png"> ';
+    }
+
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
@@ -790,7 +828,13 @@ function CarAuctionBidAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="carbid' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png"> ';
+    }
+
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
@@ -867,7 +911,13 @@ function PartSaleOfferAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="partoffer' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png"> ';
+    }
+
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
@@ -1037,7 +1087,12 @@ function cancelReservePartSaleOffer(offerID) {
 
 
 
-// Purchase Reserve Offer ======
+// Purchase Reserve Offer and Forms ======
+function purchaseReserveCarSaleOfferForm(reserveID) {
+    $('#carsalereserve_id').val(reserveID);
+    $('#salePurchaseModal').modal('show');
+}
+
 function purchaseReserveCarSaleOffer(reserveID) {
     $.ajax({
         url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/purchasesale",
@@ -1049,6 +1104,11 @@ function purchaseReserveCarSaleOffer(reserveID) {
             // Event takes care of action
         }
     });
+}
+
+function purchaseReserveCarRentOfferForm(reserveID) {
+    $('#carrentreserve_id').val(reserveID);
+    $('#rentPurchaseModal').modal('show');
 }
 
 function purchaseReserveCarRentOffer(reserveID) {
@@ -1064,7 +1124,12 @@ function purchaseReserveCarRentOffer(reserveID) {
     });
 }
 
-function purchaseReserveCarTenderOffer(reserveID) {
+function purchaseReserveCarTenderTenderForm(reserveID) {
+    $('#cartenderreserve_id').val(reserveID);
+    $('#tenderPurchaseModal').modal('show');
+}
+
+function purchaseReserveCarTenderTender(reserveID) {
     $.ajax({
         url: base_url + "/corporate/" + corporateID + "/corpuser/tenders/car/purchasetender",
         type: "POST",
@@ -1077,7 +1142,12 @@ function purchaseReserveCarTenderOffer(reserveID) {
     });
 }
 
-function purchaseReserveCarAuctionOffer(reserveID) {
+function purchaseReserveCarAuctionBidForm(reserveID) {
+    $('#carauctionreserve_id').val(reserveID);
+    $('#auctionPurchaseModal').modal('show');
+}
+
+function purchaseReserveCarAuctionBid(reserveID) {
     $.ajax({
         url: base_url + "/corporate/" + corporateID + "/corpuser/auctions/car/purchaseauction",
         type: "POST",
@@ -1088,6 +1158,11 @@ function purchaseReserveCarAuctionOffer(reserveID) {
             // Event takes care of action
         }
     });
+}
+
+function purchaseReservePartSaleOfferForm(reserveID) {
+    $('#partsalereserve_id').val(reserveID);
+    $('#salePurchaseModal').modal('show');
 }
 
 function purchaseReservePartSaleOffer(reserveID) {
@@ -1221,7 +1296,13 @@ function CarCommentAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="comment' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto">';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png" style="height:40px;width:auto"> ';
+    }
+
     htmltext += '  </div>';
 
     htmltext += '  <div class="col-md-10">';
@@ -1251,7 +1332,13 @@ function PartCommentAddedBuildTrade(data) {
 
     htmltext += '<div class="list-group-item col-md-12" id="comment' + data.id + '">';
     htmltext += '  <div class="col-md-2">';
-    htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto">';
+
+    if (data.propic != null) {
+        htmltext += '    <img class="img-responsive" src="' + data.propic + '" style="height:40px;width:auto"> ';
+    } else {
+        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png" style="height:40px;width:auto"> ';
+    }
+
     htmltext += '  </div>';
 
     htmltext += '  <div class="col-md-10">';
@@ -1684,7 +1771,6 @@ function getPartImages(data) {
             'part_array': data
         },
         success: function(ajaxdata) {
-            console.log(ajaxdata);
             if (ajaxdata.success == true) {
                 if (data.length == ajaxdata.partimages.length) {
                     for (var i = 0; i < data.length; i++) {
@@ -1882,7 +1968,13 @@ function getCarTails(carID) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
                     htmltext += '    <a href="'+ base_url + '/user/' + data.cartails[i].user_id + '">';
-                    htmltext += '      <img src="' + data.cartails[i].propic + '" style="height:50px;width:auto">';
+
+                    if (data.cartails[i].propic != null) {
+                        htmltext += '    <img class="img-responsive" src="' + data.cartails[i].propic + '" style="height:50px;width:auto"> ';
+                    } else {
+                        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png" style="height:50px;width:auto"> ';
+                    }
+
                     htmltext += '      &nbsp;&nbsp;&nbsp;';
                     htmltext += '      <strong>' + data.cartails[i].name + '</strong>';
                     htmltext += '    </a>';
@@ -1931,7 +2023,13 @@ function getPartTails(partID) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
                     htmltext += '    <a href="'+ base_url + '/user/' + data.parttails[i].user_id + '">';
-                    htmltext += '      <img src="' + data.parttails[i].propic + '" style="height:50px;width:auto">';
+
+                    if (data.parttails[i].propic != null) {
+                        htmltext += '    <img class="img-responsive" src="' + data.parttails[i].propic + '" style="height:50px;width:auto"> ';
+                    } else {
+                        htmltext += '    <img class="img-responsive" src="' + base_url + '/imgs/no-images.png" style="height:50px;width:auto"> ';
+                    }
+
                     htmltext += '      &nbsp;&nbsp;&nbsp;';
                     htmltext += '      <strong>' + data.parttails[i].name + '</strong>';
                     htmltext += '    </a>';
@@ -1968,7 +2066,7 @@ function getNotifications() {
                             if (jQuery.inArray(data.notifications[i].data.user_sending_id, uniqueUserIDArray) < 0) {
                                 uniqueUserIDArray.push(data.notifications[i].data.user_sending_id);
                                 
-                                htmltextMessages += '<p id="' + data.notifications[i].id + '" style="padding-left:5px;padding-right:5px;cursor:pointer" onclick="window.location=\'' + base_url + '/user/messages/' + data.notifications[i].data.user_sending_id + '\'"><span style="font-weight:bold">' + data.notifications[i].data.user_sending_name + '</span><span class="pull-right" style="font-size:8px;color:grey" id="mess' + data.notifications[i].id + '"></span><br>';
+                                htmltextMessages += '<p id="' + data.notifications[i].id + '" style="padding-left:5px;padding-right:5px;cursor:pointer" onclick="window.location=\'' + base_url + '/user\'"><span style="font-weight:bold">' + data.notifications[i].data.user_sending_name + '</span><span class="pull-right" style="font-size:8px;color:grey" id="mess' + data.notifications[i].id + '"></span><br>';
                                 htmltextMessages += data.notifications[i].data.message;
                                 htmltextMessages += '<hr style="padding:0;margin:0"></p>';
 
@@ -2040,23 +2138,27 @@ function getUserMessages(userID) {
             var htmltext = '';
 
             if (data.success == true) {
+                $('#usermessages').html('');
+
                 for (var i = 0; i < data.messages.length; i++) {
-                    if (data.messages[i].user_id_sending == user_id) {
-                        alertClass = 'alert alert-success';
-                        pullClass = 'pull-right';
-                    } else {
-                        alertClass = 'alert alert-info';
-                        pullClass = 'pull-left';
+                    if (data.messages[i].message != "") {
+                        if (data.messages[i].user_id_sending == user_id) {
+                            alertClass = 'alert alert-success';
+                            pullClass = 'pull-right';
+                        } else {
+                            alertClass = 'alert alert-info';
+                            pullClass = 'pull-left';
+                        }
+
+                        htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                        htmltext += data.messages[i].message;
+                        htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
+
+                        timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
                     }
-
-                    htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
-                    htmltext += data.messages[i].message;
-                    htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
-
-                    timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
                 }
 
-                $('#usermessages').append(htmltext);
+                $('#usermessages').html(htmltext);
 
                 updateTimestamps();
 
@@ -2084,22 +2186,30 @@ function getUserMessagesAndUser(userID) {
 
             if (data.success == true) {
 
-                $('#user-info').html('<img src="' + data.user.propic + '" style="width:20px;height:20px"/> ' + data.user.name);
+                if (data.user.propic != null) {
+                    $('#user-info').html('<img src="' + data.user.propic + '" style="width:20px;height:20px"/> ' + data.user.name);
+                } else {
+                    $('#user-info').html('<img src="' + base_url + '/imgs/no-images.png" style="width:20px;height:20px"/> ' + data.user.name);
+                }
+
+                
 
                 for (var i = 0; i < data.messages.length; i++) {
-                    if (data.messages[i].user_id_sending == user_id) {
-                        alertClass = 'alert alert-success';
-                        pullClass = 'pull-right';
-                    } else {
-                        alertClass = 'alert alert-info';
-                        pullClass = 'pull-left';
+                    if (data.messages[i].message != "") { 
+                        if (data.messages[i].user_id_sending == user_id) {
+                            alertClass = 'alert alert-success';
+                            pullClass = 'pull-right';
+                        } else {
+                            alertClass = 'alert alert-info';
+                            pullClass = 'pull-left';
+                        }
+
+                        htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
+                        htmltext += data.messages[i].message;
+                        htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
+
+                        timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
                     }
-
-                    htmltext += '<div class="col-md-12"><p style="padding:2px;margin:2px;" class="' + alertClass + ' ' + pullClass + '">';
-                    htmltext += data.messages[i].message;
-                    htmltext += '</p><span style="font-size:10px;color:gray;padding-top:9px" class="' + pullClass + '" id="messagetime' + data.messages[i].id + '"></span></div>';
-
-                    timeArray.push(['messagetime' + data.messages[i].id, data.messages[i].created_at]);
                 }
 
                 $('#usermessages').append(htmltext);
@@ -2121,7 +2231,6 @@ function sendMessage() {
             'message': $('.message_input').val()
         },
         success: function(data) {
-            console.log(data);
             if (data.success == true) {
                 var htmltext = '';
                 alertClass = 'alert alert-success';
@@ -2157,7 +2266,13 @@ function getNewUsers(partial) {
             if (data.success == true) {
                 for (var i = 0; i < data.users.length; i++) {
                     htmltext += '<a href="javascript:void(0);" onclick="addnewmessageuser(' + data.users[i].name + ', ' + data.users[i].id + ', ' + data.users[i].propic + ')" class="list-group-item" data-dismiss="modal">';
-                    htmltext += '   <img src="' + data.users[i].propic + '" style="width:20px;height:20px"/> ';
+                    
+                    if (data.users[i].propic != null) {
+                        htmltext += '   <img src="' + data.users[i].propic + '" style="width:20px;height:20px"/> ';
+                    } else {
+                        htmltext += '   <img src="' + base_url + '/imgs/no-images.png" style="width:20px;height:20px"/> ';
+                    }
+
                     htmltext +=     data.users[i].name;
                     htmltext += '   <span style="font-size:9px;color:gray">' + data.users[i].email + '</span>';
                     htmltext += '</a>';
@@ -2174,7 +2289,13 @@ function addnewmessageuser(userName,userID,propic) {
 
     htmltext += '<li class="list-group-item">';
     htmltext += '    <a href="javascript:void(0)" onclick="getUserMessages(' + userID + ')">';
-    htmltext += '        <img src="' + propic + '" style="width:20px;height:20px"> ' + userName;
+
+    if (propic != null) {
+        htmltext += '        <img src="' + propic + '" style="width:20px;height:20px"> ' + userName;
+    } else {
+        htmltext += '        <img src="' + base_url + '/imgs/no-images.png" style="width:20px;height:20px"> ' + userName;
+    }
+
     htmltext += '    </a>';
     htmltext += '</li>';
 
@@ -2466,6 +2587,30 @@ function initCarModelAutocomplete() {
         source: carmodels,
         minLength: 2
     });
+}
+
+
+function selectPlan(planClass) {
+    $('#btn-basic-plan').removeClass();
+    $('#btn-small-plan').removeClass();
+    $('#btn-business-plan').removeClass();
+    $('#btn-premium-plan').removeClass();
+
+    $('#btn-basic-plan').addClass('btn btn-default');
+    $('#btn-small-plan').addClass('btn btn-default');
+    $('#btn-business-plan').addClass('btn btn-default');
+    $('#btn-premium-plan').addClass('btn btn-default');
+
+    $('#btn-basic-plan').html('choose');
+    $('#btn-small-plan').html('choose');
+    $('#btn-business-plan').html('choose');
+    $('#btn-premium-plan').html('choose');
+
+    $('#btn-' + planClass + '-plan').removeClass();
+    $('#btn-' + planClass + '-plan').addClass('btn btn-primary');
+    $('#btn-' + planClass + '-plan').html('selected');
+
+    $('#subscription').val(planClass);
 }
 
 

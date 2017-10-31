@@ -25,7 +25,7 @@ class Partsalepurchase extends Model
     /**
 	* Get the partsale that owns this purchase.
 	*/
-	public function sale()
+	public function partsale()
 	{
 		return $this->BelongsTo('App\Partsale');
 	}
@@ -33,7 +33,7 @@ class Partsalepurchase extends Model
 	/**
 	* Get the part sale reserve that owns this purchase.
 	*/
-	public function reserve()
+	public function partsalereserve()
 	{
 		return $this->BelongsTo('App\Partsalereserve');
 	}

@@ -143,11 +143,11 @@ class Corporate extends Model
         return $this->hasMany('App\Corporatetail');
     }
 
-    /**
-    * Get the subscription record associated with this corporation.
-    */
-    public function subscription()
-    {
-        return $this->hasOne('App\Subscription');
-    }
+    // /**
+    // * Get the subscription record associated with this corporation.
+    // */
+    // public function subscription()
+    // {
+    //     return $this->hasOne('App\Subscription');
+    // }
 }

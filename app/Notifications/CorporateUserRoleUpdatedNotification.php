@@ -24,7 +24,7 @@ class CorporateUserRoleUpdatedNotification extends Notification
     public function __construct(Corporateuser $corporateuser)
     {
         $this->corporateuser = $corporateuser;
-        $this->url = url('/corporate/' . $this->corporateuser->corporate->id . '/user/' . $this->corporateuser->user->id);
+        $this->url = url('/user/settings');
         $this->message = 'Your assigned role has been updated.';
     }
 

@@ -33,75 +33,13 @@
 <div class="col-md-12">
 	<div class="col-md-12"><br></div>
 
-	<div class="col-md-12">
-		<div class="col-md-6" style="font-size:12px">
-			<h4>Totals</h4>
-			<p><strong>Cars sold</strong>: </p>  
-			<p><strong>Cars rented</strong>: </p>  
-			<p><strong>Parts sold</strong>: </p>  
-			<p><strong>Comments</strong>: </p>  
-			<p><strong>Tails</strong>: </p>  
-			<p><strong>Offers, bids and tenders</strong>: </p>  
-		</div>
-
-		<div class="col-md-6" style="font-size:12px">
-			<h4>This month</h4>
-			<p><strong>Cars sold</strong>: </p>  
-			<p><strong>Cars rented</strong>: </p>  
-			<p><strong>Parts sold</strong>: </p>  
-			<p><strong>Comments</strong>: </p>  
-			<p><strong>Tails</strong>: </p>  
-			<p><strong>Offers, bids and tenders</strong>: </p> 
-		</div>
-
-		<div class="col-md-12">
-			<hr>
-		</div>
-	</div>
-
-	<div class="col-md-6" style="padding-left:3px;padding-right:3px;">
-		<div class="panel panel-primary" style="margin-bottom:10px;">
-			<div class="panel-heading">Car sales activity</div>
-			<div class="panel-body">
-				<h4>Graph not set up</h4>
-			</div>	
-		</div>
-	</div>
-
-	<div class="col-md-6" style="padding-left:3px;padding-right:3px;">
-		<div class="panel panel-primary" style="margin-bottom:10px;">
-			<div class="panel-heading">Part sales activity</div>
-			<div class="panel-body">
-				<h4>Graph not set up</h4>
-			</div>	
-		</div>
-	</div>
-
-	<div class="col-md-6" style="padding-left:3px;padding-right:3px;">
-		<div class="panel panel-primary" style="margin-bottom:10px;">
-			<div class="panel-heading">Car rents activity</div>
-			<div class="panel-body">
-				<h4>Graph not set up</h4>
-			</div>	
-		</div>
-	</div>
-
-	<div class="col-md-6" style="padding-left:3px;padding-right:3px;">
-		<div class="panel panel-primary" style="margin-bottom:10px;">
-			<div class="panel-heading">Car tenders activity</div>
-			<div class="panel-body">
-				<h4>Graph not set up</h4>
-			</div>	
-		</div>
-	</div>
-
-	<div class="col-md-6" style="padding-left:3px;padding-right:3px;">
-		<div class="panel panel-primary" style="margin-bottom:10px;">
-			<div class="panel-heading">Car auctions activity</div>
-			<div class="panel-body">
-				<h4>Graph not set up</h4>
-			</div>	
-		</div>
+	<div class="col-md-12" style="height:300px;position:relative;">
+		<h3>Welcome to your dashboard!</h3>
+		<hr>
+		<br>
+		<p>Please use the tabs above to navigate through the site.</p>
+		<p>For any enquiries or issues with the site, please feel free to contact us immediately on 76074402 or email <a href="mailto:admin@skoonters.com" target="_top">admin@skoonters.com</a></p>
+		<p style="position:absolute;bottom:0;font-size:10px">Powered by <span style="color:gray;"><a href="http://www.skoonters.com" title="Skoonters Website Development Gurus">Skoonters</a> Ltd</span>.</p>
 	</div>
 
 </div>

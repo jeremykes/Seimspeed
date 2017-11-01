@@ -50,6 +50,12 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
+                        @if (Auth::check())
+                            @if (Auth::user()->corporateuser->corporate->exists())
+                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</a></li>
+                            @endif
+                        @endif
+
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}" style="color:white">Login</a></li>
                             <li><a href="{{ route('register') }}" style="color:white">Register</a></li>

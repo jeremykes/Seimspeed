@@ -89,6 +89,12 @@
                         &nbsp;
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+
+                        @if (Auth::check())
+                            @if (Auth::user()->corporateuser->corporate->exists())
+                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</a></li>
+                            @endif
+                        @endif
                     
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

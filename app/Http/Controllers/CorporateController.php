@@ -114,10 +114,17 @@ class CorporateController extends Controller
 
         if ($user = User::where('email', $request->email)->count() == 0) {
             // return response()->json(['success'=>false, 'message'=>'User does not exist in the system. Please check your spelling for the email.']);
-            return redirect('/corporate/' . $corporate->id . '/members');
+            // return redirect('/corporate/' . $corporate->id . '/members');
+            return redirect()->back()->withErrors(array('message' => 'User does not exist in the system. Please check your spelling for the email.'));
         } 
 
         $user = User::where('email', $request->email)->first();
+
+        # This is to check if user is already a corporate user.
+        if (Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count() > 0) {
+            return redirect()->back()->withErrors(array('message' => 'User is already belongs to another Corporate account.'));
+            // return redirect('/corporate/' . $corporate->id . '/members');
+        }
 
         $corporateuser_count = Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count();
         if ($corporateuser_count == 1) {

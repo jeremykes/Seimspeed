@@ -199,11 +199,26 @@
                         <div class="col-md-3" style="height:200px;background-image: url('{{ $corporate->logo_url }}');"></div>
                     </div>  
                 </div>
+                <div class="col-md-12">
+                    
+                </div>
             </div>
 
             <div class="col-md-3">
                 <div class="col-md-12" style="padding:0;margin:0">
                     <h1>{{ $corporate->name }}</h1>
+
+                    <form action="{{ url('/auth/tailcorporate') }}" method="post">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="corporate_id"  value="{{ $corporate->id }}">
+
+                        @if ($corporatetail == false)
+                            <button type="submit" class="btn btn-primary btn-xs">Tail</button>
+                        @else
+                            <button type="submit" class="btn btn-primary btn-xs">Un-tail</button>
+                        @endif
+                    </form>
+                
                     <hr>
                     <p>{{ $corporate->descrip }}</p>
                     <p><span style="font-weight:bold">Address</span> {{ $corporate->address }}</p>

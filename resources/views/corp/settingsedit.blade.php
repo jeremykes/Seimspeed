@@ -50,7 +50,7 @@
 
 	<hr>
 
-		<form action="{{ url('/') }}" method="post">
+		<form action="{{ url('/corporate/' . $corporate->id . '/corpuser/administrator/updatecorporate') }}" method="post">
 
 			{!! csrf_field() !!}
 
@@ -237,23 +237,65 @@
 	        subName = item.val();
 	    });
 
-	    var addedFileCount = 1;
+	    $("div#logodropzone").dropzone({ 
+	    	init: function() {
 
-	    Dropzone.options.logoDropzone = {
-	              url: "{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/caruploadtempimage') }}",
-	              method: 'post',
-	              headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
-	              maxFilesize: 2, 
-	              addRemoveLinks: true,
-	              dictDefaultMessage: 'Click here to upload images or simply drop them here',
-	              acceptedFiles: 'image/*',
-	              success: function(file, response) {
-	                $(file.previewTemplate).append('<span class="server_filename" style="display:none">'+response.filename+'</span>');
-	                $(file.previewTemplate).append('<span class="server_fileurl" style="display:none">'+response.img_url+'</span>');
-	                $(file.previewTemplate).append('<span class="server_filecount" style="display:none">'+response.img_count+'</span>');
-	                addedFileCount++;
-	              }
-	        };
+	    		var mockFile;
+	    		var fileuploded;
+
+	    		@if ($corporate->logo_url != null || $corporate->logo_url != '')
+	    		    mockFile = { name: "preview", size: 0, filename: "preview" };
+	    		    this.emit("addedfile", mockFile);
+	    		    this.createThumbnailFromUrl(mockFile, "{{ $corporate->logo_url }}");
+	    		    this.emit("complete", mockFile);
+	    		    fileuploded = mockFile.previewElement.querySelector("[data-dz-name]");
+	    		    fileuploded.innerHTML = "preview";
+	    		@endif
+
+	    	},
+	    	url: "{{ url('/corporate/' . $corporate->id . '/corpuser/administrator/uploadtemplogoimage') }}",
+          	method: 'post',
+          	headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
+          	maxFilesize: 2, 
+          	maxFiles: 1,
+          	addRemoveLinks: true,
+          	dictDefaultMessage: 'Click here to upload images or simply drop them here',
+          	acceptedFiles: 'image/*',
+          	success: function(file, response) {
+            	$(file.previewTemplate).append('<span class="server_filename" style="display:none">'+response.filename+'</span>');
+            	$(file.previewTemplate).append('<span class="server_fileurl" style="display:none">'+response.img_url+'</span>');
+          	}
+	    });
+
+	    $("div#bannerdropzone").dropzone({ 
+	    	init: function() {
+
+	    		var mockFile;
+	    		var fileuploded;
+
+	    		@if ($corporate->banner_url != null || $corporate->banner_url != '')
+	    		    mockFile = { name: "preview", size: 0, filename: "preview" };
+	    		    this.emit("addedfile", mockFile);
+	    		    this.createThumbnailFromUrl(mockFile, "{{ $corporate->banner_url }}");
+	    		    this.emit("complete", mockFile);
+	    		    fileuploded = mockFile.previewElement.querySelector("[data-dz-name]");
+	    		    fileuploded.innerHTML = "preview";
+	    		@endif
+
+	    	},
+	    	url: "{{ url('/corporate/' . $corporate->id . '/corpuser/administrator/uploadtempbannerimage') }}",
+          	method: 'post',
+          	headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content') },
+          	maxFilesize: 2, 
+          	maxFiles: 1,
+          	addRemoveLinks: true,
+          	dictDefaultMessage: 'Click here to upload images or simply drop them here',
+          	acceptedFiles: 'image/*',
+          	success: function(file, response) {
+            	$(file.previewTemplate).append('<span class="server_filename" style="display:none">'+response.filename+'</span>');
+            	$(file.previewTemplate).append('<span class="server_fileurl" style="display:none">'+response.img_url+'</span>');
+          	}
+	    });
 
 	});
 

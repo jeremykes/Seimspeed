@@ -15,6 +15,7 @@ use App\Usersetting;
 use App\Socialprofile;
 use App\Message;
 
+use App\Corporate;
 use App\Corporateuser;
 use App\Corporaterating;
 use App\Corporatetail;
@@ -316,23 +317,27 @@ class UserController extends Controller
             $corporatetail->corporate_id = $corporate->id;
             $corporatetail->user_id = Auth::user()->id;
             $corporatetail->save();
+
+            // Notification
+            // Notify all corpusers
+
+            $notifiable_users = DB::table('corpnotificables')
+                ->select('user_id')
+                ->where('corpnotificables.corporate_id', $corporate->id)
+                ->where(function ($query) {
+                    $query->where('corpnotificables.role', 'administrator')
+                          ->orWhere('corpnotificables.role', 'sales');
+                })
+                ->pluck('user_id');
+                $users = User::find($notifiable_users);
+            Notification::send($users, new CorporateTailedNotification($corporatetail));
         } else {
             if (Auth::user()->id == $corporatetail_exist->user_id) {
                 $corporatetail_exist->delete();
             }
         }
 
-        // Notification
-        // Notify all corpusers
-
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
-            ->get();
-
-        Notification::send($users, new CorporateTailedNotification($corporatetail));
-
-        return response()->json(['success'=>true]);
+        return redirect()->back();
     }
 
     /**

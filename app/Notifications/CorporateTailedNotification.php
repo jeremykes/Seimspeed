@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Corporatetail;
 
-class CorporaorporateTailedNotification extends Notification
+class CorporateTailedNotification extends Notification
 {
     use Queueable;
 
@@ -25,17 +25,9 @@ class CorporaorporateTailedNotification extends Notification
     {
         $this->corporatetail = $corporatetail;
 
-        if ($this->corporatetail->car->sale->exists()) {
-           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/carsale/' . $this->corporatetail->car->sale->id);
-        } else if ($this->corporatetail->car->rent->exists()) {
-           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/carrent/' . $this->corporatetail->car->rent->id);
-        } else if ($this->corporatetail->car->auction->exists()) {
-           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/carauction/' . $this->corporatetail->car->auction->id);
-        } else if ($this->corporatetail->car->tender->exists()) {
-           $this->url = url('/corporate/' . $this->corporatetail->car->corporate->id . '/car/' . $this->corporatetail->car->id . '/cartender/' . $this->corporatetail->car->tender->id);
-        }
+        $this->url = url('/corporate/' . $this->corporatetail->corporate->id);
 
-        $this->message = $this->corporatetail->user->name . ' is tailing you.';
+        $this->message = $this->corporatetail->user->name . ' is tailing ' . $this->corporatetail->corporate->name . '.';
     }
 
     /**

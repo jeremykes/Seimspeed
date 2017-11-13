@@ -10,6 +10,7 @@ use Notification;
 use DB;
 use Illuminate\Notifications\DatabaseNotification;
 use Carbon;
+use Session;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriptionApplication;
@@ -40,6 +41,7 @@ use App\Partsalepurchase;
 
 use App\Corporate;
 use App\Corporateuser;
+use App\Corporatetail;
 use App\Car;
 use App\Carcomment;
 use App\Cartail;
@@ -215,8 +217,14 @@ class FrameworkController extends Controller
             }
         }
 
+        $corporatetail = false;
+        if (Corporatetail::where('user_id', Auth::user()->id)->where('corporate_id', $corporate->id)->count() > 0) {
+            $corporatetail = true;
+        }
+
         return view('corphome', [
             'corporate' => $corporate,
+            'corporatetail' => $corporatetail,
         ]); 
     }
 
@@ -378,6 +386,21 @@ class FrameworkController extends Controller
      */
     public function corporatesettingsedit(Corporate $corporate)
     {
+        if (Session::has($corporate->id . 'corp_logo_image_url')) {
+            // $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            // for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($corporate->id . 'corp_logo_image_url');
+            // }
+            // Session::forget('car_image_upload_count');
+        }
+        if (Session::has($corporate->id . 'corp_banner_image_url')) {
+            // $car_image_upload_count = (int)Session::pull('car_image_upload_count');
+            // for ($i = $car_image_upload_count; $i > 0; $i--) { 
+                Session::forget($corporate->id . 'corp_banner_image_url');
+            // }
+            // Session::forget('car_image_upload_count');
+        }
+
         $subscription = Subscription::findOrFail($corporate->subscription_id);
 
         return view('corp.settingsedit', [

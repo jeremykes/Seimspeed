@@ -54,7 +54,7 @@ Route::get('/corporate/{corporate}/car/{car}/cartender/{cartender}/{id?}', 'Fram
 // partgroup  		
 Route::get('/corporate/{corporate}/part/{part}/partsale/{partsale}/{id?}', 'FrameworkController@partsale')->middleware('corpactive'); // partsale 		
 // partsalegroup 
-Route::get('/corporate/{corporate}', 'FrameworkController@corporatehome')->middleware('corpactive'); // corphome 
+
 
 Route::get('/getcarsaleoffers', 'FrameworkController@getcarsaleoffers');
 Route::get('/getcarrentoffers', 'FrameworkController@getcarrentoffers');
@@ -466,6 +466,11 @@ Route::group(['middleware' => ['auth']], function() {
 			| Misc Routes
 			|--------------------------------------------------------------------------
 			*/
+			Route::post('/corporate/{corporate}/corpuser/administrator/uploadtemplogoimage', 'CorporateController@uploadtemplogoimage');
+			Route::post('/corporate/{corporate}/corpuser/administrator/deletetemplogoimage', 'CorporateController@deletetemplogoimage');
+			Route::post('/corporate/{corporate}/corpuser/administrator/uploadtempbannerimage', 'CorporateController@uploadtempbannerimage');
+			Route::post('/corporate/{corporate}/corpuser/administrator/deletetempbannerimage', 'CorporateController@deletetempbannerimage');
+			
 
 
 		}); // End of middleware 'role:administrator'
@@ -475,6 +480,8 @@ Route::group(['middleware' => ['auth']], function() {
 
 }); // End of middleware 'auth'
 
+# URL is crashing with other corporate URLs because of {id?} wildcard so this is put here last.
+Route::get('/corporate/{corporate}/{id?}', 'FrameworkController@corporatehome')->middleware('corpactive'); // corphome 
 
 
 Auth::routes();

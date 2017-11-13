@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
+use Session;
+
 use App\Corporate;
 use App\Corporateuser;
 use App\Car;
@@ -58,8 +60,118 @@ class CorporateController extends Controller
         $this->middleware('role:administrator', ['only' => [
             'updatecorporate',
             'deactivatecorporate',
+            'uploadtemplogoimage',
+            'deletetemplogoimage',
+            'uploadtempbannerimage',
+            'deletetempbannerimage',
         ]]);
         
+    }
+
+    /**
+     * Upload car temporary image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function uploadtemplogoimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'file' => 'required|image'
+        ]);
+
+        $path = $request->file('file')->store('corplogo');
+
+        $imageName = $request->file->hashName();
+        $image_url = $path;
+        $image_url_full = 'storage/' . $path;
+        $session_key = $corporate->id . 'corp_logo_image_url';
+        $request->session()->put($session_key, $image_url_full);
+
+        return response()->json(
+            ['img_url' => $image_url, 'filename' => $imageName]
+        );
+    }
+
+    /**
+     * Delete car temp image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function deletetemplogoimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'serverfilename' => 'required',
+            'serverfileurl' => 'required',
+        ]);
+
+        $success = true;
+        $message = 'File successfully deleted.';
+
+        if (Storage::exists($request->serverfileurl)) {
+            Storage::delete($request->serverfileurl);
+        } else {
+            $success = false;
+            $message = 'File doesn\'t exist buddy.';
+        }
+
+        return response()->json(
+            ['success' => $success , 'message' => $message]
+        );
+    }
+
+    /**
+     * Upload car temporary image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function uploadtempbannerimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'file' => 'required|image'
+        ]);
+
+        $path = $request->file('file')->store('corpbanner');
+
+        $imageName = $request->file->hashName();
+        $image_url = $path;
+        $image_url_full = 'storage/' . $path;
+        $session_key = $corporate->id . 'corp_banner_image_url';
+        $request->session()->put($session_key, $image_url_full);
+
+        return response()->json(
+            ['img_url' => $image_url, 'filename' => $imageName]
+        );
+    }
+
+    /**
+     * Delete car temp image (no database records inserted)
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function deletetempbannerimage(Request $request, Corporate $corporate)
+    {
+        $this->validate($request, [
+            'serverfilename' => 'required',
+            'serverfileurl' => 'required',
+        ]);
+
+        $success = true;
+        $message = 'File successfully deleted.';
+
+        if (Storage::exists($request->serverfileurl)) {
+            Storage::delete($request->serverfileurl);
+        } else {
+            $success = false;
+            $message = 'File doesn\'t exist buddy.';
+        }
+
+        return response()->json(
+            ['success' => $success , 'message' => $message]
+        );
     }
 
     /**
@@ -78,9 +190,12 @@ class CorporateController extends Controller
         $corporate->name = $request->name;
         $corporate->address = $request->address;
         $corporate->phone = $request->phone;
-        $corporate->descrip = $descrip;
-        $corporate->logo_url = $request->logo_url;
-        $corporate->banner_url = $request->banner_url;
+        $corporate->descrip = $request->descrip;
+
+        # Check if images exist
+        $corporate->logo_url = asset($request->session()->pull($corporate->id . 'corp_logo_image_url'));
+        $corporate->banner_url = asset($request->session()->pull($corporate->id . 'corp_banner_image_url'));
+
         $corporate->save();
 
         return response()->json(['success'=>true]);
@@ -158,6 +273,9 @@ class CorporateController extends Controller
         $corporateuser->user_id = $user->id;
         $corporateuser->title = $request->title;
         $corporateuser->save();
+
+
+        # This is to make sure the user gets notifications for this Corporate
 
         // Notification
         // Notify user being added

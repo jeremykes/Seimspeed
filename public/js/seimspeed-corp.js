@@ -298,7 +298,7 @@ function CarSaleBuild(data) {
         htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
     }
 
-    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
 
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
@@ -347,7 +347,7 @@ function CarRentBuild(data) {
     htmltext += '        <p id="carrent_created_at' + data.carrent_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
-    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
@@ -395,7 +395,7 @@ function CarTenderBuild(data) {
     htmltext += '        <p id="cartender_created_at' + data.cartender_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
-    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
@@ -443,7 +443,7 @@ function CarAuctionBuild(data) {
     htmltext += '        <p id="carauction_created_at' + data.carauction_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
-    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
@@ -499,7 +499,7 @@ function PartSaleBuild(data) {
         htmltext += '    <p><span class="label label-warning">Not negotiable</span></p>';
     }
 
-    htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
 
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
@@ -1599,7 +1599,7 @@ function getNewsFeed(pageurl) {
                         } 
                     }
                     if (data.carrents.data.length > 0) {
-                        for (var i = 0; i < data.carrents.length; i++) {
+                        for (var i = 0; i < data.carrents.data.length; i++) {
                             CarRentBuild(data.carrents.data[i]);
                         }
                         if (data.carrents.next_page_url != null) {
@@ -1607,7 +1607,7 @@ function getNewsFeed(pageurl) {
                         }
                     }
                     if (data.cartenders.data.length > 0) {
-                        for (var i = 0; i < data.cartenders.length; i++) {
+                        for (var i = 0; i < data.cartenders.data.length; i++) {
                             CarTenderBuild(data.cartenders.data[i]);
                         }
                         if (data.cartenders.next_page_url != null) {
@@ -1615,7 +1615,7 @@ function getNewsFeed(pageurl) {
                         }
                     }
                     if (data.carauctions.data.length > 0) {
-                        for (var i = 0; i < data.carauctions.length; i++) {
+                        for (var i = 0; i < data.carauctions.data.length; i++) {
                             CarAuctionBuild(data.carauctions.data[i]);
                         }
                         if (data.carauctions.next_page_url != null) {
@@ -1623,7 +1623,7 @@ function getNewsFeed(pageurl) {
                         }
                     }
                     if (data.partsales.data.length > 0) {
-                        for (var i = 0; i < data.partsales.length; i++) {
+                        for (var i = 0; i < data.partsales.data.length; i++) {
                             PartSaleBuild(data.partsales.data[i]);
                         }
                         if (data.partsales.next_page_url != null) {

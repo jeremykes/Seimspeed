@@ -184,7 +184,7 @@
                     </p>
                     <p id="cartender_created_at{{ $cartender->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                     <p class="pull-right" id="cartendersignup">
-                        @if ($cartender->signuprequired == 0) 
+                        @if ($cartender->signuprequired == 1) 
                             <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $cartender->signupfee }}</span>
                         @else
                             <span class="label label-warning">Signup not required</span>

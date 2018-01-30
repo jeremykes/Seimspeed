@@ -37,7 +37,7 @@
         CarTenderTenderAddedBuildTrade(data.cartendertender[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderCancelled', function(data) {
-        CarTenderTenderCancelledBuildTrade(data.cartendertender[0])) 
+        CarTenderTenderCancelledBuildTrade(data.cartendertender[0]);
     }); 
 </script>
 
@@ -95,9 +95,9 @@
                     </span>
                 </p>
                 <p id="cartender_created_at{{ $cartender->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
-                <p class="pull-right" id="cartendersignup">
-                    @if ($cartender->signuprequired == 0) 
-                        <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $cartender->signupfee }}</span>
+                <p id="cartendersignup">
+                    @if ($cartender->signuprequired == 1) 
+                        <span class="label label-warning">Signup required</span> <span style="font-size:13px">K{{ number_format($cartender->signupfee, 2) }} signup fee.</span>
                     @else
                         <span class="label label-warning">Signup not required</span>
                     @endif
@@ -125,11 +125,11 @@
 
             <div class="col-md-12">
                 <hr style="margin:10px">
-                <a href="#" style="cursor:pointer"><i class="fa fa-money"></i> Tender</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarTenderTenders({{ $cartender->id }});"><i class="fa fa-money"></i> Tender</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" style="cursor:pointer"><i class="fa fa-comment"></i> Comment</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarComments({{ $cartender->car->id }});"><i class="fa fa-comment"></i> Comment</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" style="cursor:pointer"><i class="fa fa-eye"></i> Tail</a>
+                <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarTails({{ $cartender->car->id }});"><i class="fa fa-eye"></i> Tail</a>
             </div>
 
         </div>
@@ -155,20 +155,43 @@
 
 <div class="col-md-12" id="amountinput">
     @if (Auth::check())
-        <div class="col-md-12">
-          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
-            <div class="form-inline">
-              <div class="form-group">
-                <label>Your tender</label>
-                <div class="input-group">
-                  <div class="input-group-addon">K</div>
-                  <input type="text" class="form-control" placeholder="Amount" name="tender" id="tender">
+        @if ($cartender->signuprequired == 0)
+            <div class="col-md-12">
+              <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label>Your tender</label>
+                    <div class="input-group">
+                      <div class="input-group-addon">K</div>
+                      <input type="text" class="form-control" placeholder="Amount" name="tender" id="tender">
+                    </div>
+                  </div>
+                  <a class="btn btn-success btn-xs" onclick="submitCarTenderTender({{ $cartender->car->id }})">Tender</a>
                 </div>
               </div>
-              <a class="btn btn-success btn-xs" onclick="submitCarTenderTender({{ $cartender->car->id }})">Tender</a>
             </div>
-          </div>
-        </div>
+        @else
+            @if ($user_can_tender == true) 
+                <div class="col-md-12">
+                  <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+                    <div class="form-inline">
+                      <div class="form-group">
+                        <label>Your tender</label>
+                        <div class="input-group">
+                          <div class="input-group-addon">K</div>
+                          <input type="text" class="form-control" placeholder="Amount" name="tender" id="tender">
+                        </div>
+                      </div>
+                      <a class="btn btn-success btn-xs" onclick="submitCarTenderTender({{ $cartender->car->id }})">Tender</a>
+                    </div>
+                  </div>
+                </div>
+            @else
+                <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+                    You have to signup to start placing tenders. <br><br><span class="btn btn-primary btn-md">Sign up</span>
+                </div>
+            @endif
+        @endif
     @else
         <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
             You have to be logged in to post a tender.
@@ -176,7 +199,7 @@
     @endif
 </div>
 
-<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
     @if (Auth::check())
         <button class="btn btn-primary" onclick="tailCar({{ $cartender->car->id }})" id="cartailbutton"></button>
     @else

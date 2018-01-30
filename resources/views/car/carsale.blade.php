@@ -171,7 +171,7 @@
     @endif
 </div>
 
-<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:30px;padding-bottom:30px">
+<div class="col-md-12" id="tailinput" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
     @if (Auth::check())
         <button class="btn btn-primary" onclick="tailCar({{ $carsale->car->id }})" id="cartailbutton"></button>
     @else

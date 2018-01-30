@@ -16,7 +16,7 @@ class CreateCarauctionreservesTable extends Migration
             $table->increments('id');
             $table->integer('carauction_id')->unsigned();
             $table->foreign('carauction_id')->references('id')->on('carauctions');
-            $table->integer('carauctionbid_id')->unsigned();
+            $table->integer('no_books_purchased')->unsigned();
             $table->foreign('carauctionbid_id')->references('id')->on('carauctionbids');
             $table->text('note')->nullable();
             $table->timestamps();

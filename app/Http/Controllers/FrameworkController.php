@@ -58,6 +58,10 @@ use App\Carrentoffer;
 use App\Cartendertender;
 use App\Carauctionbid;
 
+use App\Partsaleoffer;
+
+use App\Cartendertenderer;
+
 use App\Notifications\CarSaleOfferReservedNotification;
 use App\Notifications\NewMessageNotification;
 
@@ -179,8 +183,21 @@ class FrameworkController extends Controller
             }
         }
 
+        $user_can_tender = false;
+
+        if (Auth::check()) {
+            
+            if ($cartender->signuprequired == 1) {
+                $cartendertenderer = Cartendertenderer::find(Auth::user()->id);
+                if ($cartendertenderer) {
+                    $user_can_tender = true;
+                }
+            }
+        }
+
         return view('car.cartender', [
             'cartender' => $cartender,
+            'user_can_tender' => $user_can_tender,
         ]); 
     }
 
@@ -218,8 +235,10 @@ class FrameworkController extends Controller
         }
 
         $corporatetail = false;
-        if (Corporatetail::where('user_id', Auth::user()->id)->where('corporate_id', $corporate->id)->count() > 0) {
-            $corporatetail = true;
+        if (Auth::check()) {
+            if (Corporatetail::where('user_id', Auth::user()->id)->where('corporate_id', $corporate->id)->count() > 0) {
+                $corporatetail = true;
+            }
         }
 
         return view('corphome', [

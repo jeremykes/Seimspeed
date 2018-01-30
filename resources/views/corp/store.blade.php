@@ -55,7 +55,7 @@
 
 	<div class="col-md-12" style="padding-left:1px;padding-right:1px">
 		<div class="panel panel-danger">
-			<div class="panel-heading">
+			<div class="panel-heading" style="font-size:20px">
 				Reserved
 			</div>
 			<div class="panel-body">
@@ -143,11 +143,9 @@
 		</div>
 	</div>	
 
-	<div class="col-md-12" style="padding-left:1px;padding-right:1px"><hr></div>
-	
 	<div class="col-md-12" style="padding-left:1px;padding-right:1px">
 		<div class="panel panel-primary">
-			<div class="panel-heading">
+			<div class="panel-heading" style="font-size:20px">
 				All open items
 			</div>
 			<div class="panel-body">

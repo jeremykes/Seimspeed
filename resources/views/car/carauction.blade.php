@@ -96,9 +96,9 @@
                     </span>
                 </p>
                 <p id="carauction_created_at{{ $carauction->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
-                <p class="pull-right" id="carauctionsignup">
-                    @if ($carauction->signuprequired == 0) 
-                        <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $carauction->signupfee }}</span>
+                <p id="carauctionsignup">
+                    @if ($carauction->signuprequired == q) 
+                        <span class="label label-warning">Signup required</span> <span style="font-size:13px">K{{ number_format($carauction->signupfee, 2) }} signup fee.</span>
                     @else
                         <span class="label label-warning">Signup not required</span>
                     @endif

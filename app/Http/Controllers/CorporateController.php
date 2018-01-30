@@ -193,12 +193,18 @@ class CorporateController extends Controller
         $corporate->descrip = $request->descrip;
 
         # Check if images exist
-        $corporate->logo_url = asset($request->session()->pull($corporate->id . 'corp_logo_image_url'));
-        $corporate->banner_url = asset($request->session()->pull($corporate->id . 'corp_banner_image_url'));
+        if ($request->session()->has($corporate->id . 'corp_logo_image_url')) {
+            $corporate->logo_url = asset($request->session()->pull($corporate->id . 'corp_logo_image_url'));
+        }
+
+        if ($request->session()->has($corporate->id . 'corp_banner_image_url')) {
+            $corporate->banner_url = asset($request->session()->pull($corporate->id . 'corp_banner_image_url'));
+        }
 
         $corporate->save();
 
-        return response()->json(['success'=>true]);
+        // return response()->json(['success'=>true]);
+        return redirect('/corporate/' . $corporate->id . '/settings');
     }
 
     /**
@@ -235,16 +241,17 @@ class CorporateController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        # This is to check if user is already a corporate user.
-        if (Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count() > 0) {
-            return redirect()->back()->withErrors(array('message' => 'User is already belongs to another Corporate account.'));
+        if (Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count() == 1) {
+            // return response()->json(['success'=>false, 'message'=>'User is already a member.']);
+            return redirect()->back()->withErrors(array('message' => 'User is already a member.'));
             // return redirect('/corporate/' . $corporate->id . '/members');
         }
 
-        $corporateuser_count = Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count();
-        if ($corporateuser_count == 1) {
-            // return response()->json(['success'=>false, 'message'=>'User is already a member.']);
-            return redirect('/corporate/' . $corporate->id . '/members');
+        # This is to check if user is already a corporate user.
+        // if (Corporateuser::where('user_id', $user->id)->where('corporate_id', $corporate->id)->count() > 0) {
+        if (Corporateuser::where('user_id', $user->id)->count() == 1) {
+            return redirect()->back()->withErrors(array('message' => 'User already belongs to another Corporate account.'));
+            // return redirect('/corporate/' . $corporate->id . '/members');
         }
 
         $user->detachAllRoles();
@@ -276,6 +283,19 @@ class CorporateController extends Controller
 
 
         # This is to make sure the user gets notifications for this Corporate
+        $corpnotificable = new Corpnotificable;
+        $corpnotificable->corporate_id = $corporate->id;
+        $corpnotificable->user_id = $user->id;
+        if ($user->hasRole('administrator')) {
+            $corpnotificable->role = 'administrator';
+        } else if ($user->hasRole('sales')) {
+            $corpnotificable->role = 'sales';
+        } else if ($user->hasRole('maintainer')) {
+            $corpnotificable->role = 'maintainer';
+        } else if ($user->hasRole('manager')) {
+            $corpnotificable->role = 'manager';
+        }
+        $corpnotificable->save();
 
         // Notification
         // Notify user being added
@@ -323,6 +343,21 @@ class CorporateController extends Controller
         }
         $user->save();
 
+        # This is to make sure the user gets notifications for this Corporate
+        $corpnotificable = Corpnotificable::where('corporate_id', $corporate->id)->where('user_id', $user->id)->get();
+        $corpnotificable->corporate_id = $corporate->id;
+        $corpnotificable->user_id = $user->id;
+        if ($user->hasRole('administrator')) {
+            $corpnotificable->role = 'administrator';
+        } else if ($user->hasRole('sales')) {
+            $corpnotificable->role = 'sales';
+        } else if ($user->hasRole('maintainer')) {
+            $corpnotificable->role = 'maintainer';
+        } else if ($user->hasRole('manager')) {
+            $corpnotificable->role = 'manager';
+        }
+        $corpnotificable->save();
+
         // Notification
         // Notify user being updated
 
@@ -345,6 +380,12 @@ class CorporateController extends Controller
         ]);
 
         $corporateuser = Corporateuser::findOrFail($request->corporateuser_id);
+
+        # Delete corpnotificable too
+        $corpnotificable = Corpnotificable::where('corporate_id', $corporate->id)->where('user_id', $corporateuser->user->id)->get();
+        $corpnotificable->delete();
+
+        # Delete corpuser
         $corporateuser->delete();
 
         return response()->json(['success'=>true]);
@@ -360,6 +401,13 @@ class CorporateController extends Controller
     {
 
         $corporateuser->user->attachRole($role);
+
+        # This is to make sure the user gets notifications for this Corporate
+        $corpnotificable = new Corpnotificable;
+        $corpnotificable->corporate_id = $corporate->id;
+        $corpnotificable->user_id = $corporateuser->user->id;
+        $corpnotificable->role = $role->name;
+        $corpnotificable->save();
 
         // Notification
         // Notify user role added
@@ -379,6 +427,13 @@ class CorporateController extends Controller
     {
         $corporateuser->user->detachRole($corporateuser->user->roles);
         $corporateuser->user->attachRole($role);
+
+        # This is to make sure the user gets notifications for this Corporate
+        $corpnotificable = Corpnotificable::where('corporate_id', $corporate->id)->where('user_id', $corporateuser->user->id)->get();
+        $corpnotificable->corporate_id = $corporate->id;
+        $corpnotificable->user_id = $corporateuser->user->id;
+        $corpnotificable->role = $role->name;
+        $corpnotificable->save();
 
         // Notification
         // Notify user role updated

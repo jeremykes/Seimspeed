@@ -52,8 +52,9 @@
 
                         @if (Auth::check())
                             @if (Auth::user()->corporateuser->corporate->exists())
-                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</a></li>
+                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><span class="label label-danger"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</span></a></li>
                             @endif
+                            <li><a href="{{ route('/createcorporate') }}" style="color:white">Login</a></li>
                         @endif
 
                         @if (Auth::guest())

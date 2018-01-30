@@ -215,20 +215,19 @@
 
 <script>
 
-	function setSub(currentSub) {
-		$('#' + currentSub + '-current').html('CURRENT');
-		$('#' + currentSub + '-panel-body').addClass('btn-info');
-	}
-	function removeSub(currentSub) {
-		$('#' + subName + '-current').html('');
-		$('#' + subName + '-panel-body').removeClass('btn-info');
-	}
-
 	$(document).ready(function(e) {
 
 		var subName = '{{ $subscription->name }}';
 
-		setSub(subName);
+		function setSub(currentSub) {
+			$('#' + currentSub + '-panel-body').addClass('btn-info');
+		}
+		function removeSub(currentSub) {
+			$('#' + subName + '-panel-body').removeClass('btn-info');
+		}
+
+		$('#' + subName + '-current').html('CURRENT');
+		$('#' + subName + '-panel-body').addClass('btn-info');
 
 	    $('#subscription').change(function() {    
 	        var item = $(this);

@@ -57,31 +57,30 @@
               <input type="text" class="form-control" id="title" name="title" placeholder="Title of new member">
               <span style="color:grey;font-size:10px">Title of new member</span>
           </div>
-          <div class="col-md-12"><hr></div>
-          <div class="col-md-12"><h3>Member Roles</h3></div>
-          <p>Please select either one or multiple roles for the new member</p>
-          <div class="form-group col-md-6">
+          <div class="col-md-12"><strong>Member Roles</strong></div>
+          <div class="col-md-12"><p>Please select either one or multiple roles for the new member.</p></div>
+          <div class="form-group col-md-12">
               <label class="form-check-label">
                 <input type="checkbox" name="role_manager" id="role_manager" class="form-check-input">
-                Manager <br><span style="color:gray;" class="pull-right"><span class="label label-danger">view reports</span></span>
+                Manager <span class="label label-danger">view reports</span>
               </label>
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-12">
               <label class="form-check-label">
                 <input type="checkbox" name="role_maintainer" id="role_maintainer" class="form-check-input">
-                Maintainer <br><span style="color:gray;" class="pull-right"><span class="label label-danger">create cars/parts</span> <br><span class="label label-danger">add/edit members</span></span>
+                Maintainer <span class="label label-danger">create cars/parts</span> <span class="label label-danger">add/edit members</span>
               </label>
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-12">
               <label class="form-check-label">
                 <input type="checkbox" name="role_sales" id="role_sales" class="form-check-input">
-                Sales <br><span style="color:gray;" class="pull-right"><span class="label label-danger">create sales/rents/tenders/auctions</span> <br><span class="label label-danger">accept/cancel offers, tenders, bids</span> <br><span class="label label-danger">close sales, rents, tenders, auctions</span></span>
+                Sales <span class="label label-danger">create sales/rents/tenders/auctions</span> <span class="label label-danger">accept/cancel offers, tenders, bids</span> <span class="label label-danger">close sales, rents, tenders, auctions</span>
               </label>
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-12">
               <label class="form-check-label">
                 <input type="checkbox" name="role_administrator" id="role_administrator" class="form-check-input">
-                Administrator <br><span style="color:gray;" class="pull-right"><span class="label label-danger">can do everything. Superuser.</span></span>
+                Administrator <span class="label label-danger">can do everything. Superuser.</span>
               </label>
           </div>
           <div class="form-group col-md-12">

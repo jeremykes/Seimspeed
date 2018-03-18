@@ -151,8 +151,9 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/auth/addcorporate', 'FrameworkController@addcorporate');
 
 	Route::post('/user/sendmessage', 'FrameworkController@sendmessage');
-
 	Route::post('/user/settings/edit/save', 'UserController@usersettingseditsave');
+
+	Route::post('/user/tender/{cartender}/signup', 'UserController@usertendersignup');
 	/*
 	|--------------------------------------------------------------------------
 	| Misc Routes
@@ -320,6 +321,12 @@ Route::group(['middleware' => ['auth']], function() {
 			Route::post('/corporate/{corporate}/corpuser/sales/car/cardeletetempimage', 'CarController@cardeletetempimage');
 			Route::post('/corporate/{corporate}/corpuser/sales/part/partuploadtempimage', 'PartController@partuploadtempimage');
 			Route::post('/corporate/{corporate}/corpuser/sales/part/partdeletetempimage', 'PartController@partdeletetempimage');
+
+			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/signup/accept/{cartendertenderer}', 'CarController@cartendersignupaccept');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/signup/decline/{cartendertenderer}', 'CarController@cartendersignupdecline');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/cartendertenderer/delete/{cartendertenderer}', 'CarController@cartendertendererdelete');
+
+			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/{cartender}/tenders/export/{format?}', 'CarController@cartenderexporttenders');
 
 
 		}); // End of middleware 'role:sales:maintainer:administrator'

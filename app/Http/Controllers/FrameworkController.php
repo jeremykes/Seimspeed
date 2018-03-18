@@ -183,14 +183,19 @@ class FrameworkController extends Controller
             }
         }
 
+        $user_not_req = false;
         $user_can_tender = false;
 
         if (Auth::check()) {
             
             if ($cartender->signuprequired == 1) {
-                $cartendertenderer = Cartendertenderer::find(Auth::user()->id);
-                if ($cartendertenderer) {
-                    $user_can_tender = true;
+                $cartendertenderer = Cartendertenderer::where('user_id', Auth::user()->id)->where('cartender_id', $cartender->id)->first();
+                if ($cartendertenderer !== null && $cartendertenderer->count()) {
+                    if ($cartendertenderer->accepted == true) {
+                        $user_can_tender = true;
+                    }
+                } else {
+                    $user_not_req = true;
                 }
             }
         }
@@ -198,6 +203,7 @@ class FrameworkController extends Controller
         return view('car.cartender', [
             'cartender' => $cartender,
             'user_can_tender' => $user_can_tender,
+            'user_not_req' => $user_not_req,
         ]); 
     }
 
@@ -522,12 +528,18 @@ class FrameworkController extends Controller
             }
         }
 
-        $cartenderreserves = Cartenderreserve::where('cartender_id', $cartender->id)->get();
+        // $cartenderreserves = Cartenderreserve::where('cartender_id', $cartender->id)->get();
+        $cartendertenderers = Cartendertenderer::where('cartender_id', $cartender->id)->get();
+        $cartendertenderers_pending = Cartendertenderer::where('cartender_id', $cartender->id)->where('accepted', false)->get();
+        $cartendertenderers_accepted = Cartendertenderer::where('cartender_id', $cartender->id)->where('accepted', true)->get();
 
         return view('corp.car.cartender', [
             'cartender' => $cartender,
             'corporate' => $corporate,
-            'cartenderreserves' => $cartenderreserves,
+            // 'cartenderreserves' => $cartenderreserves,
+            'cartendertenderers' => $cartendertenderers,
+            'cartendertenderers_pending' => $cartendertenderers_pending,
+            'cartendertenderers_accepted' => $cartendertenderers_accepted,
         ]); 
     }
 
@@ -1355,6 +1367,8 @@ class FrameworkController extends Controller
             'name' => 'required',
             'descrip' => 'required',
             'subscription' => 'required',
+            'logo_url' => 'required|image',
+            'banner_url' => 'required|image',
         ]);
 
         $user = Auth::user();
@@ -1364,8 +1378,18 @@ class FrameworkController extends Controller
         $corporate->address = $request->address;
         $corporate->phone = $request->phone;
         $corporate->descrip = $request->descrip;
-        $corporate->logo_url = $request->logo_url;
-        $corporate->banner_url = $request->banner_url;
+
+        $path = $request->file('logo_url')->store('corplogo');
+        $imageName = $request->logo_url->hashName();
+        $image_url = $path;
+        $image_url_full = url('/') . '/storage/' . $path;
+        $corporate->logo_url = $image_url_full;
+
+        $path = $request->file('banner_url')->store('corpbanner');
+        $imageName = $request->banner_url->hashName();
+        $image_url = $path;
+        $image_url_full = url('/') . '/storage/' . $path;
+        $corporate->banner_url = $image_url_full;
 
         $subscription = Subscription::where('name', ($request->subscription))->first();
         $corporate->subscription_id = $subscription->id;
@@ -1440,7 +1464,7 @@ class FrameworkController extends Controller
 
         $success = false;
 
-        if (Auth::user()->corporateuser) {
+        if (!is_null(Auth::user()->corporateuser)) {
             if (Auth::user()->corporateuser->corporate->id == $request->corp_id) {
                 $success = true;
             }

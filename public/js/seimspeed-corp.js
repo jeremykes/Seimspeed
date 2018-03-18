@@ -590,7 +590,7 @@ function CarSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a id="carsaleofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <strong><a id="carsaleofferusername' + data.id + '" href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br><br>';
@@ -672,7 +672,7 @@ function CarRentOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a id="carrentofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="carrentofferusername' + data.id + '" href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
@@ -755,14 +755,14 @@ function CarTenderTenderAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a id="cartendertenderusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="cartendertenderusername' + data.id + '" href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="tenderdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
     htmltext += '    <br>';
     htmltext += '    <p style="font-size:18px"><span id="cartendertenderamount' + data.id + '">K' + formatCurrency(data.tender) + '</span>';
     htmltext += '      <span class="pull-right" id="tender_is_reserved' + data.id + '"></span>';
-    htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + cartenderAddReserveMessage + '\', \'reserveCarTenderTender(' + data.id + ')\', \'success\')">reserve</a></span>';
+    // htmltext += '      <span class="pull-right"><a class="btn btn-xs btn-default" href="javascript:void(0);" onclick="confirmMe(\'' + cartenderAddReserveMessage + '\', \'reserveCarTenderTender(' + data.id + ')\', \'success\')">reserve</a></span>';
     htmltext += '    </p>';
     htmltext += '  </div>';
     htmltext += '</div>';
@@ -838,7 +838,7 @@ function CarAuctionBidAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a id="carauctionbidusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="carauctionbidusername' + data.id + '" href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="biddate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
@@ -921,7 +921,7 @@ function PartSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a id="partsaleofferusername' + data.id + '" href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a id="partsaleofferusername' + data.id + '" href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <br>';
@@ -1307,7 +1307,7 @@ function CarCommentAddedBuildTrade(data) {
 
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '        <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <strong><a href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '        <span style="color:gray;font-size:11px" id="carcomment_created_at' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -1343,7 +1343,7 @@ function PartCommentAddedBuildTrade(data) {
 
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="partcomment_created_at' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -1845,9 +1845,9 @@ function getCarTenderTenders(cartenderID) {
         },
         success: function(data) {
             if (data.success == true) {
-                var carTenderTenders = data['cartendertenders'];
+                var carTenderTenders = data.cartendertenders;
                 $('#list').html('');
-                for (var i = 0; i < carTenderTenders; i++) {
+                for (var i = 0; i < carTenderTenders.length; i++) {
                     CarTenderTenderAddedBuildTrade(carTenderTenders[i]);
                 }
             }
@@ -1967,7 +1967,7 @@ function getCarTails(carID) {
                 for (var i = 0; i < data.cartails.length; i++) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
-                    htmltext += '    <a href="'+ base_url + '/user/' + data.cartails[i].user_id + '">';
+                    htmltext += '    <a href="#">';
 
                     if (data.cartails[i].propic != null) {
                         htmltext += '    <img class="img-responsive" src="' + data.cartails[i].propic + '" style="height:50px;width:auto"> ';
@@ -2022,7 +2022,7 @@ function getPartTails(partID) {
                 for (var i = 0; i < data.parttails.length; i++) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
-                    htmltext += '    <a href="'+ base_url + '/user/' + data.parttails[i].user_id + '">';
+                    htmltext += '    <a href="#">';
 
                     if (data.parttails[i].propic != null) {
                         htmltext += '    <img class="img-responsive" src="' + data.parttails[i].propic + '" style="height:50px;width:auto"> ';
@@ -2114,6 +2114,51 @@ function markNotificationAsRead(notiID) {
         success: function(data) {
             if (data.success == true) {
                 $('#' + notiID).remove();
+            }
+        }
+    });
+}
+
+
+// ------------------- Tender/Auction Functions for Bidders ------------------ //
+
+function carTenderSignUpAccept(cartendertendererID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/cartender/signup/accept/" + cartendertendererID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
+function carTenderSignUpDecline(cartendertendererID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/cartender/signup/decline/" + cartendertendererID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
+function carTenderTendererDelete(cartendertendererID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/cartender/cartendertenderer/delete/" + cartendertendererID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
             }
         }
     });

@@ -57,7 +57,7 @@
             <div class="col-md-12">
                 <a href="{{ url('/corporate/' . $cartender->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $cartender->corporate->name }}</span></a>
                 
-                @if (Auth::check())
+                @if (Auth::check() && !(is_null(Auth::user()->corporateuser)))
                     @if (Auth::user()->corporateuser->corporate->id == $cartender->corporate->id && ( Auth::user()->hasRole('sales') || Auth::user()->hasRole('administrator') ) )
                         <a class="btn btn-default btn-xs pull-right" href="{{ url('/corporate/' . $cartender->corporate->id . '/corpuser/car/' . $cartender->car->id . '/cartender/' . $cartender->id ) }}">See in Store</a>
                     @endif
@@ -91,7 +91,6 @@
                     &nbsp;&nbsp;&nbsp;
                     <label class="label label-danger" style="font-size:16px">tender</label>
                     <span class="pull-right">
-                        <span style="font-size:20px" id="carprice">K{{ number_format($cartender->price, 2) }}</span>
                     </span>
                 </p>
                 <p id="cartender_created_at{{ $cartender->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
@@ -182,14 +181,20 @@
                           <input type="text" class="form-control" placeholder="Amount" name="tender" id="tender">
                         </div>
                       </div>
-                      <a class="btn btn-success btn-xs" onclick="submitCarTenderTender({{ $cartender->car->id }})">Tender</a>
+                      <a class="btn btn-success btn-xs" onclick="submitCarTenderTender({{ $cartender->id }})">Tender</a>
                     </div>
                   </div>
                 </div>
             @else
-                <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
-                    You have to signup to start placing tenders. <br><br><span class="btn btn-primary btn-md">Sign up</span>
-                </div>
+                @if ($user_not_req == true) 
+                    <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+                        You have to request signup to start placing tenders. <br><br><span class="btn btn-primary btn-md" onclick="confirmMe('Are you sure you want to sign up for this tender?<br>The owners will contact you shortly.', 'carTenderSignUp({{ $cartender->id }})', 'primary')">Request Sign Up</span>
+                    </div>
+                @else 
+                    <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+                        Your request is still pending. Please check again later.
+                    </div>
+                @endif
             @endif
         @endif
     @else

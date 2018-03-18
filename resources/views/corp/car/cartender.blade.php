@@ -40,7 +40,7 @@
         CarTenderTenderAddedBuildTrade(data.cartendertender[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderCancelled', function(data) {
-        CarTenderTenderCancelledBuildTrade(data.cartendertender)) 
+        CarTenderTenderCancelledBuildTrade(data.cartendertender);
     }); 
 </script>
 
@@ -141,10 +141,16 @@
 
 <div class="col-md-12"><br></div>
 
-<div class="col-md-12">
-    <p><a href="#" style="text-decoration:underline">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline">Close</a>
-    <hr style="padding:0;margin:0">
-    <br>
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="col-md-12">
+        <a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updatetenderform/' . $cartender->id) }}" style="text-decoration:underline">Edit</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="confirmMe('Are you sure you want to close this car tender?', 'closeCarTender({{ $cartender->id }})', 'danger')">close</a>
+        <span class="pull-right" style="font-size:13px;color:rgb(255,75,87);">Tender ends {{ $cartender->enddate->diffForHumans() }} ({{ $cartender->enddate->format('d-m-Y') }})</span>
+    </div>
+
+    <div class="col-md-12">
+        <hr style="padding:0;margin:0">
+    </div>
+    
 </div>
 
 <div class="col-md-7" style="padding-left:0;padding-right:0">
@@ -179,7 +185,6 @@
                         &nbsp;&nbsp;&nbsp;
                         <label class="label label-danger" style="font-size:16px">tender</label>
                         <span class="pull-right">
-                            <span style="font-size:20px" id="carprice">K{{ number_format($cartender->price, 2) }}</span>
                         </span>
                     </p>
                     <p id="cartender_created_at{{ $cartender->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
@@ -209,11 +214,13 @@
                         <p>In group <a href="#"><span class="label label-primary">go to group</span></a></p>
                     @endif
 
+                    <atitle="">Click</a>
+
                 </div>
 
                 <div class="col-md-12">
                     <hr style="margin:10px">
-                    <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarTenderTenders({{ $cartender->car->id }});"><i class="fa fa-money"></i> Tender</a>
+                    <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarTenderTenders({{ $cartender->id }});"><i class="fa fa-money"></i> Tender</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0);" style="cursor:pointer" onclick="getCarComments({{ $cartender->car->id }});"><i class="fa fa-comment"></i> Comment</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -221,6 +228,14 @@
                 </div>
 
             </div>
+
+            <div class="col-md-12" style='padding-top:10px;padding-bottom:10px'>
+                Export tenders list as;    
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/cartender/'.$cartender->id.'/tenders/export?format=csv') }}">CSV</a>, 
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/cartender/'.$cartender->id.'/tenders/export?format=xlsx') }}">XLSX</a>, or  
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/cartender/'.$cartender->id.'/tenders/export?format=html') }}">HTML</a>
+            </div>
+
         </div>
     </div>
 
@@ -254,33 +269,85 @@
 <div class="col-md-5" style="padding-left:0;padding-right:0">
     <div class="panel panel-danger">
         <div class="panel-heading">
-            Reserved Tenders
+            Tender Requests
         </div>
         <div class="panel-body">
 
-            Reserved Tenders are deleted automatically after {{ $cartender->tenderreserveholddays }} days.
-            <br><br>
-            
-            <ul class="list-group">
+            @if ($cartender->signuprequired == 1)
 
-                @foreach($cartenderreserves as $cartenderreserve)
+                @if ($cartender->signupfee > 0)
+                    Please confirm externally that the user has paid the signup fee of <span style="font-size:16px">K{{ number_format($cartender->signupfee) }}</span> before accepting their request here.
+                @else 
+                    No fee required. Select "accept" to allow the user to start tendering
+                @endif
 
-                    <li class="list-group-item">
-                        <p>
-                            {{ $cartenderreserve->cartendertender->user->name }}, 
-                            <strong>K{{ number_format($cartenderreserve->cartendertender->tender, 2) }}</strong>&nbsp;&nbsp;&nbsp;
-                            <span style="font-size:9px;color:gray">{{ $cartenderreserve->created_at->diffForHumans() }}</span>
-                            <span class="pull-right">
-                                <button class="btn btn-xs btn-success" onclick="purchaseReserveCarTenderTenderForm({{ $cartenderreserve->id }})"><i class="fa fa-money"></i></button> 
-                                <button class="btn btn-xs btn-info" onclick="#"><i class="fa fa-envelope"></i></button> 
-                                <button class="btn btn-xs btn-warning" onclick="cancelReserveCarTenderTender({{ $cartenderreserve->cartendertender->id }})"><i class="fa fa-trash"></i></button>
-                            </span>
-                        </p>
-                    </li>
+                <br><br>
+                
+                <ul class="list-group">
 
-                @endforeach
+                    @foreach($cartendertenderers_pending as $cartendertenderer_pending)
 
-            </ul>
+                        <li class="list-group-item">
+                            <p>
+                                <strong>{{ $cartendertenderer_pending->user->name }} </strong>
+                                Requested - {{ $cartendertenderer_pending->created_at->diffForHumans() }}&nbsp;&nbsp;&nbsp;
+                                <span class="pull-right">
+                                    <button class="btn btn-xs btn-success" onclick="confirmMe('Are you sure you want to accept this user request?', 'carTenderSignUpAccept({{ $cartendertenderer_pending->id }})', 'success')"><i class="fa fa-check"></i></button> 
+                                    <button class="btn btn-xs btn-danger" onclick="confirmMe('Are you sure you want to delete this user request?', 'carTenderSignUpDecline({{ $cartendertenderer_pending->id }})', 'danger')"><i class="fa fa-trash"></i></button>
+                                </span>
+                            </p>
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            @else
+
+                <!-- Sign up NOT required -->
+
+                Tender is free for anyone to submit tenders.
+
+            @endif
+
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Accepted Users
+        </div>
+        <div class="panel-body">
+
+            @if ($cartender->signuprequired == 1)
+
+                <br>
+                
+                <ul class="list-group">
+
+                    @foreach($cartendertenderers_accepted as $cartendertenderer_accepted)
+
+                        <li class="list-group-item">
+                            <p>
+                                <strong>{{ $cartendertenderer_accepted->user->name }} </strong>
+                                Accepted - {{ $cartendertenderer_accepted->updated_at->diffForHumans() }}&nbsp;&nbsp;&nbsp;
+                                <span class="pull-right">
+                                    <button class="btn btn-xs btn-danger" onclick="confirmMe('Are you sure you want to delete this accepted user?<br>There is NO UNDO for this action and all tenders submitted by this user will also be deleted!', 'carTenderTendererDelete({{ $cartendertenderer_accepted->id }})', 'danger')"><i class="fa fa-trash"></i></button>
+                                </span>
+                            </p>
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            @else
+
+                <!-- Sign up NOT required -->
+
+                Tender is free for anyone to submit tenders.
+
+            @endif
 
         </div>
     </div>

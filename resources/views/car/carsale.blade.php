@@ -57,7 +57,7 @@
             <div class="col-md-12">
                 <a href="{{ url('/corporate/' . $carsale->corporate->id) }}"><span style="font-size:20px;font-weight:bold">{{ $carsale->corporate->name }}</span></a>
 
-                @if (Auth::check())
+                @if (Auth::check() && !(is_null(Auth::user()->corporateuser)))
                     @if (Auth::user()->corporateuser->corporate->id == $carsale->corporate->id && ( Auth::user()->hasRole('sales') || Auth::user()->hasRole('administrator') ) )
                         <a class="btn btn-default btn-xs pull-right" href="{{ url('/corporate/' . $carsale->corporate->id . '/corpuser/car/' . $carsale->car->id . '/carsale/' . $carsale->id ) }}">See in Store</a>
                     @endif

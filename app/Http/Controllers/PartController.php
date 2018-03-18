@@ -283,9 +283,10 @@ class PartController extends Controller
         for ($i = 1; $i <= $part_image_upload_count; $i++) { 
             $partimage = new Partimage;
             $partimage->part_id = $part->id;
-            $partimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $partimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->thumb_img_url = $img_url;
             $partimage->save();
 
             // $request->session()->forget($i.$session_key_tail);
@@ -370,9 +371,10 @@ class PartController extends Controller
         for ($i = 1; $i <= $part_image_upload_count; $i++) { 
             $partimage = new Partimage;
             $partimage->part_id = $part->id;
-            $partimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $partimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $partimage->thumb_img_url = $img_url;
             $partimage->save();
             // $request->session()->forget($i.$session_key_tail);
         }

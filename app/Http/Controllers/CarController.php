@@ -10,6 +10,8 @@ use Notification;
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Session;
+use Excel;
+use Illuminate\Support\Facades\Input;
 
 use App\User;
 use App\Corporate;
@@ -24,10 +26,12 @@ use App\Carrentreserve;
 use App\Carrentpurchase;
 use App\Cartender;
 use App\Cartendertender;
+use App\Cartendertenderer;
 use App\Cartenderreserve;
 use App\Cartenderpurchase;
 use App\Carauction;
 use App\Carauctionbid;
+use App\Carauctionbidder;
 use App\Carauctionreserve;
 use App\Carauctionpurchase;
 
@@ -385,7 +389,7 @@ class CarController extends Controller
         // Initalize session with images
         $car_image_upload_count = 0;
         $session_key_tail = 'car_image_url';
-        foreach ($carsale->car->images as $carimage) {
+        foreach ($cartender->car->images as $carimage) {
             $car_image_upload_count++;
             $session_key = $car_image_upload_count.$session_key_tail;
             $request->session()->put($session_key, $carimage->img_url);
@@ -568,9 +572,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
 
             // $request->session()->forget($i.$session_key_tail);
@@ -666,9 +671,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
             // $request->session()->forget($i.$session_key_tail);
         }
@@ -1054,9 +1060,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
 
             // $request->session()->forget($i.$session_key_tail);
@@ -1154,9 +1161,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
             // $request->session()->forget($i.$session_key_tail);
         }
@@ -1566,9 +1574,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
 
             // $request->session()->forget($i.$session_key_tail);
@@ -1668,9 +1677,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
             // $request->session()->forget($i.$session_key_tail);
         }
@@ -2056,9 +2066,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
 
             // $request->session()->forget($i.$session_key_tail);
@@ -2160,9 +2171,10 @@ class CarController extends Controller
         for ($i = 1; $i <= $car_image_upload_count; $i++) { 
             $carimage = new Carimage;
             $carimage->car_id = $car->id;
-            $carimage->img_url = asset($request->session()->pull($i.$session_key_tail));
+            $img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->img_url = $img_url;
             # Later compress this to make actual thumbs
-            $carimage->thumb_img_url = asset($request->session()->pull($i.$session_key_tail));
+            $carimage->thumb_img_url = $img_url;
             $carimage->save();
             // $request->session()->forget($i.$session_key_tail);
         }
@@ -2442,6 +2454,94 @@ class CarController extends Controller
 
         return redirect('/corporate/' . $corporate->id . '/store');
         // return response()->json(['success'=>true]);
+    }
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Tender/Auction Bidders and Tenderers
+    // 
+    // 
+    // =================================================================================== 
+
+    /**
+     * Accept Cartendertenderer request
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function cartendersignupaccept(Request $request, Corporate $corporate, Cartendertenderer $cartendertenderer)
+    {
+        $cartendertenderer->accepted = true;
+        $cartendertenderer->save();
+
+        return response()->json(['success'=>true]);
+    }
+
+    /**
+     * Decline Cartendertenderer request
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function cartendersignupdecline(Request $request, Corporate $corporate, Cartendertenderer $cartendertenderer)
+    {
+        $cartendertenderer->delete();
+
+        return response()->json(['success'=>true]);
+    }
+
+    /**
+     * Delete Cartendertenderer
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function cartendertendererdelete(Request $request, Corporate $corporate, Cartendertenderer $cartendertenderer)
+    {
+        $cartendertenders = Cartendertender::where('cartender_id', $cartendertenderer->cartender_id)->where('user_id', $cartendertenderer->user_id)->delete();
+
+        $cartendertenderer->delete();
+
+        return response()->json(['success'=>true]);
+    }
+
+
+    // ===================================================================================
+    // 
+    // 
+    //     Export Functions
+    // 
+    // 
+    // =================================================================================== 
+
+
+    /**
+     * Export Cartendertenderers 
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function cartenderexporttenders(Request $request, Corporate $corporate, Cartender $cartender, $format = 'xls')
+    {
+        if ($request->format != 'xlsx' && $request->format != 'xls' && $request->format != 'htm' && $request->format != 'html' && $request->format != 'csv' && $request->format != 'txt' && $request->format != 'pdf') {
+            return $request->format;
+        }
+
+        $cartendertenders = DB::table('cartendertenders')
+                    ->leftJoin('users', 'users.id', '=', 'cartendertenders.user_id')
+                    ->select('users.id', 'users.name', 'cartendertenders.tender', 'cartendertenders.created_at')
+                    ->where('cartendertenders.cartender_id', $cartender->id)
+                    ->get();
+
+        $cartendertenders= json_decode( json_encode($cartendertenders), true);
+
+        Excel::create('users', function($excel) use($cartendertenders) {
+            $excel->sheet('Sheet 1', function($sheet) use($cartendertenders) {
+                $sheet->fromArray($cartendertenders);
+            });
+        })->export($request->format);
     }
 }
 

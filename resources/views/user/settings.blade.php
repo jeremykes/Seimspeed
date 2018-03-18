@@ -37,14 +37,16 @@
     
     <hr>
 
-    @if ($corporateusers->count() > 0)
-        @foreach ($corporateusers as $corporateuser)
+    @if (!(is_null(Auth::user()->corporateuser)))
+        @if ($corporateusers->count() > 0)
+            @foreach ($corporateusers as $corporateuser)
 
-            <p><strong><a href="{{ url('/corporate/' . $corporateuser->corporate->id . '/dashboard') }}">{{ $corporateuser->corporate->name }}</a></strong>, as {{ $corporateuser->title }}</p>
+                <p><strong><a href="{{ url('/corporate/' . $corporateuser->corporate->id . '/dashboard') }}">{{ $corporateuser->corporate->name }}</a></strong>, as {{ $corporateuser->title }}</p>
 
-        @endforeach
-    @else
-        <p><strong>Nothing</strong></p>
+            @endforeach
+        @else
+            <p><strong>Nothing</strong></p>
+        @endif
     @endif
 
     <br>

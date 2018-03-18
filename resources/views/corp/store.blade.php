@@ -184,7 +184,7 @@
 									<td>K{{ number_format($carrent->rateperday, 2) }}</td>
 									<td>{{ count($carrent->offers) }}</td>
 									<td>{{ $carrent->created_at->diffForHumans() }}</td>
-									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/rents/car/updaterentform/' . $carrent->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updaterentform/' . $carrent->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $carrent->car->id . '/carrent/' . $carrent->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -200,7 +200,7 @@
 									<td> - </td>
 									<td>{{ count($cartender->tenders) }}</td>
 									<td>{{ $cartender->created_at->diffForHumans() }}</td>
-									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/tenders/car/updatetenderform/' . $cartender->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updatetenderform/' . $cartender->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $cartender->car->id . '/cartender/' . $cartender->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 
@@ -214,7 +214,7 @@
 									<td> - </td>
 									<td>{{ count($carauction->bids) }}</td>
 									<td>{{ $carauction->created_at->diffForHumans() }}</td>
-									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/auctions/car/updateauctionform/' . $carauction->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
+									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updateauctionform/' . $carauction->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-edit"></i></a></td>
 									<td><a href="{{ url('/corporate/'. $corporate->id .'/corpuser/car/' . $carauction->car->id . '/carauction/' . $carauction->id) }}" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>
 								</tr>
 

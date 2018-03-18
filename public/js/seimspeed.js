@@ -392,10 +392,10 @@ function CarTenderBuild(data) {
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-9">';
     htmltext += '        <p><span style="text-decoration:bold;font-size:14px;color:gray"><span>' + data.make + '</span> ' + data.model + ', ' + data.color + '</span>&nbsp;&nbsp;&nbsp;<label class="label label-danger" style="font-size:16px">tender</label><span class="pull-right"><span style="font-size:20px"></span></span></p>';
-    htmltext += '        <p id="cartender_created_at' + data.cartender_id + '" style="color:rgb(255,75,87);font-size:11px"></p>'   
+    htmltext += '        <p id="cartender_created_at' + data.cartender_id + '" style="color:rgb(255,75,87);font-size:11px"></p>';   
     htmltext += '        <p>Body type: ' + data.bodytype + '. Weight: ' + data.weight + 'Kg\'s. Fuel Type: ' + data.fueltype + '. Transmission: ' + data.transmissiontype + '. Steering side: ' + data.steeringside + '. Location: ' + data.location + '. </p>';
     htmltext += '        <p style="font-size:11px;color:grey">' + data.note + '</p>';
-    // htmltext += '        <p><hr style="margin:2px"><span style="font-size:11px;color:grey">' + data.note + '</span></p>';
+    htmltext += '        <p style="color:rgb(255,75,87);font-size:11px">Tender ends <strong id="cartender_end_date' + data.cartender_id + '" style="font-size:13px"></strong></p>'; 
     htmltext += '    </div>';
     htmltext += '    <div class="col-md-12">';
     htmltext += '        <hr style="margin:10px">';
@@ -418,6 +418,7 @@ function CarTenderBuild(data) {
 
     // moment.js stuff
     timeArray.push(['cartender_created_at' + data.cartender_id, data.cartenders_created_at]);
+    timeArray.push(['cartender_end_date' + data.cartender_id, data.enddate]);
     updateTimestamps();
 }
 
@@ -569,7 +570,7 @@ function CarSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -645,7 +646,7 @@ function CarRentOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -753,7 +754,7 @@ function CarAuctionBidAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="biddate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -829,7 +830,7 @@ function PartSaleOfferAddedBuildTrade(data) {
     htmltext += '  </div>';
     htmltext += '  <div class="col-md-10">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong> ';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong> ';
     htmltext += '      <span style="color:gray;font-size:11px" id="offerdate' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -888,7 +889,7 @@ function CarCommentAddedBuildTrade(data) {
 
     htmltext += '  <div class="col-md-11">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '        <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '        <strong><a href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '        <span style="color:gray;font-size:11px" id="carcomment_created_at' + data.id + '"></span>';
     htmltext += '    </p><p>';
     htmltext += '    <p>';
@@ -936,7 +937,7 @@ function PartCommentAddedBuildTrade(data) {
 
     htmltext += '  <div class="col-md-11">';
     htmltext += '    <p class="pull-left">';
-    htmltext += '      <strong><a href="'+ base_url + '/user/' + data.user_id + '">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
+    htmltext += '      <strong><a href="#">' + data.name + '</a></strong>&nbsp;&nbsp;&nbsp;';
     htmltext += '      <span style="color:gray;font-size:11px" id="partcomment_created_at' + data.id + '"></span>';
     htmltext += '    </p>';
     htmltext += '    <p>';
@@ -1572,7 +1573,7 @@ function getCarTails(carID) {
                 for (var i = 0; i < data.cartails.length; i++) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
-                    htmltext += '    <a href="'+ base_url + '/user/' + data.cartails[i].user_id + '">';
+                    htmltext += '    <a href="#">';
 
                     if (data.cartails[i].propic != null) {
                         htmltext += '      <img src="' + data.cartails[i].propic + '" style="height:50px;width:auto">';
@@ -1627,7 +1628,7 @@ function getPartTails(partID) {
                 for (var i = 0; i < data.parttails.length; i++) {
                     htmltext += '<div class="list-group-item col-md-12">';
                     htmltext += '  <div class="col-md-12" style="padding:10px;">';
-                    htmltext += '    <a href="'+ base_url + '/user/' + data.parttails[i].user_id + '">';
+                    htmltext += '    <a href="#">';
                     
                     if (data.parttails[i].propic != null) {
                         htmltext += '      <img src="' + data.parttails[i].propic + '" style="height:50px;width:auto">';
@@ -1649,6 +1650,7 @@ function getPartTails(partID) {
 }
 
 function getNotifications() {
+    console.log('test1');
     // get notifications for user
     $.ajax({
         url: base_url + "/auth/getnotifications",
@@ -1723,6 +1725,24 @@ function markNotificationAsRead(notiID) {
         }
     });
 }
+
+
+// ------------------- Tender/Auction Functions for Bidders ------------------ //
+
+function carTenderSignUp(cartenderID) {
+    $.ajax({
+        url: base_url + "/user/tender/" + cartenderID + "/signup",
+        type: "POST",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
 
 
 // ------------------- Message Functions ------------------ //

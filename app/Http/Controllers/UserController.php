@@ -14,6 +14,7 @@ use App\User;
 use App\Usersetting;
 use App\Socialprofile;
 use App\Message;
+use App\Corpnotificable;
 
 use App\Corporate;
 use App\Corporateuser;
@@ -28,8 +29,10 @@ use App\Carrent;
 use App\Carrentoffer;
 use App\Cartender;
 use App\Cartendertender;
+use App\Cartendertenderer;
 use App\Carauction;
 use App\Carauctionbid;
+use App\Carauctionbidder;
 use App\Part;
 use App\Partcomment;
 use App\Parttail;
@@ -286,10 +289,14 @@ class UserController extends Controller
         // Notification
         // Notify all corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $corporate->id)->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CorporateRatedNotification($corporaterating));
 
@@ -321,15 +328,15 @@ class UserController extends Controller
             // Notification
             // Notify all corpusers
 
-            $notifiable_users = DB::table('corpnotificables')
-                ->select('user_id')
-                ->where('corpnotificables.corporate_id', $corporate->id)
-                ->where(function ($query) {
-                    $query->where('corpnotificables.role', 'administrator')
-                          ->orWhere('corpnotificables.role', 'sales');
-                })
-                ->pluck('user_id');
-                $users = User::find($notifiable_users);
+            $corpnotificables = Corpnotificable::where('corporate_id', $corporate->id)->get();
+
+            $users_array = [];
+            foreach ($corpnotificables as $corpnotificable) {
+                $users_array[] = $corpnotificable->user_id;
+            }
+
+            $users = User::find($users_array);
+
             Notification::send($users, new CorporateTailedNotification($corporatetail));
         } else {
             if (Auth::user()->id == $corporatetail_exist->user_id) {
@@ -366,10 +373,14 @@ class UserController extends Controller
         // Notification
         // Notify all corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carcomment->car->corporate->id)
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carcomment->car->corporate->id)->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarCommentAddedNotification($carcomment));
 
@@ -395,10 +406,14 @@ class UserController extends Controller
         // Notification
         // Notify all corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $car->corporate->id)
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carcomment->car->corporate->id)->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarCommentUpdatedNotification($carcomment));
 
@@ -425,7 +440,7 @@ class UserController extends Controller
 
         if (Auth::user()->id == $carcomment->user_id) {
             $carcomment->delete();
-        } else if (Auth::user()->corporateuser->exists()){
+        } else if (!(is_null(Auth::user()->corporateuser))){
             if ($carcomment->car->corporate->id == Auth::user()->corporateuser->corporate->id) {
                 $carcomment->delete();
             }
@@ -453,10 +468,14 @@ class UserController extends Controller
             // Notification
             // Notify all corpusers
 
-            $users = DB::table('users')
-                ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $corporate->id)
-                ->get();
+            $corpnotificables = Corpnotificable::where('corporate_id', $carlike->car->corporate->id)->get();
+
+            $users_array = [];
+            foreach ($corpnotificables as $corpnotificable) {
+                $users_array[] = $corpnotificable->user_id;
+            }
+
+            $users = User::find($users_array);
 
             Notification::send($users, new CarLikedNotification($carlike));
 
@@ -494,10 +513,14 @@ class UserController extends Controller
             // Notification
             // Notify all corpusers
 
-            $users = DB::table('users')
-                ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $car->corporate->id)
-                ->get();
+            $corpnotificables = Corpnotificable::where('corporate_id', $cartail->car->corporate->id)->get();
+
+            $users_array = [];
+            foreach ($corpnotificables as $corpnotificable) {
+                $users_array[] = $corpnotificable->user_id;
+            }
+
+            $users = User::find($users_array);
 
             Notification::send($users, new CarTailedNotification($cartail));
 
@@ -538,13 +561,18 @@ class UserController extends Controller
 
         // Notification
         // Notify sales,admin corpusers
+        $corpnotificables = Corpnotificable::where('corporate_id', $carsale->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carsale->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarSaleOfferAddedNotification($carsaleoffer));
 
@@ -578,13 +606,18 @@ class UserController extends Controller
 
         // Notification
         // Notify sales,admin corpusers
+        $corpnotificables = Corpnotificable::where('corporate_id', $carsaleoffer->carsale->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carsaleoffer->carsale->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarSaleOfferCancelledNotification($carsaleoffer));
 
@@ -626,12 +659,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carrent->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carrent->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarRentOfferAddedNotification($carrentoffer));
 
@@ -666,12 +705,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carrentoffer->carrent->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carrentoffer->carrent->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarRentOfferCancelledNotification($carrentoffer));
 
@@ -706,17 +751,23 @@ class UserController extends Controller
         $cartendertender->cartender_id = $cartender->id;
         $cartendertender->user_id = Auth::user()->id;
         $cartendertender->tender = $request->tender;
-        $cartender->save();
+        $cartendertender->save();
 
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $cartender->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $cartender->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarTenderTenderAddedNotification($cartendertender));
 
@@ -751,12 +802,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $cartendertender->cartender->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $cartendertender->cartender->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarTenderTenderCancelledNotification($cartendertender));
 
@@ -796,12 +853,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carauction->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carauction->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarAuctionBidAddedNotification($carauctionbid));
 
@@ -836,12 +899,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $carauctionbid->carauction->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $carauctionbid->carauction->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new CarAuctionBidCancelledNotification($carauctionbid));
 
@@ -878,10 +947,14 @@ class UserController extends Controller
         // Notification
         // Notify all corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $partcomment->part->corporate->id)
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $partcomment->part->corporate->id)->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new PartCommentAddedNotification($partcomment));
 
@@ -907,10 +980,14 @@ class UserController extends Controller
         // Notification
         // Notify all corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $corporate->id)
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $partcomment->part->corporate->id)->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new PartCommentUpdatedNotification($partcomment));
 
@@ -954,10 +1031,14 @@ class UserController extends Controller
             // Notification
             // Notify all corpusers
 
-            $users = DB::table('users')
-                ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $corporate->id)
-                ->get();
+            $corpnotificables = Corpnotificable::where('corporate_id', $partlike->part->corporate->id)->get();
+
+            $users_array = [];
+            foreach ($corpnotificables as $corpnotificable) {
+                $users_array[] = $corpnotificable->user_id;
+            }
+
+            $users = User::find($users_array);
 
             Notification::send($users, new PartLikedNotification($partlike));
             
@@ -995,10 +1076,14 @@ class UserController extends Controller
             // Notification
             // Notify all corpusers
 
-            $users = DB::table('users')
-                ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-                ->where('corpnotificables.corporate_id', $part->corporate->id)
-                ->get();
+            $corpnotificables = Corpnotificable::where('corporate_id', $parttail->part->corporate->id)->get();
+
+            $users_array = [];
+            foreach ($corpnotificables as $corpnotificable) {
+                $users_array[] = $corpnotificable->user_id;
+            }
+
+            $users = User::find($users_array);
 
             Notification::send($users, new PartTailedNotification($parttail));
 
@@ -1040,12 +1125,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $partsale->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $partsale->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new PartSaleOfferAddedNotification($partsaleoffer));
 
@@ -1080,12 +1171,18 @@ class UserController extends Controller
         // Notification
         // Notify sales,admin corpusers
 
-        $users = DB::table('users')
-            ->leftJoin('corpnotificables', 'users.id', '=', 'corpnotificables.user_id')
-            ->where('corpnotificables.corporate_id', $partsaleoffer->partsale->corporate->id)
-            ->where('corpnotificables.role', 'sales')
-            ->where('corpnotificables.role', 'admin')
-            ->get();
+        $corpnotificables = Corpnotificable::where('corporate_id', $partsaleoffer->partsale->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
 
         Notification::send($users, new PartSaleOfferCancelledNotification($partsaleoffer));
 
@@ -1095,6 +1192,27 @@ class UserController extends Controller
         
         return response()->json(['success'=>true]);
     }
+
+
+    
+    /**
+     * Request signup for Tender
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function usertendersignup(Request $request, Cartender $cartender)
+    {
+        $cartendertenderer = new Cartendertenderer;
+        $cartendertenderer->cartender_id = $cartender->id;
+        $cartendertenderer->user_id = Auth::user()->id;
+        $cartendertenderer->accepted = false;
+        $cartendertenderer->paid = false;
+        $cartendertenderer->save();
+    
+        return response()->json(['success'=>true]);
+    }
+
 }
 
 

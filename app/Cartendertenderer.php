@@ -13,6 +13,8 @@ class Cartendertenderer extends Model
 	protected $fillable = [
     	'cartender_id', 
     	'user_id', 
+    	'accepted', 
+    	'paid', 
     ];
 
     /**

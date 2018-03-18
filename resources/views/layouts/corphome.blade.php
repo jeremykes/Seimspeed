@@ -121,7 +121,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
-                        @if (Auth::check())
+                        @if (Auth::check() && !(is_null(Auth::user()->corporateuser)))
                             @if (Auth::user()->corporateuser->corporate->exists())
                                 <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><span class="label label-danger"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</span></a></li>
                             @endif

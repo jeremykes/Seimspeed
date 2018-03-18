@@ -21,7 +21,7 @@ class CarTenderTenderAddedNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Cartendertender $cartendertender)
     {
         $this->cartendertender = $cartendertender;
         $this->url = url('/corporate/' . $this->cartendertender->cartender->corporate->id . '/car/' . $this->cartendertender->cartender->car->id . '/cartender/' . $this->cartendertender->cartender->id);

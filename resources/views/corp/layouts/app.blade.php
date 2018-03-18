@@ -55,8 +55,10 @@
         });
         
         function BroadcastNotificationCreated(data) {
+            console.log(data);
             if (data.type == 'App\\Notifications\\NewMessageNotification') {
                 // getMessages();
+                getNotifications();
             } else { 
                 getNotifications();
             }
@@ -89,7 +91,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
-                        @if (Auth::check())
+                        @if (Auth::check() && !(is_null(Auth::user()->corporateuser)))
                             @if (Auth::user()->corporateuser->corporate->exists())
                                 <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><span class="label label-danger"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</span></a></li>
                             @endif
@@ -167,17 +169,21 @@
         <!-- Message modal -->
         <div class="modal fade" tabindex="-1" role="dialog" id="messageModal">
             <div class="modal-dialog model-lg" role="document">
-                <div class="modal-content col-md-12">
-                    <div class="modal-header" style="padding:0;">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px"><span aria-hidden="true">&times;</span></button>
-                    </div>
+                <div class="modal-content col-md-12" style="padding-left:0;padding-right:0;">
+                    <!-- <div class="modal-header" style="padding:0;"> -->
+                        <!-- <h3>Messages</h3> -->
+                        
+                    <!-- </div> -->
                     <div class="modal-body">
-                        <div class="col-md-12" id="user-info"></div>
-                        <div class="col-md-12" id="usermessages" style="height:450px;min-height:450px;overflow:scroll;padding-bottom:100px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding-right:5px;"><span aria-hidden="true">&times;</span></button>
+                        <div class="col-md-12" id="user-info" style="padding-bottom:20px"><hr></div>
+                        <div class="col-md-12" style="padding:0;margin:0"><hr style="padding:0;margin:0"></div>
+                        <div class="col-md-12" id="usermessages" style="height:450px;min-height:450px;overflow:scroll;padding-bottom:70px;padding-left:0;padding-right:0;">
                           
                         </div>
-                        <div class="col-md-12" id="message_input" style="display:none">
-                            <div class="bottom_wrapper">
+
+                        <div class="col-md-12" id="message_input" style="display:none;padding:0;margin:0">
+                            <div class="col-md-12 bottom_wrapper" style="border-top:1px solid rgb(238,238,238);width:100% !important;">
                                 <div class="message_input_wrapper">
                                     <input class="message_input" placeholder="Type..." />
                                 </div>

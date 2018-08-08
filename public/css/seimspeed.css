@@ -151,3 +151,8 @@
 }
 
 /* Messaging Baloons */
+
+
+.noTableRowBorder {
+	border: none !important;
+}

@@ -946,6 +946,20 @@ function PartSaleOfferCancelledBuildTrade(data) {
 }
 
 
+// ------------------- Misc List Builders ------------------ //
+// function CarAuctionBidderRequestBuild(data) {
+//     var htmltext = '';
+
+//     htmltext += '<li class="list-group-item">';
+//     htmltext += '   <p>';
+//     htmltext += '       <strong>' + data.name + '</strong>';
+//     htmltext += '       Requested - <span style="color:gray;font-size:11px" id="requestdate' + data.carauctionbidders_id + '"></span>&nbsp;&nbsp;&nbsp;';
+//     htmltext += '<p>';
+//     htmltext += '<p>';
+//     htmltext += '<p>';
+
+// }
+
 
 
 
@@ -1515,23 +1529,23 @@ function submitCarAuctionBid(carauctionID) {
     });
 }
 
-function cancelCarAuctionBid(carauctionBidID) {
-    // cancel Bid for CarAuction
-    $.ajax({
-        url: base_url + "/auth/carauctionbidcancel",
-        type: "POST",
-        data: { 
-            'carauctionbid_id': carauctionBidID
-        },
-        success: function(data) {
-            if (data.success == true) {
-                alertMe('You have successfully cancelled your bid.');
-            } else {
-                alertMe('Oops something went wrong :( <br>Please refresh and try again.');
-            }
-        }
-    });
-}
+// function cancelCarAuctionBid(carauctionBidID) {
+//     // cancel Bid for CarAuction
+//     $.ajax({
+//         url: base_url + "/auth/carauctionbidcancel",
+//         type: "POST",
+//         data: { 
+//             'carauctionbid_id': carauctionBidID
+//         },
+//         success: function(data) {
+//             if (data.success == true) {
+//                 alertMe('You have successfully cancelled your bid.');
+//             } else {
+//                 alertMe('Oops something went wrong :( <br>Please refresh and try again.');
+//             }
+//         }
+//     });
+// }
 
 function submitPartSaleOffer(partsaleID) {
     // Submit Offer for PartSale
@@ -1869,9 +1883,9 @@ function getCarAuctionBids(carauctionID) {
         },
         success: function(data) {
             if (data.success == true) {
-                var carAuctionBids = data['carauctionbids'];
+                var carAuctionBids = data.carauctionbids;
                 $('#list').html('');
-                for (var i = 0; i < carAuctionBids; i++) {
+                for (var i = 0; i < carAuctionBids.length; i++) {
                     CarAuctionBidAddedBuildTrade(carAuctionBids[i]);
                 }
             }
@@ -2153,6 +2167,48 @@ function carTenderSignUpDecline(cartendertendererID) {
 function carTenderTendererDelete(cartendertendererID) {
     $.ajax({
         url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/cartender/cartendertenderer/delete/" + cartendertendererID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
+function carAuctionSignUpAccept(carauctionbidderID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/carauction/signup/accept/" + carauctionbidderID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
+function carAuctionSignUpDecline(carauctionbidderID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/carauction/signup/decline/" + carauctionbidderID,
+        type: "GET",
+        success: function(data) {
+            if (data.success == true) {
+                location.reload();
+            } else {
+                alertMe("There was an error in processing your request. Please refresh the page and try again.");
+            }
+        }
+    });
+}
+
+function carAuctionBidderDelete(carauctionbidderID) {
+    $.ajax({
+        url: base_url + "/corporate/" + corporateID + "/corpuser/sales/car/carauction/carauctionbidder/delete/" + carauctionbidderID,
         type: "GET",
         success: function(data) {
             if (data.success == true) {
@@ -2514,6 +2570,31 @@ function tailPart(partID) {
 
 
 // ------------------- Misc. Functions ------------------ //
+
+function toggleAdvancedTable(tableID) {
+    if ($('#' + tableID).hasClass('searchoff')) {
+        $('#' + tableID).DataTable().destroy();
+        $('#' + tableID).DataTable();
+        $('#' + tableID).removeClass('searchoff');
+        $('#' + tableID).addClass('searchon');
+        $('#' + tableID + 'Header').toggle(true);
+        $('#' + tableID + ' td').removeClass('noTableRowBorder');
+    } else if ($('#' + tableID).hasClass('searchon')) {
+        $('#' + tableID).DataTable().destroy();
+        $('#' + tableID).DataTable({
+            "paging": false,
+            "ordering": false,
+            "info":     false,
+            "searching": false
+        });
+        $('#' + tableID).DataTable().order([4, 'desc']).draw();
+        $('#' + tableID).removeClass('searchon');
+        $('#' + tableID).addClass('searchoff');
+        $('#' + tableID + 'Header').toggle(false);
+        $('#' + tableID + ' td').addClass('noTableRowBorder');
+    }
+
+}
 
 function isCorpUser(corpID) {
     // check if the current user is a corp user for this corp.

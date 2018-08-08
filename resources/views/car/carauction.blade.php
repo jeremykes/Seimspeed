@@ -37,12 +37,12 @@
         CarAuctionBidAddedBuildTrade(data.carauctionbid[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionBidCancelled', function(data) {
-        CarAuctionBidCancelledBuildTrade(data.carauctionbid[0]);
+        CarAuctionBidCancelledBuildTrade(data.carauctionbid);
     }); 
 
 </script>
 
-@ensection
+@endsection
 
 
 @section('content')
@@ -92,12 +92,12 @@
                     &nbsp;&nbsp;&nbsp;
                     <label class="label label-danger" style="font-size:16px">auction</label>
                     <span class="pull-right">
-                        <span style="font-size:20px" id="carprice">K{{ number_format($carauction->price, 2) }}</span>
+                        <span style="font-size:20px" id="carprice">K{{ number_format($carauction->startbidprice, 2) }}</span>
                     </span>
                 </p>
                 <p id="carauction_created_at{{ $carauction->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                 <p id="carauctionsignup">
-                    @if ($carauction->signuprequired == q) 
+                    @if ($carauction->signuprequired == 1) 
                         <span class="label label-warning">Signup required</span> <span style="font-size:13px">K{{ number_format($carauction->signupfee, 2) }} signup fee.</span>
                     @else
                         <span class="label label-warning">Signup not required</span>
@@ -114,7 +114,7 @@
                     Start: <span style="font-weight:bold">{{ $carauction->startdate->diffForHumans() }}</span>. 
                     End: <span style="font-weight:bold">{{ $carauction->enddate->diffForHumans() }}</span>. 
                     <br>
-                    <span class="label label-info">Start bid price</span>: <span style="font-weight:bold;font-size:16px">{{ $carauction->startbidprice }}</span>. 
+                    <span class="label label-info">Start bid price</span>: <span style="font-weight:bold;font-size:16px">K{{ number_format($carauction->startbidprice) }}</span>. 
                     <br>
                     <span style="font-size:11px;color:grey">{{ $carauction->car->note }}
                 </p>
@@ -158,20 +158,49 @@
 
 <div class="col-md-12" id="amountinput">
     @if (Auth::check())
-        <div class="col-md-12">
-          <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
-            <div class="form-inline">
-              <div class="form-group">
-                <label>Your bid</label>
-                <div class="input-group">
-                  <div class="input-group-addon">K</div>
-                  <input type="text" class="form-control" placeholder="Amount" name="bid" id="bid">
+        @if ($carauction->signuprequired == 0)
+            <div class="col-md-12">
+              <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label>Your bid</label>
+                    <div class="input-group">
+                      <div class="input-group-addon">K</div>
+                      <input type="text" class="form-control" placeholder="Amount" name="bid" id="bid">
+                    </div>
+                  </div>
+                  <a class="btn btn-success btn-xs" onclick="submitCarAuctionBid({{ $carauction->car->id }})">Bid</a>
                 </div>
               </div>
-              <a class="btn btn-success btn-xs" onclick="submitCarAuctionBid({{ $carauction->car->id }})">Bid</a>
             </div>
-          </div>
-        </div>
+        @else
+            @if ($user_can_bid == true) 
+                <div class="col-md-12">
+                  <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
+                    <div class="form-inline">
+                      <div class="form-group">
+                        <label>Your bid</label>
+                        <div class="input-group">
+                          <div class="input-group-addon">K</div>
+                          <input type="text" class="form-control" placeholder="Amount" name="bid" id="bid">
+                        </div>
+                      </div>
+                      <a class="btn btn-success btn-xs" onclick="submitCarAuctionBid({{ $carauction->id }})">Bid</a>
+                    </div>
+                  </div>
+                </div>
+            @else
+                @if ($user_not_req == true) 
+                    <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+                        You have to request signup to start placing bids. <br><br><span class="btn btn-primary btn-md" onclick="confirmMe('Are you sure you want to sign up for this auction?<br>The owners will contact you shortly.', 'carAuctionSignUp({{ $carauction->id }})', 'primary')">Request Sign Up</span>
+                    </div>
+                @else 
+                    <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
+                        Your request is still pending. Please check again later.
+                    </div>
+                @endif
+            @endif
+        @endif
     @else
         <div class="col-sm-12" style="text-align:center;padding-top:20px;padding-bottom:20px;color:grey;">
             You have to be logged in to post a bid.

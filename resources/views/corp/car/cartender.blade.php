@@ -41,7 +41,10 @@
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarTenderTenderCancelled', function(data) {
         CarTenderTenderCancelledBuildTrade(data.cartendertender);
-    }); 
+    });
+    publicCarTradeChannel.bind('App\\Events\\CarTenderTendererRequest', function(data) {
+        // CarTenderTendererRequestBuild(data.carauctiontenderer);
+    });  
 </script>
 
 @endsection
@@ -283,7 +286,7 @@
 
                 <br><br>
                 
-                <ul class="list-group">
+                <ul class="list-group" id="cartenderrequestlist">
 
                     @foreach($cartendertenderers_pending as $cartendertenderer_pending)
 

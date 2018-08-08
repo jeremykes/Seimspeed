@@ -13,12 +13,14 @@ class Carauctionbidder extends Model
 	protected $fillable = [
     	'carauction_id', 
     	'user_id', 
+    	'accepted', 
+    	'paid', 
     ];
 
     /**
 	* Get the carauction that owns this bidder.
 	*/
-	public function auction()
+	public function carauction()
 	{
 		return $this->BelongsTo('App\Carauction');
 	}

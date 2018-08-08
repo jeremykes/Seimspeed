@@ -61,6 +61,7 @@ use App\Carauctionbid;
 use App\Partsaleoffer;
 
 use App\Cartendertenderer;
+use App\Carauctionbidder;
 
 use App\Notifications\CarSaleOfferReservedNotification;
 use App\Notifications\NewMessageNotification;
@@ -126,9 +127,28 @@ class FrameworkController extends Controller
             }
         }
 
+        $user_not_req = false;
+        $user_can_bid = false;
+
+        if (Auth::check()) {
+            
+            if ($carauction->signuprequired == 1) {
+                $carauctionbidder = Carauctionbidder::where('user_id', Auth::user()->id)->where('carauction_id', $carauction->id)->first();
+                if ($carauctionbidder !== null && $carauctionbidder->count()) {
+                    if ($carauctionbidder->accepted == true) {
+                        $user_can_bid = true;
+                    }
+                } else {
+                    $user_not_req = true;
+                }
+            }
+        }
+
         return view('car.carauction', [
             'carauction' => $carauction,
-        ]); 
+            'user_can_bid' => $user_can_bid,
+            'user_not_req' => $user_not_req,
+        ]);
     }
 
     /**
@@ -557,12 +577,16 @@ class FrameworkController extends Controller
             }
         }
 
-        $carauctionreserves = Carauctionreserve::where('carauction_id', $carauction->id)->get();
+        $carauctionbidders = Carauctionbidder::where('carauction_id', $carauction->id)->get();
+        $carauctionbidders_pending = Carauctionbidder::where('carauction_id', $carauction->id)->where('accepted', false)->get();
+        $carauctionbidders_accepted = Carauctionbidder::where('carauction_id', $carauction->id)->where('accepted', true)->get();
 
         return view('corp.car.carauction', [
             'carauction' => $carauction,
             'corporate' => $corporate,
-            'carauctionreserves' => $carauctionreserves,
+            'carauctionbidders' => $carauctionbidders,
+            'carauctionbidders_pending' => $carauctionbidders_pending,
+            'carauctionbidders_accepted' => $carauctionbidders_accepted,
         ]); 
     }
 
@@ -986,6 +1010,7 @@ class FrameworkController extends Controller
                     ->leftJoin('users', 'users.id', '=', 'cartendertenders.user_id')
                     ->select('cartendertenders.*', 'users.propic', 'users.name')
                     ->where('cartendertenders.cartender_id', $request->cartender_id)
+                    ->where('cartendertenders.user_id', Auth::user()->id)
                     ->get();
 
         return response()->json(['success'=>true, 'cartendertenders'=>$cartendertenders]);

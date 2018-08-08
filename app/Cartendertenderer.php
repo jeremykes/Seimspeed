@@ -20,7 +20,7 @@ class Cartendertenderer extends Model
     /**
 	* Get the cartender that owns this tenderer.
 	*/
-	public function tender()
+	public function cartender()
 	{
 		return $this->BelongsTo('App\Cartender');
 	}

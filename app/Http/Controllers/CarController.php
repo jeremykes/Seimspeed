@@ -875,7 +875,7 @@ class CarController extends Controller
                 ->where('notificables.model_name', 'car')
                 ->get();
 
-            Notification::send($users, new CarSaleOpenedNotification($carsaleoffer));
+            Notification::send($users, new CarSaleOpenedNotification($carsale));
         }
 
         // Notification
@@ -2508,6 +2508,49 @@ class CarController extends Controller
     }
 
 
+    /**
+     * Accept Carauctionbidder request
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function carauctionsignupaccept(Request $request, Corporate $corporate, Carauctionbidder $carauctionbidder)
+    {
+        $carauctionbidder->accepted = true;
+        $carauctionbidder->save();
+
+        return response()->json(['success'=>true]);
+    }
+
+    /**
+     * Decline Carauctionbidder request
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function carauctionsignupdecline(Request $request, Corporate $corporate, Carauctionbidder $carauctionbidder)
+    {
+        $carauctionbidder->delete();
+
+        return response()->json(['success'=>true]);
+    }
+
+    /**
+     * Delete Carauctionbidder
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function carauctionbidderdelete(Request $request, Corporate $corporate, Carauctionbidder $carauctionbidder)
+    {
+        $carauctionbids = Carauctionbid::where('carauction_id', $carauctionbidder->carauction_id)->where('user_id', $carauctionbidder->user_id)->delete();
+
+        $carauctionbidder->delete();
+
+        return response()->json(['success'=>true]);
+    }
+
+
     // ===================================================================================
     // 
     // 
@@ -2540,6 +2583,33 @@ class CarController extends Controller
         Excel::create('users', function($excel) use($cartendertenders) {
             $excel->sheet('Sheet 1', function($sheet) use($cartendertenders) {
                 $sheet->fromArray($cartendertenders);
+            });
+        })->export($request->format);
+    }
+
+    /**
+     * Export Carauctionbidders 
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function carauctionexportbids(Request $request, Corporate $corporate, Carauction $carauction, $format = 'xls')
+    {
+        if ($request->format != 'xlsx' && $request->format != 'xls' && $request->format != 'htm' && $request->format != 'html' && $request->format != 'csv' && $request->format != 'txt' && $request->format != 'pdf') {
+            return $request->format;
+        }
+
+        $carauctionbids = DB::table('carauctionbids')
+                    ->leftJoin('users', 'users.id', '=', 'carauctionbids.user_id')
+                    ->select('users.id', 'users.name', 'carauctionbids.auction', 'carauctionbids.created_at')
+                    ->where('carauctionbids.carauction_id', $carauction->id)
+                    ->get();
+
+        $carauctionbids= json_decode( json_encode($carauctionbids), true);
+
+        Excel::create('users', function($excel) use($carauctionbids) {
+            $excel->sheet('Sheet 1', function($sheet) use($carauctionbids) {
+                $sheet->fromArray($carauctionbids);
             });
         })->export($request->format);
     }

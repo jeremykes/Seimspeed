@@ -8,13 +8,14 @@
     <title>{{ config('app.name') }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/font-awesome.min.css') }}" >
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-lumen.min.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/themes/bootstrap-paper.min.css') }}" >
+    <!-- <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}" > -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/seimspeed.css') }}">
 
 
     <style type="text/css" media="screen">
         body {
-            font-size: 12px;
+            /*font-size: 12px;*/
         }
     </style>
 
@@ -80,7 +81,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url('/') }}" style="color:white">
+                    <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name') }}
                     </a>
                 </div>
@@ -93,14 +94,14 @@
 
                         @if (Auth::check() && !(is_null(Auth::user()->corporateuser)))
                             @if (Auth::user()->corporateuser->corporate->exists())
-                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}" style="color:white"><span class="label label-danger"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</span></a></li>
+                                <li><a href="{{ url('/corporate/' . Auth::user()->corporateuser->corporate->id . '/dashboard') }}"><span class="label label-danger"><i class="fa fa-at"></i> {{ Auth::user()->corporateuser->corporate->name }}</span></a></li>
                             @endif
                         @endif
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" id="notificationCount">
-                                  <i class="fa fa-bell-o fa-stack-1x" style="color:white"></i>
+                                  <i class="fa fa-bell-o fa-stack-1x"></i>
                                 </span>
                             </a>
 
@@ -114,7 +115,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <span class="fa-stack has-badge" id="messageCount">
-                                  <i class="fa fa-envelope-o fa-stack-1x" style="color:white"></i>
+                                  <i class="fa fa-envelope-o fa-stack-1x"></i>
                                 </span>
                             </a>
 
@@ -128,7 +129,7 @@
                         <li></li>
                         <li></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:white">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
 
@@ -201,13 +202,13 @@
         <div class="container">
             
             <div class="col-md-2">
-                <!-- <ul class="list-group">
-                    <li class="list-group-item">Item 1</li>
-                    <li class="list-group-item">Item 2</li>
-                    <li class="list-group-item">Item 3</li>
-                    <li class="list-group-item">Item 4</li>
-                    <li class="list-group-item">Item 5</li>
-                </ul> --> 
+                <div class="list-group">
+                    <a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addsaleform') }}" class="list-group-item" style="padding-top:3px;padding-bottom:3px" data-toggle="modal" data-target="#sellcar"><img src="{{ asset('/imgs/land_sales.png') }}" style="height:40px;width:auto"> Sell car</a>
+                    <a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addrentform') }}" class="list-group-item" style="padding-top:3px;padding-bottom:3px" data-toggle="modal" data-target="#rentcar"><img src="{{ asset('/imgs/car_rental.png') }}" style="height:40px;width:auto"> Rent car</a>
+                    <a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addtenderform') }}" class="list-group-item" style="padding-top:3px;padding-bottom:3px" data-toggle="modal" data-target="#auctioncar"><img src="{{ asset('/imgs/megaphone.png') }}" style="height:40px;width:auto"> Auction car</a>
+                    <a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/car/addauctionform') }}" class="list-group-item" style="padding-top:3px;padding-bottom:3px" data-toggle="modal" data-target="#tendercar"><img src="{{ asset('/imgs/elections.png') }}" style="height:40px;width:auto"> Tender car</a>
+                    <a href="{{ url('/corporate/' . $corporate->id . '/corpuser/sales/part/addsaleform') }}" class="list-group-item" style="padding-top:3px;padding-bottom:3px" data-toggle="modal" data-target="#sellpart"><img src="{{ asset('/imgs/automotive.png') }}" style="height:40px;width:auto"> Sell part</a>
+                </div> 
             </div>
 
             <div class="col-md-10">
@@ -246,6 +247,7 @@
 
     <script src="{{ asset('js/jquery-1.11.2.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/material.min.js') }}"></script>
     <script src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/seimspeed-corp.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

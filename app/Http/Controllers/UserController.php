@@ -52,8 +52,10 @@ use App\Notifications\CarRentOfferAddedNotification;
 use App\Notifications\CarRentOfferCancelledNotification;
 use App\Notifications\CarTenderTenderAddedNotification;
 use App\Notifications\CarTenderTenderCancelledNotification;
+use App\Notifications\CarTenderTendererRequestNotification;
 use App\Notifications\CarAuctionBidAddedNotification;
 use App\Notifications\CarAuctionBidCancelledNotification;
+use App\Notifications\CarAuctionBidderRequestNotification;
 use App\Notifications\PartCommentAddedNotification;
 use App\Notifications\PartCommentUpdatedNotification;
 use App\Notifications\PartLikedNotification;
@@ -70,8 +72,10 @@ use App\Events\CarRentOfferAdded;
 use App\Events\CarRentOfferCancelled;
 use App\Events\CarTenderTenderAdded;
 use App\Events\CarTenderTenderCancelled;
+use App\Events\CarTenderTendererRequest;
 use App\Events\CarAuctionBidAdded;
 use App\Events\CarAuctionBidCancelled;
+use App\Events\CarAuctionBidderRequest;
 use App\Events\PartCommentAdded;
 use App\Events\PartCommentUpdated;
 use App\Events\PartSaleOfferAdded;
@@ -654,7 +658,7 @@ class UserController extends Controller
         $carrentoffer->user_id = Auth::user()->id;
         $carrentoffer->daysofrent = $request->daysofrent;
         $carrentoffer->offer = $request->offer;
-        $carrent->save();
+        $carrentoffer->save();
 
         // Notification
         // Notify sales,admin corpusers
@@ -848,7 +852,7 @@ class UserController extends Controller
         $carauctionbid->carauction_id = $carauction->id;
         $carauctionbid->user_id = Auth::user()->id;
         $carauctionbid->bid = $request->bid;
-        $carauction->save();
+        $carauctionbid->save();
 
         // Notification
         // Notify sales,admin corpusers
@@ -886,10 +890,14 @@ class UserController extends Controller
             'carauctionbid_id' => 'required|numeric',
         ]);
 
+        // return $request->carauctionbid_id;
+
         $carauctionbid = Carauctionbid::findOrFail($request->carauctionbid_id);
 
+        // return $carauctionbid->bid;
+
         // This is the check for Carauction status. Move this out to Traits later.
-        if ($carauctionbid->carauction->status != 'reserved' || $carauctionbid->carauction->status != 'opened') {
+        if ($carauctionbid->carauction->status != 'reserved' && $carauctionbid->carauction->status != 'opened') {
             return response()->json(['success'=>false]);
         }
 
@@ -1209,6 +1217,64 @@ class UserController extends Controller
         $cartendertenderer->accepted = false;
         $cartendertenderer->paid = false;
         $cartendertenderer->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $corpnotificables = Corpnotificable::where('corporate_id', $cartender->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
+
+        Notification::send($users, new CarTenderTendererRequestNotification($cartendertenderer));
+
+        event(new CarTenderTendererRequest($cartendertenderer));
+    
+        return response()->json(['success'=>true]);
+    }
+
+    /**
+     * Request signup for Auction
+     *
+     * @param  Request $request
+     * @return Response 
+     */
+    public function userauctionsignup(Request $request, Carauction $carauction)
+    {
+        $carauctionbidder = new Carauctionbidder;
+        $carauctionbidder->carauction_id = $carauction->id;
+        $carauctionbidder->user_id = Auth::user()->id;
+        $carauctionbidder->accepted = false;
+        $carauctionbidder->paid = false;
+        $carauctionbidder->save();
+
+        // Notification
+        // Notify sales,admin corpusers
+
+        $corpnotificables = Corpnotificable::where('corporate_id', $carauction->corporate->id)
+                                ->where(function ($query) {
+                                    $query->where('role', 'sales')
+                                          ->orWhere('role', 'administrator');
+                                })->get();
+
+        $users_array = [];
+        foreach ($corpnotificables as $corpnotificable) {
+            $users_array[] = $corpnotificable->user_id;
+        }
+
+        $users = User::find($users_array);
+
+        Notification::send($users, new CarAuctionBidderRequestNotification($carauctionbidder));
+
+        event(new CarAuctionBidderRequest($carauctionbidder));
     
         return response()->json(['success'=>true]);
     }

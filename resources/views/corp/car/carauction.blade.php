@@ -40,7 +40,7 @@
         CarAuctionBidAddedBuildTrade(data.carauctionbid[0]);
     }); 
     publicCarTradeChannel.bind('App\\Events\\CarAuctionBidCancelled', function(data) {
-        CarAuctionBidCancelledBuildTrade(data.carauctionbid);
+        CarAuctionBidCancelledBuildTrade(data.carauctionbid[0]);
     }); 
 
 </script>
@@ -142,10 +142,16 @@
 
 <div class="col-md-12"><br></div>
 
-<div class="col-md-12">
-    <p><a href="#" style="text-decoration:underline">Edit</a>&nbsp;&nbsp;&nbsp;<a href="#" style="text-decoration:underline">Close</a>
-    <hr style="padding:0;margin:0">
-    <br>
+<div class="col-md-12" style="padding-bottom:10px">
+    <div class="col-md-12">
+        <a href="{{ url('/corporate/'. $corporate->id .'/corpuser/sales/car/updateauctionform/' . $carauction->id) }}" style="text-decoration:underline">Edit</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="confirmMe('Are you sure you want to close this car auction?', 'closeCarAuction({{ $carauction->id }})', 'danger')">close</a>
+        <span class="pull-right" style="font-size:13px;color:rgb(255,75,87);">Auction ends {{ $carauction->enddate->diffForHumans() }} ({{ $carauction->enddate->format('d-m-Y') }})</span>
+    </div>
+
+    <div class="col-md-12">
+        <hr style="padding:0;margin:0">
+    </div>
+    
 </div>
 
 <div class="col-md-7" style="padding-left:0;padding-right:0">
@@ -180,12 +186,11 @@
                         &nbsp;&nbsp;&nbsp;
                         <label class="label label-danger" style="font-size:16px">auction</label>
                         <span class="pull-right">
-                            <span style="font-size:20px" id="carprice">K{{ number_format($carauction->price, 2) }}</span>
                         </span>
                     </p>
                     <p id="carauction_created_at{{ $carauction->car->id }}" style="color:rgb(255,75,87);font-size:11px"></p>
                     <p class="pull-right" id="carauctionsignup">
-                        @if ($carauction->signuprequired == 0) 
+                        @if ($carauction->signuprequired == 1) 
                             <span class="label label-warning">Signup required</span> <span style="font-size:16px">{{ $carauction->signupfee }}</span>
                         @else
                             <span class="label label-warning">Signup not required</span>
@@ -202,7 +207,7 @@
                         Start: <span style="font-weight:bold">{{ $carauction->startdate->diffForHumans() }}</span>. 
                         End: <span style="font-weight:bold">{{ $carauction->enddate->diffForHumans() }}</span>. 
                         <br>
-                        <span class="label label-info">Start bid price</span>: <span style="font-weight:bold;font-size:16px">{{ $carauction->startbidprice }}</span>. 
+                        <span class="label label-info">Start bid price</span>: <span style="font-weight:bold;font-size:16px">K{{ number_format($carauction->startbidprice) }}</span>. 
                         <br>
                         <span style="font-size:11px;color:grey">{{ $carauction->car->note }}
                     </p>
@@ -224,6 +229,14 @@
                 </div>
 
             </div>
+
+            <div class="col-md-12" style='padding-top:10px;padding-bottom:10px'>
+                Export bidders list as;    
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/carauction/'.$carauction->id.'/auctions/export?format=csv') }}">CSV</a>, 
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/carauction/'.$carauction->id.'/auctions/export?format=xlsx') }}">XLSX</a>, or  
+                <a href="{{ url('/corporate/'.$corporate->id.'/corpuser/sales/car/carauction/'.$carauction->id.'/auctions/export?format=html') }}">HTML</a>
+            </div>
+
         </div>
     </div>
 
@@ -256,33 +269,85 @@
 <div class="col-md-5" style="padding-left:0;padding-right:0">
     <div class="panel panel-danger">
         <div class="panel-heading">
-            Reserved Bids
+            Auction Requests
         </div>
         <div class="panel-body">
 
-            Reserved bids are deleted automatically after {{ $carauction->auctionreserveholddays }} days.
-            <br><br>
-            
-            <ul class="list-group">
+            @if ($carauction->signuprequired == 1)
 
-                @foreach($carauctionreserves as $carauctionreserve)
+                @if ($carauction->signupfee > 0)
+                    Please confirm externally that the user has paid the signup fee of <span style="font-size:16px">K{{ number_format($carauction->signupfee) }}</span> before accepting their request here.
+                @else 
+                    No fee required. Select "accept" to allow the user to start bidding
+                @endif
 
-                    <li class="list-group-item">
-                        <p>
-                            {{ $carauctionreserve->carauctionbid->user->name }}, 
-                            <strong>K{{ number_format($carauctionreserve->carauctionbid->bid, 2) }}</strong>&nbsp;&nbsp;&nbsp;
-                            <span style="font-size:9px;color:gray">{{ $carauctionreserve->created_at->diffForHumans() }}</span>
-                            <span class="pull-right">
-                                <button class="btn btn-xs btn-success" onclick="purchaseReserveCarAuctionBidForm({{ $carauctionreserve->id }})"><i class="fa fa-money"></i></button> 
-                                <button class="btn btn-xs btn-info" onclick="#"><i class="fa fa-envelope"></i></button> 
-                                <button class="btn btn-xs btn-warning" onclick="cancelReserveCarAuctionBid({{ $carauctionreserve->carauctionbid->id }})"><i class="fa fa-trash"></i></button>
-                            </span>
-                        </p>
-                    </li>
+                <br><br>
+                
+                <ul class="list-group" id="carauctionrequestlist">
 
-                @endforeach
+                    @foreach($carauctionbidders_pending as $carauctionbidder_pending)
 
-            </ul>
+                        <li class="list-group-item">
+                            <p>
+                                <strong>{{ $carauctionbidder_pending->user->name }} </strong>
+                                Requested - {{ $carauctionbidder_pending->created_at->diffForHumans() }}&nbsp;&nbsp;&nbsp;
+                                <span class="pull-right">
+                                    <button class="btn btn-xs btn-success" onclick="confirmMe('Are you sure you want to accept this user request?', 'carAuctionSignUpAccept({{ $carauctionbidder_pending->id }})', 'success')"><i class="fa fa-check"></i></button> 
+                                    <button class="btn btn-xs btn-danger" onclick="confirmMe('Are you sure you want to delete this user request?', 'carAuctionSignUpDecline({{ $carauctionbidder_pending->id }})', 'danger')"><i class="fa fa-trash"></i></button>
+                                </span>
+                            </p>
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            @else
+
+                <!-- Sign up NOT required -->
+
+                Tender is free for anyone to submit tenders.
+
+            @endif
+
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Accepted Users
+        </div>
+        <div class="panel-body">
+
+            @if ($carauction->signuprequired == 1)
+
+                <br>
+                
+                <ul class="list-group">
+
+                    @foreach($carauctionbidders_accepted as $carauctionbidder_accepted)
+
+                        <li class="list-group-item">
+                            <p>
+                                <strong>{{ $carauctionbidder_accepted->user->name }} </strong>
+                                Accepted - {{ $carauctionbidder_accepted->updated_at->diffForHumans() }}&nbsp;&nbsp;&nbsp;
+                                <span class="pull-right">
+                                    <button class="btn btn-xs btn-danger" onclick="confirmMe('Are you sure you want to delete this accepted user?<br>There is NO UNDO for this action and all bids submitted by this user will also be deleted!', 'carAuctionBidderDelete({{ $carauctionbidder_accepted->id }})', 'danger')"><i class="fa fa-trash"></i></button>
+                                </span>
+                            </p>
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            @else
+
+                <!-- Sign up NOT required -->
+
+                Auction is free for anyone to submit bids.
+
+            @endif
 
         </div>
     </div>

@@ -171,6 +171,10 @@
             </div>
         @else
             @if ($user_can_tender == true) 
+                <div class="col-md-12" style="padding-top:20px;text-align:center">
+                    Please note that Tenders are PRIVATE. You will only be able to see <strong>your own</strong> tenders.
+                </div>
+                
                 <div class="col-md-12">
                   <div class="col-md-8 col-md-offset-2" style="padding-top:20px;padding-bottom:10px;">
                     <div class="form-inline">
@@ -215,6 +219,12 @@
 <div class="col-md-12" id="list">
 
 </div>
+
+<div class="col-md-12">
+    <hr>
+</div>
+
+
         
 @endsection
 

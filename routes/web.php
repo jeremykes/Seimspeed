@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/user/settings/edit/save', 'UserController@usersettingseditsave');
 
 	Route::post('/user/tender/{cartender}/signup', 'UserController@usertendersignup');
+	Route::post('/user/auction/{carauction}/signup', 'UserController@userauctionsignup');
 	/*
 	|--------------------------------------------------------------------------
 	| Misc Routes
@@ -325,8 +326,12 @@ Route::group(['middleware' => ['auth']], function() {
 			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/signup/accept/{cartendertenderer}', 'CarController@cartendersignupaccept');
 			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/signup/decline/{cartendertenderer}', 'CarController@cartendersignupdecline');
 			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/cartendertenderer/delete/{cartendertenderer}', 'CarController@cartendertendererdelete');
-
 			Route::get('/corporate/{corporate}/corpuser/sales/car/cartender/{cartender}/tenders/export/{format?}', 'CarController@cartenderexporttenders');
+
+			Route::get('/corporate/{corporate}/corpuser/sales/car/carauction/signup/accept/{carauctionbidder}', 'CarController@carauctionsignupaccept');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/carauction/signup/decline/{carauctionbidder}', 'CarController@carauctionsignupdecline');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/carauction/carauctionbidder/delete/{carauctionbidder}', 'CarController@carauctionbidderdelete');
+			Route::get('/corporate/{corporate}/corpuser/sales/car/carauction/{carauction}/auctions/export/{format?}', 'CarController@carauctionexportbids');
 
 
 		}); // End of middleware 'role:sales:maintainer:administrator'
